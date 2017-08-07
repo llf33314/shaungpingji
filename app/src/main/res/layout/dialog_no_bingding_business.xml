@@ -8,28 +8,28 @@
     >
 
     <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    >
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        >
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="提示"
+        android:textColor="@color/black"
+        android:textSize="22sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="提示"
-            android:textColor="@color/black"
-            android:textSize="22sp" />
-
-        <TextView
-            android:id="@+id/no_bingding_cancel"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:text="×"
-            android:textSize="34sp"
-            android:gravity="center"
-            android:layout_alignParentRight="true"
-            />
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/no_bingding_cancel"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:text="×"
+        android:textSize="34sp"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        />
+</RelativeLayout>
     <View
         style="@style/grayLine"
       />

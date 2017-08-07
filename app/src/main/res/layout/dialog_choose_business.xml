@@ -4,24 +4,58 @@
     android:orientation="vertical"
     android:layout_width="600dp"
     android:layout_height="350dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
     android:background="@color/white"
     >
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="选择应用行业"
+            android:textColor="@color/black"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/choose_business_cancel"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:text="×"
+            android:textSize="34sp"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            />
+    </RelativeLayout>
+    <View
+        style="@style/grayLine"
+        />
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="0.5" />
 
     <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/rv_choose_business"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="25dp"
+        android:scrollbars="horizontal"
+        android:layout_marginLeft="25dp"
+        android:scrollbarStyle="outsideInset"
+        android:scrollbarTrackHorizontal="@drawable/login_scroll_bar_track"
+        android:scrollbarThumbHorizontal="@drawable/shape_scroll_bar_thumb"
+        android:paddingBottom="10dp"
+        >
 
     </android.support.v7.widget.RecyclerView>
     <Space
@@ -33,9 +67,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="记住我的选择"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="30dp"
         android:textColor="@color/black"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
         />
 </FrameLayout>

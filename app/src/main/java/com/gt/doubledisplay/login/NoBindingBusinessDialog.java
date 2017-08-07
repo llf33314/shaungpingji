@@ -34,6 +34,7 @@ public class NoBindingBusinessDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_no_bingding_business);
         ButterKnife.bind(this);
+        this.setCanceledOnTouchOutside(false);
     }
 
     @OnClick(R.id.no_bingding_cancel)

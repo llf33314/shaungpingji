@@ -28,6 +28,7 @@ public class LoginActivity extends RxAppCompatActivity {
 
     @OnClick(R.id.btn_login)
     public void onViewClicked() {
-        new NoBindingBusinessDialog(this,R.style.HttpRequestDialogStyle).show();
+        //new NoBindingBusinessDialog(this,R.style.HttpRequestDialogStyle).show();
+        new ChooseBusinessDialog(this,R.style.HttpRequestDialogStyle).show();
     }
 }
