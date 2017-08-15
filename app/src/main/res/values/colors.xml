@@ -6,10 +6,11 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="gray">#dedede</color>
-    <color name="webviewProgress">#56dde7</color>
+    <color name="webviewProgress">#436aea</color>
     <color name="forgetPsd">#75bafc</color>
     <color name="loginNotP">#5fcb85</color>
     <color name="loginP">#31ae5e</color>
-
+    <color name="wifi_connection_bg">#ececec</color>
+    <color name="wifi_connection_tv_color">#999999</color>
 
 </resources>

@@ -617,7 +617,7 @@ public final class BarUtils {
      *
      * @return 导航栏高度，0代表不存在
      */
-    public int getNavigationBarHeight() {
+    public static int getNavigationBarHeight() {
         boolean hasMenuKey = ViewConfiguration.get(Utils.getContext()).hasPermanentMenuKey();
         boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
         if (!hasMenuKey && !hasBackKey) {

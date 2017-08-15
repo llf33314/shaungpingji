@@ -1,11 +1,9 @@
-package com.gt.doubledisplay.utils.view;
+package com.gt.doubledisplay.web;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -23,6 +21,9 @@ public class HorizontalProgress extends View {
     private Paint mPaint;
     public HorizontalProgress(Context context) {
         super(context);
+        progressColor=context.getResources().getColor(R.color.webviewProgress);
+        initPaint();
+
     }
 
     public HorizontalProgress(Context context, @Nullable AttributeSet attrs) {
@@ -31,9 +32,13 @@ public class HorizontalProgress extends View {
         max=a.getInteger(R.styleable.HorizontalProgress_max,100);
         currentProgress=a.getInteger(R.styleable.HorizontalProgress_currentProgress,0);
         progressColor=a.getColor(R.styleable.HorizontalProgress_progressColor,context.getResources().getColor(R.color.gray));
+        initPaint();
+        a.recycle();
+    }
+
+    private void initPaint(){
         mPaint=new Paint();
         mPaint.setColor(progressColor);
-        a.recycle();
     }
 
     @Override

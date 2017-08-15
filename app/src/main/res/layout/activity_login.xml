@@ -96,6 +96,7 @@
                 android:textSize="18sp"
                 />
             <TextView
+                android:id="@+id/login_forget_psd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="忘记密码？"

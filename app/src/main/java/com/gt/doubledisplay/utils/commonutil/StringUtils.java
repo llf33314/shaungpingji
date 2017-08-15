@@ -1,5 +1,7 @@
 package com.gt.doubledisplay.utils.commonutil;
 
+import java.util.Arrays;
+
 /**
  * <pre>
  *     author: Blankj
@@ -32,6 +34,10 @@ public final class StringUtils {
      */
     public static boolean isTrimEmpty(final String s) {
         return (s == null || s.trim().length() == 0);
+    }
+
+    public static boolean useList(String[] arr, String targetValue) {
+        return Arrays.asList(arr).contains(targetValue);
     }
 
     /**

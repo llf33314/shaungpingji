@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Process;
 
+import com.gt.doubledisplay.login.LoginActivity;
+
 
 /**
  * Created by wzb on 2017/7/11 0011.
@@ -26,6 +28,7 @@ public class MyApplication extends Application {
     }
 
     public static void appExit(){
+        getAppContext().stopService(LoginActivity.portIntent);
         Process.killProcess(Process.myPid());
     }
 

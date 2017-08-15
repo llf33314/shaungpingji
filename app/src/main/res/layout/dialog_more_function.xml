@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="160dp"
+    android:background="@drawable/white_radius_bg"
+    >
+    <TextView
+        android:layout_alignParentRight="true"
+        android:id="@+id/tv_more_function_cancel"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:textSize="28sp"
+        android:text="×"
+        android:gravity="center"
+        android:textColor="@color/wifi_connection_tv_color"
+        />
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:maxLines="1"
+            android:id="@+id/hint_msg"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:textColor="@color/wifi_connection_tv_color"
+            android:textSize="16sp"
+            android:text="精彩功能即将开启，敬请期待。"
+            android:gravity="center"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>
