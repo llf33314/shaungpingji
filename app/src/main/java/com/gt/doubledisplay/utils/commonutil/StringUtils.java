@@ -36,10 +36,6 @@ public final class StringUtils {
         return (s == null || s.trim().length() == 0);
     }
 
-    public static boolean useList(String[] arr, String targetValue) {
-        return Arrays.asList(arr).contains(targetValue);
-    }
-
     /**
      * 判断字符串是否为null或全为空白字符
      *

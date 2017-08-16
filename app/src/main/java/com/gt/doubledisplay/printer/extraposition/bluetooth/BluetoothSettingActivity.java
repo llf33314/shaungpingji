@@ -421,7 +421,7 @@ public class BluetoothSettingActivity extends BaseActivity {
                             BluetoothDevice d=i.next();
                             //佳博30的get出来不是3 所以这样判断  当连接了其他蓝牙时候有问题
                            // if (d.getType()==BluetoothDevice.DEVICE_TYPE_DUAL){//打印机
-                            if (!com.gt.doubledisplay.printer.internal.BluetoothUtil.Innerprinter_Address.equals(d.getAddress())){//打印机
+                            if (!com.gt.doubledisplay.printer.internal.BluetoothUtil.Innerprinter_Address.equals(d.getAddress())){//不是内置打印机
                                 //打开端口
                                 OpenPrinterPortMsg rxMsg=new OpenPrinterPortMsg(OpenPrinterPortMsg.OPEN_PROT);
                                 rxMsg.setBluetoothDevice(d);

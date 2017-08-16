@@ -27,9 +27,9 @@ import com.gprinter.service.GpPrintService;
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.base.MoreFunctionDialog;
 import com.gt.doubledisplay.base.MyApplication;
+import com.gt.doubledisplay.printer.extraposition.bluetooth.GPBluetoothUtil;
 import com.gt.doubledisplay.printer.extraposition.bluetooth.OpenPrinterPortMsg;
 import com.gt.doubledisplay.utils.RxBus;
-import com.gt.doubledisplay.utils.commonutil.StringUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -57,7 +57,7 @@ public class PrinterConnectSerivce extends Service {
 
     public static final String CONNECTION_ACTION="action.connect.status";
 
-    private static final String [] INTERNAL_USB={"/dev/bus/usb/003/012","/dev/bus/usb/003/003","/dev/bus/usb/001/002","/dev/bus/usb/003/011"};
+    private static final int [] INTERNAL_USB={300017,1,46880,14370};
 
     public static final int PRINTER_CONNECTING=14;
     public static final int PRINTER_NOT_INTI=15;
@@ -65,7 +65,6 @@ public class PrinterConnectSerivce extends Service {
     BluetoothAdapter mBluetoothAdapter ;
 
     Intent intentGpPrintService;
-
 
     public static GpService mGpService = null;
 
@@ -106,7 +105,9 @@ public class PrinterConnectSerivce extends Service {
                         break;
                     case OpenPrinterPortMsg.OPEN_PROT:
 
-                        if (!isConnceted()){//usb没有连接
+
+                      //  if (mUsbDevice==null){//usb没有连接
+                           if (!isConnceted()){//usb没有连接
                             BluetoothDevice d=openPrinterPortMsg.getBluetoothDevice();
                             openBluetoothProtFromDevice(d);
                         }
@@ -124,12 +125,6 @@ public class PrinterConnectSerivce extends Service {
         //注册usb广播 拔出插入逻辑
         registerUsbBroad();
 
-    }
-
-    @Override
-    public int onStartCommand(Intent intent,int flags, int startId) {
-
-        return super.onStartCommand(intent, flags, startId);
     }
 
     private void connection() {
@@ -168,8 +163,7 @@ public class PrinterConnectSerivce extends Service {
      * 优先选择蓝牙
      */
     public void openBluetoothOrUsbProt() {
-
-        BluetoothDevice printDevice=getConnectingBluetooth();
+        BluetoothDevice printDevice= GPBluetoothUtil.getConnectingBluetooth(mBluetoothAdapter);
         if (printDevice!=null){
             openBluetoothProtFromDevice(printDevice);
         }else if(isHasUsbDevice()){
@@ -177,89 +171,11 @@ public class PrinterConnectSerivce extends Service {
         }
     }
 
+    //这个方法很关键  根据判断是否会去自动连接 蓝牙或者usb productId如果改变了会影响连接
     private boolean isHasUsbDevice(){
-        HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
-        Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
-        while(deviceIterator.hasNext()){
-            UsbDevice d=deviceIterator.next();
-            //双屏内置有4个usb设备 排除这4个设备名称
-
-            if (!StringUtils.useList(INTERNAL_USB,d.getDeviceName())){
-                mUsbDevice  = d;
-                break;
-            }
-
-        }
+        mUsbDevice  = GPUsbUtil.getExtrapositionUsbDevice(mUsbManager);
+       // ToastUtil.getInstance().showToast( mUsbDevice!=null?"有USB":"没USB");
         return  mUsbDevice!=null;
-    }
-
-    private boolean isHasBluetoothDevice(){
-
-        if (!mBluetoothAdapter.isEnabled()){
-            return false;
-        }
-
-        Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
-        List<BluetoothDevice> devices=new ArrayList<BluetoothDevice>(bondedDevices);
-        BluetoothDevice printDevice=null;
-        for (BluetoothDevice b:devices){
-            if (b.getType()==3){
-                printDevice=b;
-                break;
-            }
-        }
-        return  printDevice!=null;
-    }
-
-    /**
-     * 没有更好的方法获取当前蓝牙的连接状态了
-     * @return
-     */
-    private BluetoothDevice getConnectingBluetooth(){
-
-        if (!mBluetoothAdapter.isEnabled()){
-            return null;
-        }
-        Set<BluetoothDevice> devices = mBluetoothAdapter.getBondedDevices();
-
-        for(BluetoothDevice device : devices){
-            //测试用  因为0D30显示的类型不是打印机？
-            //过滤掉内置打印机
-            if (/*device.getType()==3&&*/!"88:D1:31:71:2D:10".equals(device.getAddress())){
-                return device;
-            }
-        }
-        return null;
-
-       /* Class<BluetoothAdapter> bluetoothAdapterClass = BluetoothAdapter.class;//得到BluetoothAdapter的Class对象
-        try {//得到蓝牙状态的方法
-            Method method = bluetoothAdapterClass.getDeclaredMethod("getConnectionState", (Class[]) null);
-            //打开权限
-            method.setAccessible(true);
-            int state = (int) method.invoke(mBluetoothAdapter, (Object[]) null);
-
-      //      if(state == BluetoothAdapter.STATE_CONNECTED){
-
-                Set<BluetoothDevice> devices = mBluetoothAdapter.getBondedDevices();
-
-                for(BluetoothDevice device : devices){
-
-                    Method isConnectedMethod = BluetoothDevice.class.getDeclaredMethod("isConnected", (Class[]) null);
-                    method.setAccessible(true);
-                    boolean isConnected = (boolean) isConnectedMethod.invoke(device, (Object[]) null);
-
-                    if(isConnected){
-                        return device;
-                    }
-
-             //   }
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;*/
     }
 
     private void registerBoothCloseBroadcast() {
@@ -273,13 +189,12 @@ public class PrinterConnectSerivce extends Service {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-
                 try {
                     mGpService.closePort(mPrinterIndex);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
-            }
+            }else
             if (BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED.equals(action)) {
 
                 try {
@@ -315,7 +230,6 @@ public class PrinterConnectSerivce extends Service {
             ToastUtil.getInstance().showToast("请连接USB打印机");
             return -1;
         }
-
         int rel = -1;
         try {
             int state=mGpService.getPrinterConnectStatus(mPrinterIndex);
@@ -330,63 +244,6 @@ public class PrinterConnectSerivce extends Service {
             e.printStackTrace();
             return rel;
         }
-    }
-
-    public boolean[] getConnectState() {
-        boolean[] state = new boolean[GpPrintService.MAX_PRINTER_CNT];
-        for (int i = 0; i < GpPrintService.MAX_PRINTER_CNT; i++) {
-            state[i] = false;
-        }
-        for (int i = 0; i < GpPrintService.MAX_PRINTER_CNT; i++) {
-            try {
-                if (mGpService.getPrinterConnectStatus(i) == GpDevice.STATE_CONNECTED) {
-                    state[i] = true;
-                }
-            } catch (RemoteException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        return state;
-    }
-
-    /**
-     * 打印机状态
-     */
-    public static String getPrinterStatus() {
-        if (mGpService==null){
-            return "打印机未连接";
-        }
-        String str = "";
-        try {
-            int status = mGpService.queryPrinterStatus(mPrinterIndex, 500);
-
-            if (status == GpCom.STATE_NO_ERR) {
-                str = "打印机正常";
-            } else {
-                str = "打印机 ";
-                if ((byte) (status & GpCom.STATE_OFFLINE) > 0) {
-                    str += "脱机";
-                }
-                if ((byte) (status & GpCom.STATE_PAPER_ERR) > 0) {
-                    str += "缺纸";
-                }
-                if ((byte) (status & GpCom.STATE_COVER_OPEN) > 0) {
-                    str += "打印机开盖";
-                }
-                if ((byte) (status & GpCom.STATE_ERR_OCCURS) > 0) {
-                    str += "打印机出错";
-                }
-                if ((byte) (status & GpCom.STATE_TIMES_OUT) > 0) {//wzb 自己修改的 因为正常的时候也显示打印机超时
-                    str = "正常";
-                }
-            }
-           // ToastUtil.getInstance().showToast("打印机：" + mPrinterIndex + " 状态：" + str);
-        } catch (RemoteException e1) {
-            e1.printStackTrace();
-            return "打印机状态未知错误";
-        }
-        return str;
     }
 
     @Override
@@ -421,7 +278,6 @@ public class PrinterConnectSerivce extends Service {
             hintNotConnectDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         }
         hintNotConnectDialog.show();
-
     }
 
     /**
@@ -478,179 +334,52 @@ public class PrinterConnectSerivce extends Service {
         return -1;
     }
 
+
     private static int sendESCReceipt(String money) {
-        EscCommand esc = new EscCommand();
-        esc.addPrintAndFeedLines((byte) 1);
-        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);// 设置打印居中
-        esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF);// 设置为倍高倍宽
-        esc.addText("多粉餐厅（赛格）\n"); // 打印文字
-        esc.addPrintAndLineFeed();
-
-		// 打印文字 *//*
-        esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF);// 取消倍高倍宽
-        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);// 设置打印左对齐
-        esc.addText("--------------------------------\n");// 打印文字
-        esc.addText("单号：12345678987445775\n"); // 打印文字
-        esc.addText("--------------------------------\n");
-        esc.addText("消费总额："+money+"\n");
-        esc.addText("--------------------------------\n");
-        esc.addText("抵扣方式：100粉币（-10.00）\n");
-        esc.addText("实付金额：46.10\n");
-        esc.addText("支付方式：微信支付\n");
-        esc.addText("会员折扣：8.5\n");
-        esc.addText("--------------------------------\n");
-        esc.addText("开单时间：2017-07-21 14:23\n");
-        esc.addText("收银员：多粉\n");
-        esc.addText("--------------------------------\n");
-        esc.addText("联系电话：0752-3851585\n");
-        esc.addText("地址：惠州市惠城区赛格假日广场1007室\n");
-        esc.addText("--------------------------------\n");
-        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);// 设置打印居中
-        esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF);// 设置为倍高倍宽
-        esc.addText("欢迎再次光临！\n"); // 打印文字
-        esc.addPrintAndFeedLines((byte)5);
-
+        EscCommand esc=PrintESCOrTSCUtil.getPrintEscCommand(money);
 
         Vector<Byte> datas = esc.getCommand(); // 发送数据
+
+        return printEscAndTsc(datas,1);
+    }
+
+
+    private static int sendLabelReceipt() {
+        LabelCommand tsc=PrintESCOrTSCUtil.getTscCommand();
+
+        Vector<Byte> datas = tsc.getCommand(); // 发送数据
+
+        return printEscAndTsc(datas,2);
+    }
+
+    /**
+     * @param datas
+     * @param type  1 ESC 2TSC
+     * @return
+     */
+    private static int printEscAndTsc(Vector<Byte> datas,int type){
         Byte[] Bytes = datas.toArray(new Byte[datas.size()]);
         byte[] bytes = ArrayUtils.toPrimitive(Bytes);
         String sss = Base64.encodeToString(bytes, Base64.DEFAULT);
         int rs=-1;
         try {
-            rs = mGpService.sendEscCommand(mPrinterIndex, sss);
+            if (type==1){
+                rs = mGpService.sendEscCommand(mPrinterIndex, sss);
+            }else{
+                rs=mGpService.sendLabelCommand(mPrinterIndex,sss);
+            }
+
             GpCom.ERROR_CODE r = GpCom.ERROR_CODE.values()[rs];
             if (r != GpCom.ERROR_CODE.SUCCESS) {
-               // ToastUtil.getInstance().showToast(GpCom.getErrorText(r));
+                // ToastUtil.getInstance().showToast(GpCom.getErrorText(r));
             }
         } catch (RemoteException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return rs;
+
     }
-
-    private static int sendLabelReceipt() {
-         int LEFT=15;
-        String name="¥";
-
-        //总共320*240
-        LabelCommand tsc = new LabelCommand();
-        tsc.addSize(40, 30); // 设置标签尺寸，按照实际尺寸设置
-        tsc.addGap(3); // 设置标签间隙，按照实际尺寸设置，如果为无间隙纸则设置为0
-        tsc.addDirection(LabelCommand.DIRECTION.FORWARD , LabelCommand.MIRROR.NORMAL);// 设置打印方向
-        tsc.addReference(0, 0);// 设置原点坐标
-        tsc.addTear(EscCommand.ENABLE.ON); // 撕纸模式开启
-        tsc.addCls();// 清除打印缓冲区
-        // 绘制简体中文
-
-        if (name.length()<=6){//中文的小于等于6 则字体变大打印一行
-            tsc.addText(LEFT,LEFT , LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_2, LabelCommand.FONTMUL.MUL_2,
-                    "0279");
-            tsc.addText(LEFT,75, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_2, LabelCommand.FONTMUL.MUL_2,
-                    name);
-            tsc.addText(LEFT, 140, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
-                    "大杯，热 x1");
-            tsc.addText(LEFT, 170, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
-                    "备注：少冰，加糖，果粒");
-        }else{
-
-            String oneLine=name.substring(0,6);
-            String twoLine=name.substring(6,12);//最多只能打12个字
-            tsc.addText(LEFT,LEFT , LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_2, LabelCommand.FONTMUL.MUL_2,
-                    "0279");
-            tsc.addText(LEFT,70, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_2, LabelCommand.FONTMUL.MUL_2,
-                    oneLine);
-            tsc.addText(LEFT,125, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_2, LabelCommand.FONTMUL.MUL_2,
-                    twoLine);
-            tsc.addText(LEFT,180, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
-                    "大杯，热 x1");
-            tsc.addText(LEFT, 210, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
-                    "备注：123456");
-        }
-
-
-        tsc.addPrint(1, 1); // 打印标签
-        // tsc.addSound(2, 100); // 打印标签后 蜂鸣器响
-        //打印机打印密度
-        tsc.addDensity(LabelCommand.DENSITY.DNESITY10);
-        tsc.addCashdrwer(LabelCommand.FOOT.F5, 255, 255);
-        Vector<Byte> datas = tsc.getCommand(); // 发送数据
-        Byte[] Bytes = datas.toArray(new Byte[datas.size()]);
-        byte[] bytes = ArrayUtils.toPrimitive(Bytes);
-        String str = Base64.encodeToString(bytes, Base64.DEFAULT );
-        int rel=-1;
-        try {
-            rel = mGpService.sendLabelCommand(mPrinterIndex, str);
-            GpCom.ERROR_CODE r = GpCom.ERROR_CODE.values()[rel];
-            if (r != GpCom.ERROR_CODE.SUCCESS) {
-                //Toast.makeText(getApplicationContext(), GpCom.getErrorText(r), Toast.LENGTH_SHORT).show();
-            }
-        } catch (RemoteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return  rel;
-    }
-
-
-
-    /*private static int sendLabelReceipt() {
-        //总共320*240
-        LabelCommand tsc = new LabelCommand();
-        tsc.addSize(40, 30); // 设置标签尺寸，按照实际尺寸设置
-        tsc.addGap(3); // 设置标签间隙，按照实际尺寸设置，如果为无间隙纸则设置为0
-        tsc.addDirection(LabelCommand.DIRECTION.FORWARD , LabelCommand.MIRROR.NORMAL);// 设置打印方向
-        tsc.addReference(0, 0);// 设置原点坐标
-        tsc.addTear(EscCommand.ENABLE.ON); // 撕纸模式开启
-        tsc.addCls();// 清除打印缓冲区
-        // 绘制简体中文
-        tsc.addText(60, 12, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_2, LabelCommand.FONTMUL.MUL_2,
-                "多粉餐饮");
-        tsc.addReverse(45,5,320-95,63);
-
-
-        tsc.addText(15,75, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_2, LabelCommand.FONTMUL.MUL_2,
-                "海贼王连锁店");
-        tsc.addText(10, 130, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
-                "加糖拿铁 小杯");
-        tsc.addText(10, 160, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
-                "价格：15.00元");
-        tsc.addText(10, 195, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
-                "外卖：123456");
-
-        //二维码
-        tsc.addQRCode(190, 130, LabelCommand.EEC.LEVEL_L, 4, LabelCommand.ROTATION.ROTATION_0, " http://www.duofriend.com/");
-
-
-        // 绘制图片
-     *//*   Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.gprinter);
-        tsc.addBitmap(20, 50, BITMAP_MODE.OVERWRITE, b.getWidth() * 2, b);
-*//*
-
-        // 绘制一维条码
-       // tsc.add1DBarcode(20, 250, LabelCommand.BARCODETYPE.CODE128, 100, LabelCommand.READABEL.EANBEL, LabelCommand.ROTATION.ROTATION_0, "Gprinter");
-        tsc.addPrint(1, 1); // 打印标签
-       // tsc.addSound(2, 100); // 打印标签后 蜂鸣器响
-        //打印机打印密度
-        tsc.addDensity(LabelCommand.DENSITY.DNESITY10);
-        tsc.addCashdrwer(LabelCommand.FOOT.F5, 255, 255);
-        Vector<Byte> datas = tsc.getCommand(); // 发送数据
-        Byte[] Bytes = datas.toArray(new Byte[datas.size()]);
-        byte[] bytes = ArrayUtils.toPrimitive(Bytes);
-        String str = Base64.encodeToString(bytes, Base64.DEFAULT);
-        int rel=-1;
-        try {
-            rel = mGpService.sendLabelCommand(mPrinterIndex, str);
-            GpCom.ERROR_CODE r = GpCom.ERROR_CODE.values()[rel];
-            if (r != GpCom.ERROR_CODE.SUCCESS) {
-                //Toast.makeText(getApplicationContext(), GpCom.getErrorText(r), Toast.LENGTH_SHORT).show();
-            }
-        } catch (RemoteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return  rel;
-    }*/
 
     /**
      * 佳博sdk端口监听广播
@@ -723,9 +452,9 @@ public class PrinterConnectSerivce extends Service {
             } else if (action.equals(UsbManager.ACTION_USB_DEVICE_DETACHED)) {
                 // ToastUtil.getInstance().showToast("usb打印机断开...");
                 mUsbDevice=null;
-                //如果蓝牙已经连接则打开蓝牙端口
+                //如果蓝牙已经连接 则打开蓝牙端口
                 closeProt();
-                BluetoothDevice device=getConnectingBluetooth();
+                BluetoothDevice device=GPBluetoothUtil.getConnectingBluetooth(mBluetoothAdapter);
                 if (device!=null){
                     openBluetoothProtFromDevice(device);
                 }

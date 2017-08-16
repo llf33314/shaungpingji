@@ -57,6 +57,7 @@ public class LoginActivity extends RxAppCompatActivity {
                 break;
             case R.id.btn_login:
                 PrinterConnectSerivce.printReceiptClicked("100");
+               // ESCUtil.printInternal("12025477484","你尚未成为会员","￥128.00","￥50.00","-￥0.00","-￥0.00","-￥0.00","￥178.00");
              /*   if (test%2==0){
                     PrinterConnectSerivce.printReceiptClicked("100");
                 }else{
@@ -68,38 +69,5 @@ public class LoginActivity extends RxAppCompatActivity {
         }
     }
 
-    public int printInternal(String orderId,String memberMsg,String amountMoney,String seatMoney,String memberDiscount,
-                             String friendDiscount,String integralDiscount,String practicalMoney){
-        BluetoothAdapter btAdapter = BluetoothUtil.getBTAdapter();
-        if (btAdapter == null) {
 
-            return -1;
-        }
-        // 2: Get Sunmi's InnerPrinter BluetoothDevice
-        BluetoothDevice device = BluetoothUtil.getDevice(btAdapter);
-        if (device == null) {
-
-            return 0;
-        }
-
-        // 3: Generate a order data
-        byte[] data = ESCUtil.getInternalOrder( orderId, memberMsg, amountMoney, seatMoney, memberDiscount,
-                friendDiscount, integralDiscount, practicalMoney);
-        // 4: Using InnerPrinter print data
-        BluetoothSocket socket = null;
-        try {
-            socket = BluetoothUtil.getSocket(device);
-            BluetoothUtil.sendData(data, socket);
-            return 1;
-        } catch (IOException e) {
-            if (socket != null) {
-                try {
-                    socket.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-            return  2;
-        }
-    }
 }

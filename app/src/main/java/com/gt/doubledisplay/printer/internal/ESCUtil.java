@@ -1,10 +1,29 @@
 package com.gt.doubledisplay.printer.internal;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.text.format.Time;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+
+import com.gt.doubledisplay.base.MyApplication;
+import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
+import com.gt.doubledisplay.utils.commonutil.ToastUtil;
+
+import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 
 public class ESCUtil {
 
@@ -303,7 +322,6 @@ public class ESCUtil {
             byte[] left = ESCUtil.alignLeft();
             byte[] fontSize2Big = ESCUtil.fontSizeSetBig(1);
 
-
 			byte[] text1 = (maginLeft+"订单："+orderId).getBytes("gb2312");
 			byte[] text2 = (maginLeft+"会员："+memberMsg).getBytes("gb2312");
 			byte[] text3 = (maginLeft+"消费总额："+amountMoney).getBytes("gb2312");
@@ -313,15 +331,16 @@ public class ESCUtil {
 			byte[] text7 = (maginLeft+"积分："+integralDiscount).getBytes("gb2312");
 			byte[] text8 = (maginLeft+"实付金额："+practicalMoney).getBytes("gb2312");
 
+
 			byte[] breakPartial = ESCUtil.feedPaperCutPartial();
 
 			byte[][] cmdBytes = {left,fontSize2Big,text1,next2Line,text2,next2Line,text3,next2Line,
-					text4,next2Line,text5,next2Line,text6,next2Line,text7,next2Line,text8,next2Line,
+					text4,next2Line,text5,next2Line,text6,next2Line,text7,next2Line,text8,
 					breakPartial };
 			byte[] cmdBytes2=ESCUtil.byteMerger(cmdBytes);
 			//cmdBytes2=byteMerger2(cmdBytes2,cmdBytes2);
 			//cmdBytes2=byteMerger2(cmdBytes2,cmdBytes2);
-			return cmdBytes2;
+				return cmdBytes2;
 			//return ESCUtil.byteMerger(cmdBytes);
 
 		} catch (UnsupportedEncodingException e) {
@@ -329,6 +348,48 @@ public class ESCUtil {
 		}
 		return null;
 	}
+	public static byte[] Bitmap2Bytes(Bitmap bm) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+		return baos.toByteArray();
+	}
+
+
+	public static int printInternal(String orderId,String memberMsg,String amountMoney,String seatMoney,String memberDiscount,
+							 String friendDiscount,String integralDiscount,String practicalMoney){
+		BluetoothAdapter btAdapter = BluetoothUtil.getBTAdapter();
+		if (btAdapter == null) {
+
+			return -1;
+		}
+		// 2: Get Sunmi's InnerPrinter BluetoothDevice
+		BluetoothDevice device = BluetoothUtil.getDevice(btAdapter);
+		if (device == null) {
+
+			return 0;
+		}
+
+		// 3: Generate a order data
+		byte[] data =getInternalOrder( orderId, memberMsg, amountMoney, seatMoney, memberDiscount,
+				friendDiscount, integralDiscount, practicalMoney);
+		// 4: Using InnerPrinter print data
+		BluetoothSocket socket = null;
+		try {
+			socket = BluetoothUtil.getSocket(device);
+			BluetoothUtil.sendData(data, socket);
+			return 1;
+		} catch (IOException e) {
+			if (socket != null) {
+				try {
+					socket.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+			return  2;
+		}
+	}
+
 	// --------------------
 	/*public static byte[] generateMockData() {
 		try {
@@ -385,6 +446,40 @@ public class ESCUtil {
 		}
 		return null;
 	}*/
+
+	public static int printInternal(byte []data){
+		BluetoothAdapter btAdapter = BluetoothUtil.getBTAdapter();
+		if (btAdapter == null) {
+			ToastUtil.getInstance().showToast("请检查蓝牙是否打开");
+			return -1;
+		}
+		// 2: Get Sunmi's InnerPrinter BluetoothDevice
+		BluetoothDevice device = BluetoothUtil.getDevice(btAdapter);
+		if (device == null) {
+			ToastUtil.getInstance().showToast("请检查蓝牙是否打开");
+			return 0;
+		}
+
+		// 3: Generate a order data
+        /*byte[] data = ESCUtil.getInternalOrder( orderId, memberMsg, amountMoney, seatMoney, memberDiscount,
+                friendDiscount, integralDiscount, practicalMoney);*/
+		// 4: Using InnerPrinter print data
+		BluetoothSocket socket = null;
+		try {
+			socket = BluetoothUtil.getSocket(device);
+			BluetoothUtil.sendData(data, socket);
+			return 1;
+		} catch (IOException e) {
+			if (socket != null) {
+				try {
+					socket.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+			return  2;
+		}
+	}
     public static  byte[] byteMerger2(byte[] byte_1, byte[] byte_2){  
         byte[] byte_3 = new byte[byte_1.length+byte_2.length];  
         System.arraycopy(byte_1, 0, byte_3, 0, byte_1.length);  
