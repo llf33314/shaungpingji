@@ -99,7 +99,7 @@ public class LoginActivity extends RxAppCompatActivity {
                         .login(account,psd)
                         .compose(LoginActivity.this.<BaseResponse>bindToLifecycle())
                         .compose(ResultTransformer.<BaseResponse>transformerNoData())
-                        .compose(new DialogTransformer(LoginActivity.this).<BaseResponse>transformer())
+                        .compose(new DialogTransformer().<BaseResponse>transformer())
                         .subscribe(new BaseObserver<BaseResponse>() {
                             @Override
                             protected void onSuccess(BaseResponse baseResponse) {

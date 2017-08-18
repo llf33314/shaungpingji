@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 
+import com.gt.doubledisplay.http.HttpRequestDialog;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
@@ -20,38 +22,29 @@ import io.reactivex.functions.Consumer;
  */
 public class DialogTransformer {
 
-    private static final String DEFAULT_MSG = "数据加载中...";
-
-    private Activity activity;
-    private String msg;
+    //这个对话框、网络加载能否取消  默认能
     private boolean cancelable=true;
 
-    public DialogTransformer(Activity activity) {
-        this(activity, DEFAULT_MSG);
+    public DialogTransformer() {
+        this(true);
     }
 
-    public DialogTransformer(Activity activity, String msg) {
-        this(activity, msg, true);
-    }
-
-    public DialogTransformer(Activity activity, String msg, boolean cancelable) {
-        this.activity = activity;
-        this.msg = msg;
+    public DialogTransformer(boolean cancelable) {
         this.cancelable = cancelable;
     }
 
     public <T> ObservableTransformer<T, T> transformer() {
         return new ObservableTransformer<T, T>() {
-            private ProgressDialog progressDialog;
+            private HttpRequestDialog httpRequestDialog;
             @Override
             public ObservableSource<T> apply(final Observable<T> upstream) {
 
                 return  upstream.doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(@NonNull final Disposable disposable) throws Exception {
-                        progressDialog = ProgressDialog.show(activity, null, msg, true, cancelable);
+                        httpRequestDialog = new HttpRequestDialog();
                         if (cancelable) {
-                            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            httpRequestDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                                 @Override
                                 public void onCancel(DialogInterface dialog) {
                                     disposable.dispose();
@@ -62,8 +55,8 @@ public class DialogTransformer {
                 }).doOnTerminate(new Action() {
                     @Override
                     public void run() throws Exception {
-                        if (progressDialog.isShowing()) {
-                            progressDialog.cancel();
+                        if (httpRequestDialog.isShowing()) {
+                            httpRequestDialog.cancel();
                         }
                     }
                 });
