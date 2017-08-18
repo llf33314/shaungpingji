@@ -34,11 +34,6 @@ import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import io.reactivex.annotations.NonNull;
@@ -52,8 +47,7 @@ import io.reactivex.functions.Consumer;
 
 public class PrinterConnectSerivce extends Service {
 
-    private static final String ACTION_USB_PERMISSION =
-            "com.android.example.USB_PERMISSION";
+    private static final String ACTION_USB_PERMISSION ="com.android.example.USB_PERMISSION";
 
     public static final String CONNECTION_ACTION="action.connect.status";
 
@@ -75,7 +69,7 @@ public class PrinterConnectSerivce extends Service {
 
     private static UsbDevice mUsbDevice;
 
-    private  static MoreFunctionDialog hintNotConnectDialog;
+    private static MoreFunctionDialog hintNotConnectDialog;
 
     /**
      * 端口连接状态广播
@@ -104,7 +98,6 @@ public class PrinterConnectSerivce extends Service {
                             closeProt();
                         break;
                     case OpenPrinterPortMsg.OPEN_PROT:
-
 
                       //  if (mUsbDevice==null){//usb没有连接
                            if (!isConnceted()){//usb没有连接
@@ -374,7 +367,6 @@ public class PrinterConnectSerivce extends Service {
                 // ToastUtil.getInstance().showToast(GpCom.getErrorText(r));
             }
         } catch (RemoteException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return rs;
@@ -434,14 +426,6 @@ public class PrinterConnectSerivce extends Service {
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         if (usbDevice != null) {//申请权限成功 打开端口
                                 ToastUtil.getInstance().showToast("usb端口打开中...");
-
-                             /*   int rel = 0;
-                                try {
-                                    rel = mGpService.openPort(mPrinterIndex, PortParameters.USB, usbDevice.getDeviceName(), 0);
-                                } catch (RemoteException e) {
-                                    e.printStackTrace();
-                                }
-*/
                         }else{
                             ToastUtil.getInstance().showToast("usb打印机连接失败");
                         }

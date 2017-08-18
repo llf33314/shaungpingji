@@ -1,6 +1,7 @@
 package com.gt.doubledisplay.web;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.gt.doubledisplay.base.MyApplication;
+import com.gt.doubledisplay.http.ApiService;
+import com.gt.doubledisplay.login.LoginActivity;
 import com.gt.doubledisplay.sonic.SonicJavaScriptInterface;
 import com.gt.doubledisplay.sonic.SonicRuntimeImpl;
 import com.gt.doubledisplay.sonic.SonicSessionClientImpl;
@@ -155,7 +158,6 @@ public class GTWebViewFrameLayout extends FrameLayout {
 
         WebSettings webSettings = mWebView.getSettings();
 
-
         // add java script interface
         // note:if api level lower than 17(android 4.2), addJavascriptInterface has security
         // issue, please use x5 or see https://developer.android.com/reference/android/webkit/
@@ -209,9 +211,18 @@ public class GTWebViewFrameLayout extends FrameLayout {
 
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                //拦截登录url跳转到登录页面
+                if (ApiService.WEB_LOGIN.equals(url)){
+                    Intent intent=new Intent(view.getContext(), LoginActivity.class);
+                    view.getContext().startActivity(intent);
+                    ((Activity)view.getContext()).finish();
+
+                }
+
                 if (sonicSession != null) {
                     return (WebResourceResponse) sonicSession.getSessionClient().requestResource(url);
                 }
+
                 return null;
             }
         };
@@ -227,7 +238,6 @@ public class GTWebViewFrameLayout extends FrameLayout {
                 if (newProgress >= 100) {
                     mBar.setVisibility(View.GONE);
                     mBar.setProgress(0);
-
                 }
                 super.onProgressChanged(view, newProgress);
             }
@@ -271,15 +281,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
     public WebView getWebView(){
         return  mWebView;
     }
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && mWebView.canGoBack()) {
-            mWebView.goBack();
-            return true;
-        }
 
-        return super.onKeyDown(keyCode, event);
-    }
     private static class OfflinePkgSessionConnection extends SonicSessionConnection {
 
         private final WeakReference<Context> context;

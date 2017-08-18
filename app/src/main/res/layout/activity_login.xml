@@ -36,6 +36,7 @@
         android:textSize="18sp"
         />
     <EditText
+        android:id="@+id/login_account"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:hint="请输入登录账号"
@@ -44,6 +45,8 @@
         android:textSize="18sp"
         android:maxLines="1"
         android:maxLength="20"
+        android:inputType="textVisiblePassword"
+        android:text="goodtom"
         />
 
 </LinearLayout>
@@ -69,6 +72,7 @@
                 android:textSize="18sp"
                 />
             <EditText
+                android:id="@+id/login_psd"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="请输入登录密码"
@@ -78,6 +82,7 @@
                 android:maxLines="1"
                 android:maxLength="20"
                 android:inputType="textPassword"
+                android:text="gt123456"
                 />
 
         </LinearLayout>

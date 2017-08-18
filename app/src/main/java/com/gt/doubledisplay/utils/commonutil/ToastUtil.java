@@ -80,5 +80,12 @@ public class ToastUtil {
             }
         });
     }
-
+    public  void showShort(final String msg){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                     Toast.makeText(MyApplication.getAppContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

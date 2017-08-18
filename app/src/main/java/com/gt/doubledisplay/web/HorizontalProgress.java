@@ -3,7 +3,10 @@ package com.gt.doubledisplay.web;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Shader;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -44,6 +47,14 @@ public class HorizontalProgress extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        /*int r=255-255*currentProgress/100;
+        int g=255*currentProgress/100;
+        mPaint.setColor(Color.rgb(r,g,0));*/
+
+        Shader mShader = new LinearGradient(0,0,this.getWidth(),this.getHeight(),new int[] {Color.RED,Color.GREEN},null,Shader.TileMode.REPEAT);
+
+        mPaint.setShader(mShader);
+
         //当前进度占的像素
        int current= (int)(((double)currentProgress)/((double)max)*getWidth());
         canvas.drawRect(0,0,current,getHeight(),mPaint);

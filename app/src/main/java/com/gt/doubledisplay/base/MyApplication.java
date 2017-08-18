@@ -31,5 +31,4 @@ public class MyApplication extends Application {
         getAppContext().stopService(LoginActivity.portIntent);
         Process.killProcess(Process.myPid());
     }
-
 }

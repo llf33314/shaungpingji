@@ -2,6 +2,7 @@ package com.gt.doubledisplay.web;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
@@ -42,7 +43,17 @@ public class WebViewActivity extends BaseActivity {
             mWebView.setWebViewClient(null);
             mWebView.destroy();
             mWebView = null;*/
+    }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && mGTWebViewFrameLayout.getWebView().canGoBack()) {
+            mGTWebViewFrameLayout.getWebView().goBack();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }
 

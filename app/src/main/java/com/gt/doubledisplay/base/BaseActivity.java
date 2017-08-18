@@ -37,8 +37,6 @@ public  class BaseActivity extends RxAppCompatActivity {
         setSupportActionBar(mToolbar);
     }
 
-
-
     @CallSuper
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
