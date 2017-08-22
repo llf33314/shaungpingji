@@ -71,6 +71,7 @@ public class LoginActivity extends RxAppCompatActivity {
                 Intent intent=new Intent(LoginActivity.this, BluetoothSettingActivity.class);
                 startActivity(intent);
                 break;
+            
             case R.id.btn_login:
               //  PrinterConnectSerivce.printReceiptClicked("100");
                // ESCUtil.printInternal("12025477484","你尚未成为会员","￥128.00","￥50.00","-￥0.00","-￥0.00","-￥0.00","￥178.00");
