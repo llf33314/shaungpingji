@@ -8,11 +8,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 
-/**
- * <p>Description:
- *
- * <p>Created by Devin Sun on 2017/3/28.
- */
+
 
 public final class StringConverterFactory extends Converter.Factory {
 
@@ -27,6 +23,7 @@ public final class StringConverterFactory extends Converter.Factory {
             return null;
         }
         return new StringResponseBodyConverter();
+
     }
 
     @Override

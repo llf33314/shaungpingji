@@ -14,12 +14,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
-/**
- * Description:
- * Company:
- * Email:bjxm2013@163.com
- * Created by Devin Sun on 2017/4/3.
- */
+
 public class DialogTransformer {
 
     //这个对话框、网络加载能否取消  默认能
@@ -43,6 +38,7 @@ public class DialogTransformer {
                     @Override
                     public void accept(@NonNull final Disposable disposable) throws Exception {
                         httpRequestDialog = new HttpRequestDialog();
+                        httpRequestDialog.show();
                         if (cancelable) {
                             httpRequestDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                                 @Override

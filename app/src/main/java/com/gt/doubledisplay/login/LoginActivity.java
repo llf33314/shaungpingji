@@ -103,7 +103,7 @@ public class LoginActivity extends RxAppCompatActivity {
                         .subscribe(new BaseObserver<BaseResponse>() {
                             @Override
                             protected void onSuccess(BaseResponse baseResponse) {
-                                ToastUtil.getInstance().showShort("登录成功"+baseResponse.getError()+baseResponse.getMessage());
+                                ToastUtil.getInstance().showNewShort("登录成功"+baseResponse.getError()+baseResponse.getMessage());
                                 Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
                                 intent.putExtra(GTWebViewFrameLayout.PARAM_MODE,GTWebViewFrameLayout.MODE_DEFAULT);
                                 intent.putExtra(GTWebViewFrameLayout.PARAM_URL,"http://deeptel.com.cn/user/toIndex.do?setType=index");

@@ -6,12 +6,6 @@ import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Description:
- * Company:
- * Email:bjxm2013@163.com
- * Created by Devin Sun on 2017/4/3.
- */
 public class SchedulerTransformer {
 
     public static <T> ObservableTransformer<T, T> transformer() {

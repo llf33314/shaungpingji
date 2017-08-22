@@ -1,10 +1,6 @@
 package com.gt.doubledisplay.http;
 
-/**
- * <p>Description:
- *
- * <p>Created by Devin Sun on 2017/3/25.
- */
+
 
 public class HttpResponseException extends RuntimeException {
 

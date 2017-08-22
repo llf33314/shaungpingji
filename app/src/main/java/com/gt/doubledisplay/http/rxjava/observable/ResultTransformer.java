@@ -11,11 +11,6 @@ import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
-/**
- * <p>Description:
- *
- * <p>Created by Devin Sun on 2017/3/29.
- */
 
 public class ResultTransformer {
 
@@ -26,7 +21,7 @@ public class ResultTransformer {
         return new ObservableTransformer<BaseResponse<T>, T>() {
             @Override
             public ObservableSource<T> apply(Observable<BaseResponse<T>> upstream) {
-                return upstream
+                    return upstream
                         .flatMap(ResultTransformer.<T>flatMap())
                         .compose(SchedulerTransformer.<T>transformer());
             }
@@ -87,6 +82,4 @@ public class ResultTransformer {
             }
         };
     }
-
-
 }

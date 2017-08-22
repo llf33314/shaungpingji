@@ -17,11 +17,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import retrofit2.HttpException;
 
-/**
- * <p>Description:
- * <p>
- * <p>Created by Devin Sun on 2017/3/29.
- */
+
 
 public abstract class BaseObserver<T> implements Observer<T> {
 
@@ -69,6 +65,6 @@ public abstract class BaseObserver<T> implements Observer<T> {
      * 简单提示 服务器返回信息 若需要处理 则重写
      */
     protected void onFailed(HttpResponseException responseException) {
-        ToastUtil.getInstance().showShort(responseException.getMessage());
+        ToastUtil.getInstance().showNewShort(responseException.getMessage());
     }
 }

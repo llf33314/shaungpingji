@@ -10,11 +10,6 @@ import okhttp3.RequestBody;
 import okio.Buffer;
 import retrofit2.Converter;
 
-/**
- * <p>Description:
- *
- * <p>Created by Devin Sun on 2017/3/28.
- */
 
 public final class StringRequestBodyConverter implements Converter<String, RequestBody> {
 

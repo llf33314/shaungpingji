@@ -80,7 +80,7 @@ public class ToastUtil {
             }
         });
     }
-    public  void showShort(final String msg){
+    public  void showNewShort(final String msg){
         handler.post(new Runnable() {
             @Override
             public void run() {

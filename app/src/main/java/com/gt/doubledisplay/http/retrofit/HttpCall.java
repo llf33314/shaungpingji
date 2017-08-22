@@ -14,11 +14,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * <p>Description:
- * <p>
- * <p>Created by Devin Sun on 2017/3/24.
- */
 
 public class HttpCall {
 
