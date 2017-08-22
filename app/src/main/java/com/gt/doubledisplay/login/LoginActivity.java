@@ -50,7 +50,6 @@ public class LoginActivity extends RxAppCompatActivity {
     EditText etAccount;
     @BindView(R.id.login_psd)
     EditText etPsd;
-
     int test=0;
 
     @Override
