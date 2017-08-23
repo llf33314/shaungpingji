@@ -25,13 +25,12 @@ public class WebViewDiffDisplayPresentation extends Presentation {
 
     GTWebViewFrameLayout mGTWebViewFrameLayout;
 
-    private Intent intent;
+    private String mUrl;
 
-    public WebViewDiffDisplayPresentation(Context outerContext, Display display,Intent intent) {
+    public WebViewDiffDisplayPresentation(Context outerContext, Display display,String url) {
         super(outerContext, display);
-        this.intent=intent;
+        this.mUrl=url;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class WebViewDiffDisplayPresentation extends Presentation {
         if (!(this.getContext() instanceof Activity)){
             this.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         }
-        mGTWebViewFrameLayout =new GTWebViewFrameLayout(this.getContext(),intent);
+        mGTWebViewFrameLayout =new GTWebViewFrameLayout(this.getContext(),mUrl);
         setContentView(mGTWebViewFrameLayout);
         FrameLayout.LayoutParams lp= (FrameLayout.LayoutParams) mGTWebViewFrameLayout.getLayoutParams();
         lp.setMargins(0, BarUtils.getStatusBarHeight(this.getContext()),0,BarUtils.getNavigationBarHeight());
@@ -56,13 +55,6 @@ public class WebViewDiffDisplayPresentation extends Presentation {
         super.show();
     }
 
-    @Override
-    public void dismiss() {
-        if (mGTWebViewFrameLayout!=null){
-            mGTWebViewFrameLayout.destroy();
-        }
-        super.dismiss();
-    }
 
     /*  DisplayManager  mDisplayManager;//屏幕管理类
     mDisplayManager = (DisplayManager)this.getContext().getSystemService(Context.DISPLAY_SERVICE);

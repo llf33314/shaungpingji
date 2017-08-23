@@ -95,9 +95,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <CheckBox
+                android:id="@+id/login_cb_psd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="下次自动登录"
+                android:text="记住密码"
                 android:textSize="18sp"
                 />
             <TextView

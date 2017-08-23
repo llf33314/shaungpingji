@@ -12,15 +12,9 @@ import android.view.Display;
 import android.view.View;
 
 import com.gt.doubledisplay.base.BaseActivity;
-import com.gt.doubledisplay.sonic.SonicJavaScriptInterface;
-import com.gt.doubledisplay.sonic.SonicRuntimeImpl;
 import com.gt.doubledisplay.web.GTWebViewFrameLayout;
 import com.gt.doubledisplay.web.WebViewActivity;
 import com.gt.doubledisplay.web.WebViewDiffDisplayPresentation;
-import com.tencent.sonic.sdk.SonicConfig;
-import com.tencent.sonic.sdk.SonicEngine;
-
-import static com.gt.doubledisplay.web.GTWebViewFrameLayout.PERMISSION_REQUEST_CODE_STORAGE;
 
 public class MainActivity extends BaseActivity {
     WebViewDiffDisplayPresentation mp ;
@@ -32,7 +26,6 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                startBrowserActivity(GTWebViewFrameLayout.MODE_SONIC);
 
               /*  Bundle bundle= new Bundle();
                 bundle.putString("url","https://www.baidu.com/");
@@ -61,14 +54,14 @@ public class MainActivity extends BaseActivity {
 
         });
 
-        if (hasPermission()) {
+      /*  if (hasPermission()) {
             init();
         } else {
             requestPermission();
-        }
+        }*/
     }
 
-    private void init() {
+   /* private void init() {
         // init sonic engine
         if (!SonicEngine.isGetInstanceAllowed()) {
             SonicEngine.createInstance(new SonicRuntimeImpl(getApplication()), new SonicConfig.Builder().build());
@@ -111,6 +104,6 @@ public class MainActivity extends BaseActivity {
         intent.putExtra(GTWebViewFrameLayout.PARAM_MODE, mode);
         intent.putExtra(SonicJavaScriptInterface.PARAM_CLICK_TIME, System.currentTimeMillis());
         startActivityForResult(intent, -1);
-    }
+    }*/
 
 }

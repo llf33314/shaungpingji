@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Process;
 
 import com.gt.doubledisplay.login.LoginActivity;
+import com.orhanobut.hawk.Hawk;
 
 
 /**
@@ -18,7 +19,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         applicationContext=getApplicationContext();
-
+        Hawk.init(applicationContext).build();
     }
     public static Context getAppContext(){
         if (applicationContext==null){ //后台挂着 applicationContext被回收
