@@ -9,6 +9,7 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import com.gt.doubledisplay.http.ApiService;
+import com.gt.doubledisplay.http.HttpConfig;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class CookieJarImpl implements CookieJar {
     public synchronized void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
         Log.i("test","saveFromResponse url="+url.toString()+" url.host="+url.host()+"  cookies.size="+cookies.size()+" cookies="+cookies.get(0).toString());
         //清空缓存 否则再登录登录不上 应该与web那边有关
-        if (ApiService.LOGIN_URL.equals(url.toString())){
+        if (HttpConfig.LOGIN_URL.equals(url.toString())){
             cookieManager.removeAllCookie();
             cookieStore.removeAll();
         }

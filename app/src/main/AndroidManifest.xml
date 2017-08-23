@@ -67,6 +67,9 @@
         </service>
         <service android:name="com.gprinter.service.AllService" >
         </service>
+        <service android:name=".http.socket.PrintSocketService" >
+        </service>
+
     </application>
 
 </manifest>

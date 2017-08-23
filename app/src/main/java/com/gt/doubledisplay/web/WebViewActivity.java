@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.gt.doubledisplay.base.BaseActivity;
+import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 
 /**
@@ -47,10 +48,10 @@ public class WebViewActivity extends BaseActivity {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && mGTWebViewFrameLayout.getWebView().canGoBack()) {
             mGTWebViewFrameLayout.getWebView().goBack();
-            return true;
+        }else{
+            ToastUtil.getInstance().showToast("已是最后一页");
         }
-
-        return super.onKeyDown(keyCode, event);
+        return true;
     }
 }
 

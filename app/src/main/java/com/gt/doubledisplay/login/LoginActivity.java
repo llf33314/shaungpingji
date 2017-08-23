@@ -17,6 +17,7 @@ import com.gt.doubledisplay.http.retrofit.HttpCall;
 import com.gt.doubledisplay.http.rxjava.observable.DialogTransformer;
 import com.gt.doubledisplay.http.rxjava.observable.ResultTransformer;
 import com.gt.doubledisplay.http.rxjava.observer.BaseObserver;
+import com.gt.doubledisplay.http.socket.PrintSocketService;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.printer.extraposition.bluetooth.BluetoothSettingActivity;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
@@ -58,6 +59,9 @@ public class LoginActivity extends RxAppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         init();
+
+        Intent intent=new Intent(this,PrintSocketService.class);
+        startService(intent);
     }
 
     @OnClick({R.id.login_forget_psd, R.id.btn_login})
@@ -111,7 +115,7 @@ public class LoginActivity extends RxAppCompatActivity {
 
 
                                 Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
-                                intent.putExtra(GTWebViewFrameLayout.PARAM_URL,"http://deeptel.com.cn/user/toIndex.do?setType=index");
+                                intent.putExtra(GTWebViewFrameLayout.PARAM_URL,"http://canyin.duofriend.com");
                                 startActivity(intent);
                                 test++;
                                 ///每次应该打开首页 如果是登录页面才打开我们登录页面

@@ -22,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.gt.doubledisplay.http.ApiService;
+import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.login.LoginActivity;
 import com.gt.doubledisplay.utils.commonutil.ConvertUtils;
 
@@ -127,7 +128,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
                 //拦截登录url跳转到登录页面
-                if (ApiService.WEB_LOGIN.equals(url)){
+                if (HttpConfig.WEB_LOGIN.equals(url)){
                     Intent intent=new Intent(view.getContext(), LoginActivity.class);
                     view.getContext().startActivity(intent);
                     ((Activity)view.getContext()).finish();

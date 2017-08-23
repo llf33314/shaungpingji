@@ -13,6 +13,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.utils.commonutil.PhoneUtils;
+import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.orhanobut.hawk.Hawk;
 
 import org.json.JSONException;
@@ -29,8 +30,8 @@ import io.socket.emitter.Emitter;
  * Created by jack-lin on 2017/7/24 0024.
  */
 
-public class OrderPushService extends Service {
-    public static final String TAG = "OrderPushService";
+public class PrintSocketService extends Service {
+    public static final String TAG = "PrintSocketService";
     private Socket mSocket;
     private PushBinder binder=new PushBinder();
 
@@ -51,8 +52,6 @@ public class OrderPushService extends Service {
                 connectSocket();
             }
         }).start();
-
-
     }
 
     @Override
@@ -74,9 +73,10 @@ public class OrderPushService extends Service {
         @Override
         public void call(Object... args) {
             Log.d(TAG, "onConnect");
-            String UUID = PhoneUtils.getIMEI();
-            Log.d(TAG, "auth key : " + HttpConfig.SOCKET_ANDROID_AUTH_KEY + UUID);
-            mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH, HttpConfig.SOCKET_ANDROID_AUTH_KEY + UUID);
+           // String UUID = PhoneUtils.getIMEI();
+          //  Log.d(TAG, "auth key : " + HttpConfig.SOCKET_ANDROID_AUTH_KEY + UUID);
+           // mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH, HttpConfig.SOCKET_ANDROID_AUTH_KEY + UUID);
+            mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH_KEY);
             Log.d(TAG, "call: send android auth over");
         }
     };
@@ -101,8 +101,6 @@ public class OrderPushService extends Service {
             }*/
         }
     };
-
-
 
 
     // socket disConnect
@@ -138,7 +136,10 @@ public class OrderPushService extends Service {
      * 初始化socket，并建立连接
      */
     public void connectSocket() {
-
+        if (mSocket==null){
+            ToastUtil.getInstance().showToast("打印机连接服务器异常");
+            return;
+        }
         mSocket.on(Socket.EVENT_CONNECT, onConnect);
         mSocket.on(Socket.EVENT_DISCONNECT, onDisconnect);
         mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);

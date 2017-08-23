@@ -1,6 +1,7 @@
 package com.gt.doubledisplay.http.retrofit;
 
 import com.gt.doubledisplay.base.MyApplication;
+import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.retrofit.converter.string.StringConverterFactory;
 import com.gt.doubledisplay.http.ApiService;
 import com.gt.doubledisplay.web.store.CookieJarImpl;
@@ -39,7 +40,7 @@ public class HttpCall {
                     .build();
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(ApiService.BASE_URL)
+                    .baseUrl(HttpConfig.BASE_URL)
                     .client(okHttpClient)
                     .addConverterFactory(StringConverterFactory.create()) //String 转换
                     .addConverterFactory(GsonConverterFactory.create())
