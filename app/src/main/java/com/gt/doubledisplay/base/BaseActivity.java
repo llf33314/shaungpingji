@@ -11,10 +11,16 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gt.doubledisplay.R;
+import com.gt.doubledisplay.login.LoginActivity;
+import com.gt.doubledisplay.printer.extraposition.bluetooth.BluetoothSettingActivity;
+import com.gt.doubledisplay.utils.commonutil.AppManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
@@ -25,16 +31,32 @@ import butterknife.ButterKnife;
  */
 
 public  class BaseActivity extends RxAppCompatActivity {
-    private Toolbar mToolbar;
+    private RelativeLayout mToolbar;
     private TextView toolBarTitle;
+    private Button btnBlu;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // BarUtils.setStatusBarColor(this,getResources().getColor(R.color.toolbarBg));
         super.setContentView(R.layout.toolbar);
-        mToolbar= (Toolbar) findViewById(R.id.toolbar);
+        init();
+    }
+
+    private void init(){
+        mToolbar= (RelativeLayout) findViewById(R.id.base_toolbar);
         toolBarTitle= (TextView) findViewById(R.id.toolbar_title);
-        setSupportActionBar(mToolbar);
+        btnBlu= (Button) findViewById(R.id.toolbar_blu);
+        AppManager.getInstance().addActivity(this);
+        btnBlu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(BaseActivity.this, BluetoothSettingActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+    public void showBtnBlu(){
+        btnBlu.setVisibility(View.VISIBLE);
     }
 
     @CallSuper

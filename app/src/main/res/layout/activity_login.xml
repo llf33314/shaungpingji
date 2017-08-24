@@ -46,7 +46,6 @@
         android:maxLines="1"
         android:maxLength="20"
         android:inputType="textVisiblePassword"
-        android:text="goodtom"
         />
 
 </LinearLayout>
@@ -82,7 +81,6 @@
                 android:maxLines="1"
                 android:maxLength="20"
                 android:inputType="textPassword"
-                android:text="gt123456"
                 />
 
         </LinearLayout>
@@ -109,6 +107,7 @@
                 android:textColor="@color/forgetPsd"
                 android:textSize="18sp"
                 android:layout_alignParentRight="true"
+                android:visibility="gone"
                 />
 
         </RelativeLayout>

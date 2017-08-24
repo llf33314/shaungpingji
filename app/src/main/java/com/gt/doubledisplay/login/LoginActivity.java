@@ -25,6 +25,7 @@ import com.gt.doubledisplay.http.rxjava.observer.BaseObserver;
 import com.gt.doubledisplay.http.socket.PrintSocketService;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.printer.extraposition.bluetooth.BluetoothSettingActivity;
+import com.gt.doubledisplay.printer.internal.ESCUtil;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.gt.doubledisplay.web.GTWebViewFrameLayout;
 import com.gt.doubledisplay.web.WebViewActivity;
@@ -72,21 +73,22 @@ public class LoginActivity extends RxAppCompatActivity {
         ButterKnife.bind(this);
         init();
 
-        Intent intent=new Intent(this,PrintSocketService.class);
-        startService(intent);
     }
 
     @OnClick({R.id.login_forget_psd, R.id.btn_login})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.login_forget_psd:
-                Intent intent=new Intent(LoginActivity.this, BluetoothSettingActivity.class);
-                startActivity(intent);
+
                 break;
 
             case R.id.btn_login:
-              //  PrinterConnectSerivce.printReceiptClicked("100");
-               // ESCUtil.printInternal("12025477484","你尚未成为会员","￥128.00","￥50.00","-￥0.00","-￥0.00","-￥0.00","￥178.00");
+            /*    Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
+                intent.putExtra(GTWebViewFrameLayout.PARAM_URL,"http://canyin.duofriend.com");
+                startActivity(intent);*/
+
+
+              //  ESCUtil.printInternal("12025477484","你尚未成为会员","￥128.00","￥50.00","-￥0.00","-￥0.00","-￥0.00","￥178.00");
              /*   if (test%2==0){
                     PrinterConnectSerivce.printReceiptClicked("100");
                 }else{
@@ -100,19 +102,12 @@ public class LoginActivity extends RxAppCompatActivity {
                     ToastUtil.getInstance().showToast("账号密码不能为空");
                     return;
                 }
-                /*if (test!=0){
-                    Intent intent2=new Intent(LoginActivity.this, WebViewActivity.class);
-                    intent2.putExtra(GTWebViewFrameLayout.PARAM_MODE,GTWebViewFrameLayout.MODE_DEFAULT);
-                    intent2.putExtra(GTWebViewFrameLayout.PARAM_URL,"http://deeptel.com.cn/user/toIndex.do?setType=index");
-                    startActivity(intent2);
-                    return;
-                }*/
 
                 HttpCall.getApiService()
                         .getSign(account,psd,"double_screen_sign_code_is_ok")
-                        .flatMap(new Function<String, ObservableSource<BaseResponse>>() {
+                        .flatMap(new Function<String, ObservableSource<String>>() {
                             @Override
-                            public ObservableSource<BaseResponse> apply(@NonNull String s) throws Exception {
+                            public ObservableSource<String> apply(@NonNull String s) throws Exception {
                                 Gson gson=new Gson();
                                 LoginSignBean loginSignBean=gson.fromJson(s,LoginSignBean.class);
                                 String data=gson.toJson(loginSignBean.getData());
@@ -120,32 +115,62 @@ public class LoginActivity extends RxAppCompatActivity {
                                 return HttpCall.getApiService().login(account,psd,data);
                             }
                         })
-                        .compose(LoginActivity.this.<BaseResponse>bindToLifecycle())
-                        .compose(ResultTransformer.<BaseResponse>transformerNoData())
-                        .compose(new DialogTransformer().<BaseResponse>transformer())
-                        .subscribe(new BaseObserver<BaseResponse>() {
+                        .compose(LoginActivity.this.<String>bindToLifecycle())
+                        .compose(SchedulerTransformer.<String>transformer())
+                        .compose(new DialogTransformer().<String>transformer())
+                        .subscribe(new Observer<String>() {
                             @Override
-                            protected void onSuccess(BaseResponse baseResponse) {
-                                ToastUtil.getInstance().showNewShort("登录成功");
-                                if (cbPsd.isChecked()){
-                                    Hawk.put(ACCOUNT,account);
-                                    Hawk.put(PSD,psd);
-                                }else{
+                            public void onSubscribe(@NonNull Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(@NonNull String s) {
+                                //这里取数据是否成功
+                                //successCallback({"code":"1","msg":"签名验证错误，请检查签名信息"})
+                                String resultJson=s.substring(s.indexOf("(")+1,s.indexOf(")"));
+                                try {
+                                    JSONObject json=new JSONObject(resultJson);
+                                    switch (json.getInt("code")){
+                                        case 0://登录成功
+                                            ToastUtil.getInstance().showNewShort("登录成功"+s);
+                                            if (cbPsd.isChecked()){
+                                                Hawk.put(ACCOUNT,account);
+                                                Hawk.put(PSD,psd);
+                                            }else{
+                                                Hawk.delete(ACCOUNT);
+                                                Hawk.delete(PSD);
+                                            }
+
+                                            Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
+                                            intent.putExtra(GTWebViewFrameLayout.PARAM_URL,"http://canyin.duofriend.com");
+                                            startActivity(intent);
+                                            break;
+                                        case 1:
+                                            ToastUtil.getInstance().showToast("账号密码验证有误");
+                                            Hawk.delete(ACCOUNT);
+                                            Hawk.delete(PSD);
+                                            break;
+
+                                    }
+                                } catch (JSONException e) {
+                                    ToastUtil.getInstance().showToast("后台数据有误");
                                     Hawk.delete(ACCOUNT);
                                     Hawk.delete(PSD);
+                                    e.printStackTrace();
                                 }
-
-                                Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
-                                intent.putExtra(GTWebViewFrameLayout.PARAM_URL,"http://canyin.duofriend.com");
-                                startActivity(intent);
                                 ///每次应该打开首页 如果是登录页面才打开我们登录页面
                             }
 
                             @Override
-                            protected void onFailed(HttpResponseException responseException) {
-                                super.onFailed(responseException);
+                            public void onError(@NonNull Throwable e) {
                                 Hawk.delete(ACCOUNT);
                                 Hawk.delete(PSD);
+                            }
+
+                            @Override
+                            public void onComplete() {
+
                             }
                         });
 
@@ -172,7 +197,6 @@ public class LoginActivity extends RxAppCompatActivity {
                                 Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
                                 intent.putExtra(GTWebViewFrameLayout.PARAM_URL,"http://canyin.duofriend.com");
                                 startActivity(intent);
-                                test++;
                                 ///每次应该打开首页 如果是登录页面才打开我们登录页面
                             }
 

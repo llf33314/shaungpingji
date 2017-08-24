@@ -59,10 +59,9 @@ public class DuofenJSBridge {
    14：打印机正在连接
    15：打印机没初始化
      */
-    @JavascriptInterface
+    /*@JavascriptInterface
     public int printPaper(String message) {
         return PrinterConnectSerivce.printReceiptClicked(message);
-    }
-
+    }*/
 
 }

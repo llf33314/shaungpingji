@@ -14,7 +14,7 @@ public interface ApiService {
     @FormUrlEncoded
    // @POST("ErpMenus/79B4DE7C/Erplogin.do")
     @POST("https://sz.yifriend.net/ErpMenus/79B4DE7C/Erplogin.do")
-    Observable<BaseResponse> login(@Field("login_name")String account, @Field("password")String psd,@Field("sign")String sign);
+    Observable<String> login(@Field("login_name")String account, @Field("password")String psd,@Field("sign")String sign);
 
     @FormUrlEncoded
     @POST("http://192.168.3.44:8081/doubleScreenMobile/getSign")

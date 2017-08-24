@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.gt.doubledisplay.base.BaseActivity;
+import com.gt.doubledisplay.http.HttpConfig;
+import com.gt.doubledisplay.http.socket.PrintSocketService;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 
@@ -23,9 +25,14 @@ public class WebViewActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mGTWebViewFrameLayout =new GTWebViewFrameLayout(this,getIntent().getStringExtra(GTWebViewFrameLayout.PARAM_URL));
+       // String url=getIntent().getStringExtra(GTWebViewFrameLayout.PARAM_URL);
+        String url= HttpConfig.DUOFRIEND_LOGIN;
+        mGTWebViewFrameLayout =new GTWebViewFrameLayout(this,url);
         setContentView(mGTWebViewFrameLayout);
+        showBtnBlu();
         mGTWebViewFrameLayout.loadUrl();
+        //连接socket  暂时这么写 如果是登录页面就不启动
+
     }
 
     @Override

@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.gt.doubledisplay.http.ApiService;
 import com.gt.doubledisplay.http.HttpConfig;
+import com.gt.doubledisplay.http.socket.PrintSocketService;
 import com.gt.doubledisplay.login.LoginActivity;
 import com.gt.doubledisplay.utils.commonutil.ConvertUtils;
 
@@ -39,7 +40,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
 
     private WebView mWebView;
 
-
+    private Intent socketIntent;
     private static final String USERAGENT="Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36";
     /**
      * 例子里面的框架需要这样写
@@ -128,12 +129,17 @@ public class GTWebViewFrameLayout extends FrameLayout {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
                 //拦截登录url跳转到登录页面
-                if (HttpConfig.WEB_LOGIN.equals(url)){
+                /*if (HttpConfig.WEB_LOGIN.equals(url)){
                     Intent intent=new Intent(view.getContext(), LoginActivity.class);
                     view.getContext().startActivity(intent);
                     ((Activity)view.getContext()).finish();
+                }*/
 
+                if (url!=HttpConfig.DUOFRIEND_LOGIN&&socketIntent==null){//暂时这么写
+                     socketIntent=new Intent(GTWebViewFrameLayout.this.getContext(),PrintSocketService.class);
+                    GTWebViewFrameLayout.this.getContext().startService(socketIntent);
                 }
+
 
                 return null;
             }

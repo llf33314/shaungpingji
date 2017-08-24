@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.gt.doubledisplay.http.HttpConfig;
+import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.utils.commonutil.PhoneUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.orhanobut.hawk.Hawk;
@@ -76,7 +77,7 @@ public class PrintSocketService extends Service {
            // String UUID = PhoneUtils.getIMEI();
           //  Log.d(TAG, "auth key : " + HttpConfig.SOCKET_ANDROID_AUTH_KEY + UUID);
            // mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH, HttpConfig.SOCKET_ANDROID_AUTH_KEY + UUID);
-            mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH_KEY);
+            mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH,HttpConfig.SOCKET_ANDROID_AUTH_KEY);
             Log.d(TAG, "call: send android auth over");
         }
     };
@@ -85,6 +86,7 @@ public class PrintSocketService extends Service {
     private Emitter.Listener socketEvent = new Emitter.Listener() {
         @Override
         public void call(Object... objects) {
+           // PrinterConnectSerivce.printReceiptClicked();
             Log.d(TAG, "socketEvent");
             JSONObject data = (JSONObject) objects[0];
             String retData = null;

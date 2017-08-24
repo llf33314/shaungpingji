@@ -267,7 +267,8 @@ public class PrinterConnectSerivce extends Service {
 
     private static void showHintNotConnectDialog(){
         if (hintNotConnectDialog==null){
-            hintNotConnectDialog=new MoreFunctionDialog(MyApplication.getAppContext(),"打印机未连接请连接后再打印", R.style.HttpRequestDialogStyle);
+            //0824 客户急着要
+            hintNotConnectDialog=new MoreFunctionDialog(MyApplication.getAppContext(),"不干胶打印机未连接请连接后再打印", R.style.HttpRequestDialogStyle);
             hintNotConnectDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         }
         hintNotConnectDialog.show();
@@ -289,10 +290,10 @@ public class PrinterConnectSerivce extends Service {
         return false;
     }
 
-        /**
-     * 打印调用的方法
+    /**
+     * 打印不干胶调用的方法
      */
-    public static int  printReceiptClicked(String money) {
+    public static int  printReceiptClicked(String number,String name,String size,String remark) {
 
         if (mGpService==null){
             showHintNotConnectDialog();
@@ -317,9 +318,10 @@ public class PrinterConnectSerivce extends Service {
             //这里很关键   打印机类型是ESC 还是TSC
             int type = mGpService.getPrinterCommandType(mPrinterIndex);
             if (type == GpCom.ESC_COMMAND) {
-              return sendESCReceipt(money);
+              //return sendESCReceipt("");
+              return 0;
             }else if (type == GpCom.LABEL_COMMAND){ //TSC
-                return sendLabelReceipt();
+                return sendLabelReceipt(number,name,size,remark);
             }
         } catch (RemoteException e1) {
             e1.printStackTrace();
@@ -337,8 +339,8 @@ public class PrinterConnectSerivce extends Service {
     }
 
 
-    private static int sendLabelReceipt() {
-        LabelCommand tsc=PrintESCOrTSCUtil.getTscCommand();
+    private static int sendLabelReceipt(String number,String name,String size,String remark) {
+        LabelCommand tsc=PrintESCOrTSCUtil.getTscCommand(number,name,size,remark);
 
         Vector<Byte> datas = tsc.getCommand(); // 发送数据
 
