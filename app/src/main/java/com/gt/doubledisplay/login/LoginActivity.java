@@ -4,18 +4,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.gt.doubledisplay.R;
+import com.gt.doubledisplay.bean.LoginSignBean;
+import com.gt.doubledisplay.http.ApiService;
 import com.gt.doubledisplay.http.BaseResponse;
 import com.gt.doubledisplay.http.HttpResponseException;
 import com.gt.doubledisplay.http.retrofit.HttpCall;
 import com.gt.doubledisplay.http.rxjava.observable.DialogTransformer;
 import com.gt.doubledisplay.http.rxjava.observable.ResultTransformer;
+import com.gt.doubledisplay.http.rxjava.observable.SchedulerTransformer;
 import com.gt.doubledisplay.http.rxjava.observer.BaseObserver;
 import com.gt.doubledisplay.http.socket.PrintSocketService;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
@@ -26,9 +31,17 @@ import com.gt.doubledisplay.web.WebViewActivity;
 import com.orhanobut.hawk.Hawk;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 
 /**
  * Created by wzb on 2017/8/2 0002.
@@ -48,7 +61,6 @@ public class LoginActivity extends RxAppCompatActivity {
     EditText etPsd;
     @BindView(R.id.login_cb_psd)
     CheckBox cbPsd;
-    int test=0;
 
     private static final String ACCOUNT="login_account";
     private static final String PSD="login_psd";
@@ -95,7 +107,50 @@ public class LoginActivity extends RxAppCompatActivity {
                     startActivity(intent2);
                     return;
                 }*/
-                HttpCall
+
+                HttpCall.getApiService()
+                        .getSign(account,psd,"double_screen_sign_code_is_ok")
+                        .flatMap(new Function<String, ObservableSource<BaseResponse>>() {
+                            @Override
+                            public ObservableSource<BaseResponse> apply(@NonNull String s) throws Exception {
+                                Gson gson=new Gson();
+                                LoginSignBean loginSignBean=gson.fromJson(s,LoginSignBean.class);
+                                String data=gson.toJson(loginSignBean.getData());
+                                Log.d("LoginActivity",data);
+                                return HttpCall.getApiService().login(account,psd,data);
+                            }
+                        })
+                        .compose(LoginActivity.this.<BaseResponse>bindToLifecycle())
+                        .compose(ResultTransformer.<BaseResponse>transformerNoData())
+                        .compose(new DialogTransformer().<BaseResponse>transformer())
+                        .subscribe(new BaseObserver<BaseResponse>() {
+                            @Override
+                            protected void onSuccess(BaseResponse baseResponse) {
+                                ToastUtil.getInstance().showNewShort("登录成功");
+                                if (cbPsd.isChecked()){
+                                    Hawk.put(ACCOUNT,account);
+                                    Hawk.put(PSD,psd);
+                                }else{
+                                    Hawk.delete(ACCOUNT);
+                                    Hawk.delete(PSD);
+                                }
+
+                                Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
+                                intent.putExtra(GTWebViewFrameLayout.PARAM_URL,"http://canyin.duofriend.com");
+                                startActivity(intent);
+                                ///每次应该打开首页 如果是登录页面才打开我们登录页面
+                            }
+
+                            @Override
+                            protected void onFailed(HttpResponseException responseException) {
+                                super.onFailed(responseException);
+                                Hawk.delete(ACCOUNT);
+                                Hawk.delete(PSD);
+                            }
+                        });
+
+
+             /*   HttpCall
                         .getApiService()
                         .login(account,psd)
                         .compose(LoginActivity.this.<BaseResponse>bindToLifecycle())
@@ -127,7 +182,7 @@ public class LoginActivity extends RxAppCompatActivity {
                                 Hawk.delete(ACCOUNT);
                                 Hawk.delete(PSD);
                             }
-                        });
+                        });*/
                 break;
         }
     }
