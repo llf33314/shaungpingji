@@ -3,5 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="update_later">稍后更新</string>
     <string name="update_immediately">立即更新</string>
+    <string name="text">{"code":0,"data":{"fansCurrency_deduction":1,"member_deduction":0,"order_time":"2017-07-05 09:32:36","print_type":1,"shop_name":"广东谷通科技","pay_money":0.01,"pay_time":"2017-08-25 14:36:19","result":1,"order_code":"DD1499218356702","shop_adress":"广东省深圳市南山区兰光科技园102","cashier":"","pay_type":1,"consumption_money":0.01,"menus":[{"menu_no":"01","money":0.01,"norms":"","num":1,"name":"aa","commnt":""}],"shop_phone":"0755236","integral_deduction":1}}</string>
 
 </resources>

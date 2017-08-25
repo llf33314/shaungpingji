@@ -11,9 +11,13 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.gt.doubledisplay.base.MyApplication;
+import com.gt.doubledisplay.bean.TscOrderPrintBean;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.retrofit.HttpCall;
 import com.gt.doubledisplay.http.rxjava.observable.ResultTransformer;
+import com.gt.doubledisplay.http.rxjava.observable.SchedulerTransformer;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.utils.commonutil.PhoneUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
@@ -23,10 +27,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+
+import static com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce.PRINTER_NOT_INTI;
 
 /**
  * Description:
@@ -75,12 +85,11 @@ public class PrintSocketService extends Service {
     private Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            Log.d(TAG, "onConnect");
            // String UUID = PhoneUtils.getIMEI();
           //  Log.d(TAG, "auth key : " + HttpConfig.SOCKET_ANDROID_AUTH_KEY + UUID);
            // mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH, HttpConfig.SOCKET_ANDROID_AUTH_KEY + UUID);
-            mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH,HttpConfig.SOCKET_ANDROID_AUTH_KEY);
-            Log.d(TAG, "call: send android auth over");
+            mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH,HttpConfig.SOCKET_ANDROID_AUTH_KEY+ MyApplication.USER_ID);
+            Log.d(TAG, "onConnect"+HttpConfig.SOCKET_ANDROID_AUTH_KEY+ MyApplication.USER_ID);
         }
     };
 
@@ -94,10 +103,31 @@ public class PrintSocketService extends Service {
             try {
                 JSONObject jsonResult=new JSONObject(json);
                 String orderId=jsonResult.getString("message");
-               /* HttpCall.getApiService()
+                HttpCall.getApiService()
                         .getPrintTscOrder(orderId)
-                        .compose(ResultTransformer.<String>transformerNoData())
-*/
+                        .compose(SchedulerTransformer.<String>transformer())
+                        .subscribe(new Observer<String>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(@NonNull String s) {
+                                print(s);
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -106,6 +136,34 @@ public class PrintSocketService extends Service {
         }
     };
 
+    public static void print(String s){
+        JSONObject json= null;
+        try {
+            json = new JSONObject(s);
+            String data=json.getString("data");
+            Gson gson=new Gson();
+            TscOrderPrintBean bean=gson.fromJson(data,TscOrderPrintBean.class);
+            List<TscOrderPrintBean.Menus> menus=bean.getMenus();
+            if (menus!=null&&menus.size()>0){
+                for (TscOrderPrintBean.Menus m:menus){
+                    String size=m.getNorms()+" x"+m.getNum();
+                    int res=PrinterConnectSerivce.printReceiptClicked(m.getMenu_no(),m.getName(),size,m.getCommnt());
+
+                    if (res==PRINTER_NOT_INTI){//打印机未初始化
+                        break;
+                    }
+                    if (res==-2){
+                        ToastUtil.getInstance().showToast("打印机非不干胶类型，请连接正确打印机");
+                        break;
+                    }
+                }
+            }
+
+        } catch (JSONException e) {
+            //后面处理
+            e.printStackTrace();
+        }
+    }
 
     // socket disConnect
     private Emitter.Listener onDisconnect = new Emitter.Listener() {

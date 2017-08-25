@@ -319,7 +319,7 @@ public class PrinterConnectSerivce extends Service {
             int type = mGpService.getPrinterCommandType(mPrinterIndex);
             if (type == GpCom.ESC_COMMAND) {
               //return sendESCReceipt("");
-              return 0;
+              return -2;
             }else if (type == GpCom.LABEL_COMMAND){ //TSC
                 return sendLabelReceipt(number,name,size,remark);
             }

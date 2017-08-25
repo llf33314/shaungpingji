@@ -8,6 +8,7 @@ import com.gt.doubledisplay.login.LoginActivity;
 import com.orhanobut.hawk.Hawk;
 
 
+
 /**
  * Created by wzb on 2017/7/11 0011.
  */
@@ -15,6 +16,7 @@ import com.orhanobut.hawk.Hawk;
 public class MyApplication extends Application {
 
     private static Context applicationContext;
+    public static String USER_ID="";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -29,7 +31,7 @@ public class MyApplication extends Application {
     }
 
     public static void appExit(){
-        getAppContext().stopService(LoginActivity.portIntent);
+        //getAppContext().stopService(portIntent);
         Process.killProcess(Process.myPid());
     }
 }

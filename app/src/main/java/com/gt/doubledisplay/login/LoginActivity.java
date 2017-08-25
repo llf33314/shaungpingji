@@ -13,9 +13,11 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.gt.doubledisplay.R;
+import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.bean.LoginSignBean;
 import com.gt.doubledisplay.http.ApiService;
 import com.gt.doubledisplay.http.BaseResponse;
+import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.HttpResponseException;
 import com.gt.doubledisplay.http.retrofit.HttpCall;
 import com.gt.doubledisplay.http.rxjava.observable.DialogTransformer;
@@ -51,8 +53,7 @@ import io.reactivex.functions.Function;
 
 public class LoginActivity extends RxAppCompatActivity {
 
-    //打印机连接
-    public static Intent portIntent;
+
     @BindView(R.id.login_forget_psd)
     TextView loginForgetPsd;
     @BindView(R.id.btn_login)
@@ -66,7 +67,8 @@ public class LoginActivity extends RxAppCompatActivity {
 
     private static final String ACCOUNT="login_account";
     private static final String PSD="login_psd";
-
+    //打印机连接
+    public static Intent portIntent;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +106,7 @@ public class LoginActivity extends RxAppCompatActivity {
                     return;
                 }
 
-                HttpCall.getApiService()
+              /*  HttpCall.getApiService()
                         .getSign(account,psd,"double_screen_sign_code_is_ok")
                         .flatMap(new Function<String, ObservableSource<String>>() {
                             @Override
@@ -115,7 +117,8 @@ public class LoginActivity extends RxAppCompatActivity {
                                 Log.d("LoginActivity",data);
                                 return HttpCall.getApiService().login(account,psd,data);
                             }
-                        })
+                        })*/
+                HttpCall.getApiService().login(account,psd)
                         .compose(LoginActivity.this.<String>bindToLifecycle())
                         .compose(SchedulerTransformer.<String>transformer())
                         .compose(new DialogTransformer().<String>transformer())
@@ -129,12 +132,18 @@ public class LoginActivity extends RxAppCompatActivity {
                             public void onNext(@NonNull String s) {
                                 //这里取数据是否成功
                                 //successCallback({"code":"1","msg":"签名验证错误，请检查签名信息"})
-                                String resultJson=s.substring(s.indexOf("(")+1,s.indexOf(")"));
+                                //{"code":0,"data":{"UserId":42,"style":1,"message":"登录成功","error":"0"}}
+
                                 try {
-                                    JSONObject json=new JSONObject(resultJson);
+                                    JSONObject json=new JSONObject(s);
+
                                     switch (json.getInt("code")){
                                         case 0://登录成功
-                                            ToastUtil.getInstance().showNewShort("登录成功"+s);
+                                            ToastUtil.getInstance().showNewShort("登录成功");
+
+                                            String userId=json.getJSONObject("data").getString("UserId");
+                                            MyApplication.USER_ID=userId;
+
                                             if (cbPsd.isChecked()){
                                                 Hawk.put(ACCOUNT,account);
                                                 Hawk.put(PSD,psd);
@@ -144,7 +153,7 @@ public class LoginActivity extends RxAppCompatActivity {
                                             }
 
                                             Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
-                                            intent.putExtra(GTWebViewFrameLayout.PARAM_URL,"http://canyin.duofriend.com");
+                                            intent.putExtra(GTWebViewFrameLayout.PARAM_URL, HttpConfig.DUOFRIEND_LOGIN);
                                             startActivity(intent);
                                             break;
                                         case 1:
@@ -213,8 +222,7 @@ public class LoginActivity extends RxAppCompatActivity {
     }
     private void init() {
 
-        portIntent = new Intent(this, PrinterConnectSerivce.class);
-        startService(portIntent);
+
 
         String account= Hawk.get(ACCOUNT,"");
         String psd=Hawk.get(PSD,"");
@@ -224,7 +232,8 @@ public class LoginActivity extends RxAppCompatActivity {
         if (!TextUtils.isEmpty(psd)){
             etPsd.setText(psd);
         }
-
+        portIntent = new Intent(this, PrinterConnectSerivce.class);
+        startService(portIntent);
 
     }
 

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.base.BaseActivity;
 import com.gt.doubledisplay.base.OnRecyclerViewItemClickListener;
+import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.BluetoothUtil;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
@@ -150,6 +151,10 @@ public class BluetoothSettingActivity extends BaseActivity {
         swBluetooth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+               /* PrinterConnectSerivce.printReceiptClicked("aaa","aaaaaa","aaaa","aaa");
+                if (true){
+                    return;
+                }*/
                 if (isChecked){
                     if (!mBluetoothAdapter.isEnabled()){
                         mBluetoothAdapter.enable();
@@ -381,6 +386,7 @@ public class BluetoothSettingActivity extends BaseActivity {
     }
     @OnClick(R.id.btn_scan_bluetooth)
     public void onViewClicked(View v) {
+
         if (!mBluetoothAdapter.isEnabled()){
             ToastUtil.getInstance().showToast("请开启蓝牙后再扫描");
             return;
