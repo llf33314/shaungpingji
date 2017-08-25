@@ -12,6 +12,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.gt.doubledisplay.http.HttpConfig;
+import com.gt.doubledisplay.http.retrofit.HttpCall;
+import com.gt.doubledisplay.http.rxjava.observable.ResultTransformer;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.utils.commonutil.PhoneUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
@@ -86,21 +88,21 @@ public class PrintSocketService extends Service {
     private Emitter.Listener socketEvent = new Emitter.Listener() {
         @Override
         public void call(Object... objects) {
-           // PrinterConnectSerivce.printReceiptClicked();
-            Log.d(TAG, "socketEvent");
-            JSONObject data = (JSONObject) objects[0];
-            String retData = null;
+            Log.d(TAG, "socketEvent:"+objects[0].toString());
+            String json=objects[0].toString();
+            Log.d(TAG, "socketData:"+json);
             try {
-                retData = data.get("message").toString();
+                JSONObject jsonResult=new JSONObject(json);
+                String orderId=jsonResult.getString("message");
+               /* HttpCall.getApiService()
+                        .getPrintTscOrder(orderId)
+                        .compose(ResultTransformer.<String>transformerNoData())
+*/
+
             } catch (JSONException e) {
                 e.printStackTrace();
-                retData = "";
             }
-           // OrderBean orderBean= new Gson().fromJson(retData,OrderBean.class);
 
-          /*  if (orderBean!=null){
-
-            }*/
         }
     };
 

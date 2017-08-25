@@ -19,4 +19,8 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("http://192.168.3.44:8081/doubleScreenMobile/getSign")
     Observable<String> getSign(@Field("login_name")String account, @Field("password")String psd,@Field("signCode") String signCode);
+
+    @FormUrlEncoded
+    @POST("http://192.168.3.44:8081/doubleScreenMobile/redisKey")
+    Observable<String> getPrintTscOrder(@Field("redis_key")String orderId);
 }

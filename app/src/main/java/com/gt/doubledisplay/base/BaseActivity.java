@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.login.LoginActivity;
 import com.gt.doubledisplay.printer.extraposition.bluetooth.BluetoothSettingActivity;
+import com.gt.doubledisplay.setting.SettingActivity;
 import com.gt.doubledisplay.utils.commonutil.AppManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
@@ -33,7 +34,7 @@ import butterknife.ButterKnife;
 public  class BaseActivity extends RxAppCompatActivity {
     private RelativeLayout mToolbar;
     private TextView toolBarTitle;
-    private Button btnBlu;
+    private Button btnSettting;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,18 +46,18 @@ public  class BaseActivity extends RxAppCompatActivity {
     private void init(){
         mToolbar= (RelativeLayout) findViewById(R.id.base_toolbar);
         toolBarTitle= (TextView) findViewById(R.id.toolbar_title);
-        btnBlu= (Button) findViewById(R.id.toolbar_blu);
+        btnSettting= (Button) findViewById(R.id.toolbar_blu);
         AppManager.getInstance().addActivity(this);
-        btnBlu.setOnClickListener(new View.OnClickListener() {
+        btnSettting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(BaseActivity.this, BluetoothSettingActivity.class);
+                Intent intent=new Intent(BaseActivity.this, SettingActivity.class);
                 startActivity(intent);
             }
         });
     }
     public void showBtnBlu(){
-        btnBlu.setVisibility(View.VISIBLE);
+        btnSettting.setVisibility(View.VISIBLE);
     }
 
     @CallSuper
