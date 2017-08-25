@@ -2,12 +2,16 @@ package com.gt.doubledisplay.setting;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.base.BaseActivity;
 import com.gt.doubledisplay.printer.extraposition.bluetooth.BluetoothSettingActivity;
+import com.gt.doubledisplay.update.OnTaskFinishListener;
+import com.gt.doubledisplay.update.UpdateManager;
+import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -17,6 +21,8 @@ import butterknife.OnClick;
  */
 
 public class SettingActivity extends BaseActivity {
+    private long clickTime;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +38,22 @@ public class SettingActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.check_update:
+                checkUpdate();
                 break;
         }
+    }
+    private void checkUpdate(){
+        if (SystemClock.uptimeMillis()-clickTime<1500)return;
+        clickTime= SystemClock.uptimeMillis();
+        UpdateManager updateManager=new UpdateManager(this, "DoubleScreen");
+        updateManager.requestUpdate();
+        updateManager.setOnTaskFinishListener(new OnTaskFinishListener() {
+            @Override
+            public void onTaskResult(boolean result) {
+                if (!result){
+                    ToastUtil.getInstance().showToast("当前已是最新版本");
+                }
+            }
+        });
     }
 }
