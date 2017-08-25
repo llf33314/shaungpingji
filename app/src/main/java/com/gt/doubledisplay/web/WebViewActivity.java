@@ -9,6 +9,7 @@ import android.webkit.WebView;
 import com.gt.doubledisplay.base.BaseActivity;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.socket.PrintSocketService;
+import com.gt.doubledisplay.update.UpdateManager;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 
@@ -32,7 +33,8 @@ public class WebViewActivity extends BaseActivity {
         showBtnBlu();
         mGTWebViewFrameLayout.loadUrl();
         //连接socket  暂时这么写 如果是登录页面就不启动
-
+        UpdateManager updateManager=new UpdateManager(this,"DoubleScreen");
+        updateManager.requestUpdate();
     }
 
     @Override

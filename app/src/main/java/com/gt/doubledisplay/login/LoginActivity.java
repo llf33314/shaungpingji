@@ -26,6 +26,7 @@ import com.gt.doubledisplay.http.socket.PrintSocketService;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.printer.extraposition.bluetooth.BluetoothSettingActivity;
 import com.gt.doubledisplay.printer.internal.ESCUtil;
+import com.gt.doubledisplay.update.UpdateManager;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.gt.doubledisplay.web.GTWebViewFrameLayout;
 import com.gt.doubledisplay.web.WebViewActivity;
@@ -223,6 +224,8 @@ public class LoginActivity extends RxAppCompatActivity {
         if (!TextUtils.isEmpty(psd)){
             etPsd.setText(psd);
         }
+
+
     }
 
 }
