@@ -8,6 +8,7 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
+import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 
 
@@ -38,6 +39,13 @@ public class DuofenJSBridge {
             }
         });
     }
+
+    @JavascriptInterface
+    public String[] getDeviceInfo() {
+        return new String []{MyApplication.USER_ID,MyApplication.DEVICE_ID};
+    }
+
+
 
   /**
      * web打印接口

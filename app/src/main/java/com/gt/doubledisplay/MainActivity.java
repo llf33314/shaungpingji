@@ -42,6 +42,9 @@ public class MainActivity extends BaseActivity {
                 intent.putExtra(GTWebViewFrameLayout.PARAM_MODE, GTWebViewFrameLayout.MODE_SONIC);
                 intent.putExtra(SonicJavaScriptInterface.PARAM_CLICK_TIME, System.currentTimeMillis());
 
+                DisplayManager mDisplayManager;//屏幕管理类
+                mDisplayManager = (DisplayManager)MainActivity.this.getSystemService(Context.DISPLAY_SERVICE);
+                Display[] displays =mDisplayManager.getDisplays();
                 if(mp==null){
                      mp= new WebViewDiffDisplayPresentation(MainActivity.this,displays[0],intent);
                 }

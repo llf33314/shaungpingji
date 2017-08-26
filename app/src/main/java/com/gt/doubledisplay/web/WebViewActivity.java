@@ -2,16 +2,22 @@ package com.gt.doubledisplay.web;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.gt.doubledisplay.base.BaseActivity;
+import com.gt.doubledisplay.bean.CallWebViewJS;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.socket.PrintSocketService;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.update.UpdateManager;
+import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
+
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -34,6 +40,14 @@ public class WebViewActivity extends BaseActivity {
         setContentView(mGTWebViewFrameLayout);
         showBtnBlu();
         mGTWebViewFrameLayout.loadUrl();
+
+        RxBus.get().toObservable(CallWebViewJS.class).subscribe(new Consumer<CallWebViewJS>() {
+            @Override
+            public void accept(@NonNull CallWebViewJS callWebViewJS) throws Exception {
+                mGTWebViewFrameLayout.getWebView().loadUrl("javascript:test()");
+                Log.d("WebViewActivity","javascript:test()");
+            }
+        });
 
         //连接socket  暂时这么写 如果是登录页面就不启动
         UpdateManager updateManager=new UpdateManager(this,"DoubleScreen");

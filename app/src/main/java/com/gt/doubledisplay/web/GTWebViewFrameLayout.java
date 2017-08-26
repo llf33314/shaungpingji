@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.ConsoleMessage;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -139,8 +141,6 @@ public class GTWebViewFrameLayout extends FrameLayout {
                      socketIntent=new Intent(GTWebViewFrameLayout.this.getContext(),PrintSocketService.class);
                     GTWebViewFrameLayout.this.getContext().startService(socketIntent);
                 }
-
-
                 return null;
             }
         };
@@ -160,27 +160,33 @@ public class GTWebViewFrameLayout extends FrameLayout {
                 super.onProgressChanged(view, newProgress);
             }
 
-            @Override
+           /* @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-
+*//*
                 builder.setTitle("温馨提示")
                         .setMessage(message)
                         .setPositiveButton("确定", null);
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
-                result.confirm();//  因为没有绑定事件，需要强行confirm,否则页面会变黑显示不了内容。
+                result.confirm();//  因为没有绑定事件，需要强行confirm,否则页面会变黑显示不了内容。*//*
                 return true;// 不需要绑定按键事件
-            }
+            }*/
 
             //=========多窗口的问题==========================================================
-            @Override
+            /*@Override
             public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
                 WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
                 transport.setWebView(view);
                 resultMsg.sendToTarget();
                 return true;
+            }*/
+
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+                //Log.d("GTWebViewFrameLayout",consoleMessage.message());
+                return super.onConsoleMessage(consoleMessage);
             }
 
         };
@@ -188,6 +194,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
 
     public void loadUrl(){
             mWebView.loadUrl(mUrl);
+            //mWebView.loadUrl("file:///android_asset/dist/views/Slide/list.html");
     }
 
     public WebView getWebView(){

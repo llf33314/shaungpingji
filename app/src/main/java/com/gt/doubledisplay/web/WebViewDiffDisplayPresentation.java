@@ -9,9 +9,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
+import com.gt.doubledisplay.R;
+import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.utils.commonutil.BarUtils;
 import com.gt.doubledisplay.utils.commonutil.ScreenUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
@@ -36,22 +40,29 @@ public class WebViewDiffDisplayPresentation extends Presentation {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!(this.getContext() instanceof Activity)){
-            this.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        }
-        mGTWebViewFrameLayout =new GTWebViewFrameLayout(this.getContext(),mUrl);
+        this.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+
+        ImageView iv=new ImageView(MyApplication.getAppContext());
+        iv.setImageResource(R.drawable.bg);
+        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        setContentView(iv);
+        iv.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+      // iv.setLayoutParams( );
+
+        //暂时屏蔽 08-26
+        /*mGTWebViewFrameLayout =new GTWebViewFrameLayout(this.getContext(),mUrl);
         setContentView(mGTWebViewFrameLayout);
         FrameLayout.LayoutParams lp= (FrameLayout.LayoutParams) mGTWebViewFrameLayout.getLayoutParams();
         lp.setMargins(0, BarUtils.getStatusBarHeight(this.getContext()),0,BarUtils.getNavigationBarHeight());
         mGTWebViewFrameLayout.setLayoutParams(lp);
 
-        mGTWebViewFrameLayout.loadUrl();
+        mGTWebViewFrameLayout.loadUrl();*/
     }
 
     public void show(){
-        if (mGTWebViewFrameLayout !=null){//已经初始化了  第一次初始化在onCreate load
+        /*if (mGTWebViewFrameLayout !=null){//已经初始化了  第一次初始化在onCreate load
             mGTWebViewFrameLayout.loadUrl();
-        }
+        }*/
         super.show();
     }
 

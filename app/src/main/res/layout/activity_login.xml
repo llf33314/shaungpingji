@@ -81,6 +81,7 @@
                 android:maxLines="1"
                 android:maxLength="20"
                 android:inputType="textPassword"
+                android:imeOptions="actionGo"
                 />
 
         </LinearLayout>

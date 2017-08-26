@@ -1,11 +1,17 @@
 package com.gt.doubledisplay.login;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.display.DisplayManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -32,6 +38,7 @@ import com.gt.doubledisplay.update.UpdateManager;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.gt.doubledisplay.web.GTWebViewFrameLayout;
 import com.gt.doubledisplay.web.WebViewActivity;
+import com.gt.doubledisplay.web.WebViewDiffDisplayPresentation;
 import com.orhanobut.hawk.Hawk;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
@@ -54,6 +61,7 @@ import io.reactivex.functions.Function;
 public class LoginActivity extends RxAppCompatActivity {
 
 
+
     @BindView(R.id.login_forget_psd)
     TextView loginForgetPsd;
     @BindView(R.id.btn_login)
@@ -65,21 +73,25 @@ public class LoginActivity extends RxAppCompatActivity {
     @BindView(R.id.login_cb_psd)
     CheckBox cbPsd;
 
+
     private static final String ACCOUNT="login_account";
     private static final String PSD="login_psd";
     //打印机连接
     public static Intent portIntent;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         init();
-
     }
+
+
 
     @OnClick({R.id.login_forget_psd, R.id.btn_login})
     public void onViewClicked(View view) {
+
         switch (view.getId()) {
             case R.id.login_forget_psd:
 
@@ -133,15 +145,15 @@ public class LoginActivity extends RxAppCompatActivity {
                                 //这里取数据是否成功
                                 //successCallback({"code":"1","msg":"签名验证错误，请检查签名信息"})
                                 //{"code":0,"data":{"UserId":42,"style":1,"message":"登录成功","error":"0"}}
+                               // {"code":0,"data":{"message":"登录成功","error":"0","style":1,"UserId":3512}}
+                               // {"code":0,"data":{"message":"用户名不存在","error":"2"}}
 
                                 try {
                                     JSONObject json=new JSONObject(s);
-
-                                    switch (json.getInt("code")){
-                                        case 0://登录成功
-                                            ToastUtil.getInstance().showNewShort("登录成功");
-
-                                            String userId=json.getJSONObject("data").getString("UserId");
+                                    json=json.getJSONObject("data");
+                                    switch (json.getInt("error")){
+                                        case 0://请求后台正常
+                                            String userId=json.getString("UserId");
                                             MyApplication.USER_ID=userId;
 
                                             if (cbPsd.isChecked()){
@@ -154,10 +166,12 @@ public class LoginActivity extends RxAppCompatActivity {
 
                                             Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
                                             intent.putExtra(GTWebViewFrameLayout.PARAM_URL, HttpConfig.DUOFRIEND_LOGIN);
+                                            ToastUtil.getInstance().showNewShort("登录成功");
                                             startActivity(intent);
+                                            finish();
                                             break;
-                                        case 1:
-                                            ToastUtil.getInstance().showToast("账号密码验证有误");
+                                        case 2:
+                                            ToastUtil.getInstance().showToast(json.getString("message"));
                                             Hawk.delete(ACCOUNT);
                                             Hawk.delete(PSD);
                                             break;
@@ -222,7 +236,22 @@ public class LoginActivity extends RxAppCompatActivity {
     }
     private void init() {
 
+        etPsd.setOnEditorActionListener(new EditText.OnEditorActionListener() {
 
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                    btnLogin.performClick();
+
+                    return true;
+                }
+                return false;
+            }
+
+        });
 
         String account= Hawk.get(ACCOUNT,"");
         String psd=Hawk.get(PSD,"");
@@ -234,7 +263,6 @@ public class LoginActivity extends RxAppCompatActivity {
         }
         portIntent = new Intent(this, PrinterConnectSerivce.class);
         startService(portIntent);
-
     }
 
 }

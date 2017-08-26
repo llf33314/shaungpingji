@@ -221,7 +221,9 @@ public class UpdateManager {
                 }
             });
         }
-        askUpdateDialog.show();
+        if (!askUpdateDialog.isShowing()){
+            askUpdateDialog.show();
+        }
     }
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override

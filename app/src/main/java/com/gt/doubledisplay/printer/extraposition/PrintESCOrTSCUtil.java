@@ -58,7 +58,7 @@ public class PrintESCOrTSCUtil {
 
         if (name.length()<=6){//中文的小于等于6 则字体变大打印一行
             tsc.addText(LEFT,LEFT , LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_2, LabelCommand.FONTMUL.MUL_2,
-                    number);
+                    number==null?"":number);
             tsc.addText(LEFT,75, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_2, LabelCommand.FONTMUL.MUL_2,
                     name);
             tsc.addText(LEFT, 140, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
@@ -71,9 +71,16 @@ public class PrintESCOrTSCUtil {
         }else{
 
             String oneLine=name.substring(0,6);
-            String twoLine=name.substring(6,12);//最多只能打12个字
+            String twoLine;
+            if (name.length(
+
+            )>=12){
+                twoLine=name.substring(6,12);//最多只能打12个字
+            }else{
+                twoLine=name.substring(6,name.length());//最多只能打12个字
+            }
             tsc.addText(LEFT,LEFT , LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_2, LabelCommand.FONTMUL.MUL_2,
-                    number);
+                    number==null?"":number);
             tsc.addText(LEFT,70, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_2, LabelCommand.FONTMUL.MUL_2,
                     oneLine);
             tsc.addText(LEFT,125, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_2, LabelCommand.FONTMUL.MUL_2,

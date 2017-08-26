@@ -89,7 +89,7 @@ public class PrintSocketService extends Service {
           //  Log.d(TAG, "auth key : " + HttpConfig.SOCKET_ANDROID_AUTH_KEY + UUID);
            // mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH, HttpConfig.SOCKET_ANDROID_AUTH_KEY + UUID);
             mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH,HttpConfig.SOCKET_ANDROID_AUTH_KEY+ MyApplication.USER_ID);
-            Log.d(TAG, "onConnect"+HttpConfig.SOCKET_ANDROID_AUTH_KEY+ MyApplication.USER_ID);
+            Log.d(TAG, "onConnect:"+HttpConfig.SOCKET_ANDROID_AUTH_KEY+ MyApplication.USER_ID);
         }
     };
 
@@ -97,11 +97,11 @@ public class PrintSocketService extends Service {
     private Emitter.Listener socketEvent = new Emitter.Listener() {
         @Override
         public void call(Object... objects) {
-            Log.d(TAG, "socketEvent:"+objects[0].toString());
             String json=objects[0].toString();
             Log.d(TAG, "socketData:"+json);
             try {
                 JSONObject jsonResult=new JSONObject(json);
+
                 String orderId=jsonResult.getString("message");
                 HttpCall.getApiService()
                         .getPrintTscOrder(orderId)
