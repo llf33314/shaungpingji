@@ -146,7 +146,9 @@ public class PrintSocketService extends Service {
             List<TscOrderPrintBean.Menus> menus=bean.getMenus();
             if (menus!=null&&menus.size()>0){
                 for (TscOrderPrintBean.Menus m:menus){
-                    String size=m.getNorms()+" x"+m.getNum();
+                    String size=m.getNorms()+" x1";
+                    for (int i=0;i<m.getNum();i++){
+
                     int res=PrinterConnectSerivce.printReceiptClicked(m.getMenu_no(),m.getName(),size,m.getCommnt());
 
                     if (res==PRINTER_NOT_INTI){//打印机未初始化
@@ -156,6 +158,7 @@ public class PrintSocketService extends Service {
                         ToastUtil.getInstance().showToast("打印机非不干胶类型，请连接正确打印机");
                         break;
                     }
+                }
                 }
             }
 
