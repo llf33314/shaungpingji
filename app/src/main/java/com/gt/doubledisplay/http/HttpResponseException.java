@@ -4,14 +4,14 @@ package com.gt.doubledisplay.http;
 
 public class HttpResponseException extends RuntimeException {
 
-    private  int error;
+    private  int code;
 
-    public HttpResponseException(String message, int error) {
+    public HttpResponseException(String message, int code) {
         super(message);
-        this.error = error;
+        this.code = code;
     }
 
-    public int getError() {
-        return error;
+    public int getCode() {
+        return code;
     }
 }

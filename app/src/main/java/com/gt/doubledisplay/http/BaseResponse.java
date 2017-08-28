@@ -7,28 +7,19 @@ public class BaseResponse<T> {
 
     public static final int SUCCESS_STATUS = 0;
 
-    private int error;
-    private String message;
+    private int code;
     private T data;
 
-
     public boolean isSuccess() {
-        return  error == SUCCESS_STATUS;
-    }
-    public int getError() {
-        return error;
+        return  code == SUCCESS_STATUS;
     }
 
-    public void setError(int error) {
-        this.error = error;
+    public int getCode() {
+        return code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public T getData() {

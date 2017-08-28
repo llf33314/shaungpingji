@@ -3,6 +3,7 @@ package com.gt.doubledisplay.http.rxjava.observable;
 
 import com.gt.doubledisplay.http.BaseResponse;
 import com.gt.doubledisplay.http.HttpResponseException;
+import com.gt.doubledisplay.bean.LoginBean;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -39,7 +40,7 @@ public class ResultTransformer {
                             observer.onNext(tBaseResponse.getData());
                             observer.onComplete();
                         } else {
-                            observer.onError(new HttpResponseException(tBaseResponse.getMessage(), tBaseResponse.getError()));
+                            observer.onError(new HttpResponseException("服务器数据有误", tBaseResponse.getCode()));
                         }
                     }
                 };
@@ -75,7 +76,8 @@ public class ResultTransformer {
                             observer.onNext(baseResponse);
                             observer.onComplete();
                         } else {
-                            observer.onError(new HttpResponseException(baseResponse.getMessage(), baseResponse.getError()));
+
+                            observer.onError(new HttpResponseException("服务器错误", baseResponse.getCode()));
                         }
                     }
                 };

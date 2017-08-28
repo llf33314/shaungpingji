@@ -21,7 +21,9 @@ import com.orhanobut.hawk.Hawk;
 public class MyApplication extends Application {
 
     private static Context applicationContext;
+    //登录接口获取
     public static String USER_ID="";
+    //登录后获取user_id 请求接口获取  user_id即是 bus_id
     public static String DEVICE_ID="";
 
     WebViewDiffDisplayPresentation mp;
@@ -48,7 +50,7 @@ public class MyApplication extends Application {
             return;
         }
         if(mp==null){
-            mp= new WebViewDiffDisplayPresentation(this,displays[1], HttpConfig.DOUBLE_URL);
+            mp= new WebViewDiffDisplayPresentation(this,displays[1], HttpConfig.ADVERTISING_RUL);
         }
         mp.show();
     }

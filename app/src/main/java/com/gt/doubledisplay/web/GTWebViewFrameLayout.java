@@ -90,7 +90,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
         webSettings.setJavaScriptEnabled(true);
         mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
 
-        mWebView.addJavascriptInterface(new DuofenJSBridge(this.getContext(),mWebView),"dfmb");
+        mWebView.addJavascriptInterface(new DuofenJSBridge(this.getContext(),mWebView),"doubleAndroid");
 
         // init webview settings
         webSettings.setAllowContentAccess(true);
@@ -137,7 +137,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
                     ((Activity)view.getContext()).finish();
                 }*/
 
-                if (url!=HttpConfig.DUOFRIEND_LOGIN&&socketIntent==null){//暂时这么写
+                if (url!=HttpConfig.DUOFRIEND_XCM&&socketIntent==null){//暂时这么写
                      socketIntent=new Intent(GTWebViewFrameLayout.this.getContext(),PrintSocketService.class);
                     GTWebViewFrameLayout.this.getContext().startService(socketIntent);
                 }

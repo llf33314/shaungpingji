@@ -18,7 +18,7 @@ public class GPBluetoothUtil {
      */
     public static BluetoothDevice getConnectingBluetooth(BluetoothAdapter mBluetoothAdapter){
 
-        if (!mBluetoothAdapter.isEnabled()){
+        if (mBluetoothAdapter==null||!mBluetoothAdapter.isEnabled()){
             return null;
         }
         Set<BluetoothDevice> devices = mBluetoothAdapter.getBondedDevices();

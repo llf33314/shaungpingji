@@ -13,12 +13,14 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.gt.doubledisplay.base.MyApplication;
+import com.gt.doubledisplay.bean.CallWebViewJS;
 import com.gt.doubledisplay.bean.TscOrderPrintBean;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.retrofit.HttpCall;
 import com.gt.doubledisplay.http.rxjava.observable.ResultTransformer;
 import com.gt.doubledisplay.http.rxjava.observable.SchedulerTransformer;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
+import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.PhoneUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.orhanobut.hawk.Hawk;
@@ -88,8 +90,8 @@ public class PrintSocketService extends Service {
            // String UUID = PhoneUtils.getIMEI();
           //  Log.d(TAG, "auth key : " + HttpConfig.SOCKET_ANDROID_AUTH_KEY + UUID);
            // mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH, HttpConfig.SOCKET_ANDROID_AUTH_KEY + UUID);
-            mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH,HttpConfig.SOCKET_ANDROID_AUTH_KEY+ MyApplication.USER_ID);
-            Log.d(TAG, "onConnect:"+HttpConfig.SOCKET_ANDROID_AUTH_KEY+ MyApplication.USER_ID);
+            mSocket.emit(HttpConfig.SOCKET_ANDROID_AUTH,MyApplication.USER_ID);
+            Log.d(TAG, "onConnect:"+MyApplication.USER_ID);
         }
     };
 
@@ -99,6 +101,7 @@ public class PrintSocketService extends Service {
         public void call(Object... objects) {
             String json=objects[0].toString();
             Log.d(TAG, "socketData:"+json);
+            RxBus.get().post(new CallWebViewJS());
             try {
                 JSONObject jsonResult=new JSONObject(json);
 

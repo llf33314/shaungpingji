@@ -32,7 +32,7 @@ public class HttpCall {
 
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .retryOnConnectionFailure(true)
-                    .connectTimeout(20, TimeUnit.SECONDS)
+                    .connectTimeout(30, TimeUnit.SECONDS)
                     // .addNetworkInterceptor(mRequestInterceptor)
                     .addInterceptor(loggingInterceptor)
                     .cookieJar(cookieJarImpl)

@@ -2,6 +2,8 @@ package com.gt.doubledisplay.web;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
@@ -34,8 +36,8 @@ public class WebViewActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // String url=getIntent().getStringExtra(GTWebViewFrameLayout.PARAM_URL);
-        String url= HttpConfig.DUOFRIEND_LOGIN;
+        String url=getIntent().getStringExtra(GTWebViewFrameLayout.PARAM_URL);
+        //String url= HttpConfig.DUOFRIEND_LOGIN;
         mGTWebViewFrameLayout =new GTWebViewFrameLayout(this,url);
         setContentView(mGTWebViewFrameLayout);
         showBtnBlu();
@@ -44,8 +46,15 @@ public class WebViewActivity extends BaseActivity {
         RxBus.get().toObservable(CallWebViewJS.class).subscribe(new Consumer<CallWebViewJS>() {
             @Override
             public void accept(@NonNull CallWebViewJS callWebViewJS) throws Exception {
-                mGTWebViewFrameLayout.getWebView().loadUrl("javascript:test()");
-                Log.d("WebViewActivity","javascript:test()");
+                Handler handler=new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mGTWebViewFrameLayout.getWebView().loadUrl("javascript:DoubleScreen.test()");
+                      //  Log.d("WebViewActivity","javascript:test()");
+                    }
+                });
+
             }
         });
 

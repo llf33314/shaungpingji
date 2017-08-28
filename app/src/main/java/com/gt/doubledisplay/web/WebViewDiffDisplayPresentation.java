@@ -5,6 +5,7 @@ import android.app.Presentation;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -16,9 +17,15 @@ import android.widget.ImageView;
 
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.base.MyApplication;
+import com.gt.doubledisplay.bean.DeviceBean;
+import com.gt.doubledisplay.http.rxjava.observable.SchedulerTransformer;
+import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.BarUtils;
 import com.gt.doubledisplay.utils.commonutil.ScreenUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
+
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by wzb on 2017/8/7 0007.
@@ -41,24 +48,26 @@ public class WebViewDiffDisplayPresentation extends Presentation {
         super.onCreate(savedInstanceState);
 
         this.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        mGTWebViewFrameLayout =new GTWebViewFrameLayout(this.getContext(),mUrl);
 
         ImageView iv=new ImageView(MyApplication.getAppContext());
         iv.setImageResource(R.drawable.bg);
         iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
         setContentView(iv);
         iv.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-      // iv.setLayoutParams( );
 
-        //暂时屏蔽 08-26
-        /*mGTWebViewFrameLayout =new GTWebViewFrameLayout(this.getContext(),mUrl);
-        setContentView(mGTWebViewFrameLayout);
-        FrameLayout.LayoutParams lp= (FrameLayout.LayoutParams) mGTWebViewFrameLayout.getLayoutParams();
-        lp.setMargins(0, BarUtils.getStatusBarHeight(this.getContext()),0,BarUtils.getNavigationBarHeight());
-        mGTWebViewFrameLayout.setLayoutParams(lp);
 
-        mGTWebViewFrameLayout.loadUrl();*/
+        RxBus.get().toObservable(DeviceBean.class).compose(SchedulerTransformer.<DeviceBean>transformer()).subscribe(new Consumer<DeviceBean>() {
+            @Override
+            public void accept(@NonNull DeviceBean deviceBean) throws Exception {
+                setContentView(mGTWebViewFrameLayout);
+                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mGTWebViewFrameLayout.getLayoutParams();
+                lp.setMargins(0, BarUtils.getStatusBarHeight(MyApplication.getAppContext()), 0, BarUtils.getNavigationBarHeight());
+                mGTWebViewFrameLayout.setLayoutParams(lp);
+                mGTWebViewFrameLayout.loadUrl();
+            }
+        });
     }
-
     public void show(){
         /*if (mGTWebViewFrameLayout !=null){//已经初始化了  第一次初始化在onCreate load
             mGTWebViewFrameLayout.loadUrl();

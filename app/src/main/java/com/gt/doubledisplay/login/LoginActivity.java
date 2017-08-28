@@ -2,12 +2,9 @@ package com.gt.doubledisplay.login;
 
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.display.DisplayManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -17,9 +14,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.base.MyApplication;
+import com.gt.doubledisplay.bean.DeviceBean;
+import com.gt.doubledisplay.bean.LoginBean;
 import com.gt.doubledisplay.bean.LoginSignBean;
 import com.gt.doubledisplay.http.ApiService;
 import com.gt.doubledisplay.http.BaseResponse;
@@ -28,30 +26,20 @@ import com.gt.doubledisplay.http.HttpResponseException;
 import com.gt.doubledisplay.http.retrofit.HttpCall;
 import com.gt.doubledisplay.http.rxjava.observable.DialogTransformer;
 import com.gt.doubledisplay.http.rxjava.observable.ResultTransformer;
-import com.gt.doubledisplay.http.rxjava.observable.SchedulerTransformer;
 import com.gt.doubledisplay.http.rxjava.observer.BaseObserver;
-import com.gt.doubledisplay.http.socket.PrintSocketService;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
-import com.gt.doubledisplay.printer.extraposition.bluetooth.BluetoothSettingActivity;
-import com.gt.doubledisplay.printer.internal.ESCUtil;
-import com.gt.doubledisplay.update.UpdateManager;
+import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.gt.doubledisplay.web.GTWebViewFrameLayout;
 import com.gt.doubledisplay.web.WebViewActivity;
-import com.gt.doubledisplay.web.WebViewDiffDisplayPresentation;
 import com.orhanobut.hawk.Hawk;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 
 /**
@@ -118,83 +106,59 @@ public class LoginActivity extends RxAppCompatActivity {
                     return;
                 }
 
-              /*  HttpCall.getApiService()
+               HttpCall.getApiService()
                         .getSign(account,psd,"double_screen_sign_code_is_ok")
-                        .flatMap(new Function<String, ObservableSource<String>>() {
+                        .flatMap(new Function<BaseResponse<LoginSignBean>, ObservableSource<BaseResponse<LoginBean>>>() {
                             @Override
-                            public ObservableSource<String> apply(@NonNull String s) throws Exception {
-                                Gson gson=new Gson();
-                                LoginSignBean loginSignBean=gson.fromJson(s,LoginSignBean.class);
-                                String data=gson.toJson(loginSignBean.getData());
-                                Log.d("LoginActivity",data);
-                                return HttpCall.getApiService().login(account,psd,data);
-                            }
-                        })*/
-                HttpCall.getApiService().login(account,psd)
-                        .compose(LoginActivity.this.<String>bindToLifecycle())
-                        .compose(SchedulerTransformer.<String>transformer())
-                        .compose(new DialogTransformer().<String>transformer())
-                        .subscribe(new Observer<String>() {
+                            public ObservableSource<BaseResponse<LoginBean>> apply(@NonNull BaseResponse<LoginSignBean> loginSignBeanBaseResponse) throws Exception {
+
+                                return  HttpCall.getApiService().login(account,psd,loginSignBeanBaseResponse.getData().getSign());}
+                        })
+                       .flatMap(new Function<BaseResponse<LoginBean>, ObservableSource<BaseResponse<DeviceBean>>>(){
                             @Override
-                            public void onSubscribe(@NonNull Disposable d) {
-
-                            }
-
-                            @Override
-                            public void onNext(@NonNull String s) {
-                                //这里取数据是否成功
-                                //successCallback({"code":"1","msg":"签名验证错误，请检查签名信息"})
-                                //{"code":0,"data":{"UserId":42,"style":1,"message":"登录成功","error":"0"}}
-                               // {"code":0,"data":{"message":"登录成功","error":"0","style":1,"UserId":3512}}
-                               // {"code":0,"data":{"message":"用户名不存在","error":"2"}}
-
-                                try {
-                                    JSONObject json=new JSONObject(s);
-                                    json=json.getJSONObject("data");
-                                    switch (json.getInt("error")){
-                                        case 0://请求后台正常
-                                            String userId=json.getString("UserId");
-                                            MyApplication.USER_ID=userId;
-
-                                            if (cbPsd.isChecked()){
-                                                Hawk.put(ACCOUNT,account);
-                                                Hawk.put(PSD,psd);
-                                            }else{
-                                                Hawk.delete(ACCOUNT);
-                                                Hawk.delete(PSD);
-                                            }
-
-                                            Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
-                                            intent.putExtra(GTWebViewFrameLayout.PARAM_URL, HttpConfig.DUOFRIEND_LOGIN);
-                                            ToastUtil.getInstance().showNewShort("登录成功");
-                                            startActivity(intent);
-                                            finish();
-                                            break;
-                                        case 2:
-                                            ToastUtil.getInstance().showToast(json.getString("message"));
-                                            Hawk.delete(ACCOUNT);
-                                            Hawk.delete(PSD);
-                                            break;
-
+                            public ObservableSource<BaseResponse<DeviceBean>> apply(@NonNull BaseResponse<LoginBean> loginBeanBaseResponse) throws Exception {
+                                LoginBean loginBean=loginBeanBaseResponse.getData();
+                                if ("0".equals(loginBean.getError())){
+                                    MyApplication.USER_ID= HttpConfig.SOCKET_ANDROID_AUTH_KEY+loginBean.getStyle()+"_"+loginBean.getUserId();
+                                    if (cbPsd.isChecked()){
+                                        Hawk.put(ACCOUNT,account);
+                                        Hawk.put(PSD,psd);
+                                    }else{
+                                        Hawk.delete(ACCOUNT);
+                                        Hawk.delete(PSD);
                                     }
-                                } catch (JSONException e) {
-                                    ToastUtil.getInstance().showToast("后台数据有误");
-                                    Hawk.delete(ACCOUNT);
-                                    Hawk.delete(PSD);
-                                    e.printStackTrace();
+                                }else{
+                                    //ToastUtil.getInstance().showToast(loginBean.getMessage());
+                                    throw new HttpResponseException(loginBean.getMessage(),Integer.valueOf(loginBean.getError()));
                                 }
-                                ///每次应该打开首页 如果是登录页面才打开我们登录页面
+                                return HttpCall.getApiService().getDeviceId(String.valueOf(loginBean.getUserId()));
+                            }
+                        })
+                        .compose(LoginActivity.this.<BaseResponse<DeviceBean>>bindToLifecycle())
+                        .compose(ResultTransformer.<DeviceBean>transformer())
+                        .compose(new DialogTransformer().<DeviceBean>transformer())
+                        .subscribe(new BaseObserver<DeviceBean>() {
+                            //{"code":0,"data":{"UserId":42,"style":1,"message":"登录成功","error":"0"}}
+                            // {"code":0,"data":{"message":"登录成功","error":"0","style":1,"UserId":3512}}
+                            // {"code":0,"data":{"message":"用户名不存在","error":"2"}}
+
+                            @Override
+                            protected void onSuccess(DeviceBean deviceBean) {
+                                MyApplication.DEVICE_ID=deviceBean.getEqCode();
+                                Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
+                                intent.putExtra(GTWebViewFrameLayout.PARAM_URL, HttpConfig.DUOFRIEND_XCM);
+                                //ToastUtil.getInstance().showNewShort("登录成功");
+                                startActivity(intent);
+                                //显示副屏广告
+                                RxBus.get().post(deviceBean);
+                                finish();
                             }
 
                             @Override
-                            public void onError(@NonNull Throwable e) {
+                            protected void onFailed(HttpResponseException responseException) {
+                                super.onFailed(responseException);
                                 Hawk.delete(ACCOUNT);
                                 Hawk.delete(PSD);
-                            }
-
-                            @Override
-                            public void onComplete() {
-
                             }
                         });
 
@@ -260,6 +224,9 @@ public class LoginActivity extends RxAppCompatActivity {
         }
         if (!TextUtils.isEmpty(psd)){
             etPsd.setText(psd);
+        }
+        if(!TextUtils.isEmpty(psd)||!TextUtils.isEmpty(account)){
+            cbPsd.setChecked(true);
         }
         portIntent = new Intent(this, PrinterConnectSerivce.class);
         startService(portIntent);
