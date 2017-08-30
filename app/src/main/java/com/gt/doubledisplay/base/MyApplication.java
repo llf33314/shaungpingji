@@ -44,6 +44,7 @@ public class MyApplication extends Application {
     private void showScreen(){
         DisplayManager mDisplayManager;//屏幕管理类
         mDisplayManager = (DisplayManager)this.getSystemService(Context.DISPLAY_SERVICE);
+        //这里获取出来副屏是  1024*768  但是实际布局是1366*768
         Display[] displays =mDisplayManager.getDisplays();
         if (displays.length<2){
             ToastUtil.getInstance().showToast("副屏未连接");

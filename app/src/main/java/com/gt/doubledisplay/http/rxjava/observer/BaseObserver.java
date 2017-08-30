@@ -51,6 +51,7 @@ public abstract class BaseObserver<T> implements Observer<T> {
             onFailed(responseException);
         }else {//(e instanceof RuntimeException)
             Log.e("HTTP","程序异常"+e.getMessage());
+            ToastUtil.getInstance().showToast("后台数据有误！");
         }
 
     }

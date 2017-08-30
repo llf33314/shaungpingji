@@ -53,5 +53,5 @@ dependencies {
     compile files('libs/json.jar')
     compile files('libs/ksoap2-android-assembly-2.5.2-jar-with-dependencies.jar')
     compile files('libs/xUtils-2.6.14.jar')
-    compile files('libs/tbs_sdk_thirdapp_v3.3.0.1045_43300_sharewithdownload_withoutGame_obfs_20170605_170212.jar')
+
 }

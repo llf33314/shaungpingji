@@ -19,6 +19,7 @@ import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.retrofit.HttpCall;
 import com.gt.doubledisplay.http.rxjava.observable.ResultTransformer;
 import com.gt.doubledisplay.http.rxjava.observable.SchedulerTransformer;
+import com.gt.doubledisplay.printer.extraposition.PrintESCOrTSCUtil;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.PhoneUtils;
@@ -115,9 +116,10 @@ public class PrintSocketService extends Service {
 
                             }
 
+
                             @Override
                             public void onNext(@NonNull String s) {
-                                print(s);
+                                PrintESCOrTSCUtil.printXCM(s);
                             }
 
                             @Override
@@ -139,37 +141,7 @@ public class PrintSocketService extends Service {
         }
     };
 
-    public static void print(String s){
-        JSONObject json= null;
-        try {
-            json = new JSONObject(s);
-            String data=json.getString("data");
-            Gson gson=new Gson();
-            TscOrderPrintBean bean=gson.fromJson(data,TscOrderPrintBean.class);
-            List<TscOrderPrintBean.Menus> menus=bean.getMenus();
-            if (menus!=null&&menus.size()>0){
-                for (TscOrderPrintBean.Menus m:menus){
-                    String size=m.getNorms()+" x1";
-                    for (int i=0;i<m.getNum();i++){
 
-                    int res=PrinterConnectSerivce.printReceiptClicked(m.getMenu_no(),m.getName(),size,m.getCommnt());
-
-                    if (res==PRINTER_NOT_INTI){//打印机未初始化
-                        break;
-                    }
-                    if (res==-2){
-                        ToastUtil.getInstance().showToast("打印机非不干胶类型，请连接正确打印机");
-                        break;
-                    }
-                }
-                }
-            }
-
-        } catch (JSONException e) {
-            //后面处理
-            e.printStackTrace();
-        }
-    }
 
     // socket disConnect
     private Emitter.Listener onDisconnect = new Emitter.Listener() {

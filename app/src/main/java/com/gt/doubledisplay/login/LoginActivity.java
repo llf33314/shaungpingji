@@ -28,6 +28,7 @@ import com.gt.doubledisplay.http.rxjava.observable.DialogTransformer;
 import com.gt.doubledisplay.http.rxjava.observable.ResultTransformer;
 import com.gt.doubledisplay.http.rxjava.observer.BaseObserver;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
+import com.gt.doubledisplay.update.UpdateManager;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.gt.doubledisplay.web.GTWebViewFrameLayout;
@@ -73,6 +74,9 @@ public class LoginActivity extends RxAppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         init();
+        //连接socket  暂时这么写 如果是登录页面就不启动
+       // UpdateManager updateManager=new UpdateManager(this,"DoubleScreen");
+        //updateManager.requestUpdate();
     }
 
 
@@ -106,15 +110,18 @@ public class LoginActivity extends RxAppCompatActivity {
                     return;
                 }
 
-               HttpCall.getApiService()
+                //暂时去掉 等session共享再放上去
+              /* HttpCall.getApiService()
                         .getSign(account,psd,"double_screen_sign_code_is_ok")
                         .flatMap(new Function<BaseResponse<LoginSignBean>, ObservableSource<BaseResponse<LoginBean>>>() {
                             @Override
                             public ObservableSource<BaseResponse<LoginBean>> apply(@NonNull BaseResponse<LoginSignBean> loginSignBeanBaseResponse) throws Exception {
 
                                 return  HttpCall.getApiService().login(account,psd,loginSignBeanBaseResponse.getData().getSign());}
-                        })
-                       .flatMap(new Function<BaseResponse<LoginBean>, ObservableSource<BaseResponse<DeviceBean>>>(){
+                        })*/
+                HttpCall.getApiService()
+                        .login(account,psd)
+                        .flatMap(new Function<BaseResponse<LoginBean>, ObservableSource<BaseResponse<DeviceBean>>>(){
                             @Override
                             public ObservableSource<BaseResponse<DeviceBean>> apply(@NonNull BaseResponse<LoginBean> loginBeanBaseResponse) throws Exception {
                                 LoginBean loginBean=loginBeanBaseResponse.getData();
@@ -162,39 +169,6 @@ public class LoginActivity extends RxAppCompatActivity {
                             }
                         });
 
-
-             /*   HttpCall
-                        .getApiService()
-                        .login(account,psd)
-                        .compose(LoginActivity.this.<BaseResponse>bindToLifecycle())
-                        .compose(ResultTransformer.<BaseResponse>transformerNoData())
-                        .compose(new DialogTransformer().<BaseResponse>transformer())
-                        .subscribe(new BaseObserver<BaseResponse>() {
-                            @Override
-                            protected void onSuccess(BaseResponse baseResponse) {
-                                ToastUtil.getInstance().showNewShort("登录成功"+baseResponse.getError()+baseResponse.getMessage());
-                                if (cbPsd.isChecked()){
-                                    Hawk.put(ACCOUNT,account);
-                                    Hawk.put(PSD,psd);
-                                }else{
-                                    Hawk.delete(ACCOUNT);
-                                    Hawk.delete(PSD);
-                                }
-
-
-                                Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
-                                intent.putExtra(GTWebViewFrameLayout.PARAM_URL,"http://canyin.duofriend.com");
-                                startActivity(intent);
-                                ///每次应该打开首页 如果是登录页面才打开我们登录页面
-                            }
-
-                            @Override
-                            protected void onFailed(HttpResponseException responseException) {
-                                super.onFailed(responseException);
-                                Hawk.delete(ACCOUNT);
-                                Hawk.delete(PSD);
-                            }
-                        });*/
                 break;
         }
     }

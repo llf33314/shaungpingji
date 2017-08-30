@@ -23,10 +23,8 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.gt.doubledisplay.http.ApiService;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.socket.PrintSocketService;
-import com.gt.doubledisplay.login.LoginActivity;
 import com.gt.doubledisplay.utils.commonutil.ConvertUtils;
 
 /**
@@ -137,10 +135,11 @@ public class GTWebViewFrameLayout extends FrameLayout {
                     ((Activity)view.getContext()).finish();
                 }*/
 
-                if (url!=HttpConfig.DUOFRIEND_XCM&&socketIntent==null){//暂时这么写
-                     socketIntent=new Intent(GTWebViewFrameLayout.this.getContext(),PrintSocketService.class);
+                //不启用socket
+                /*if (url!=HttpConfig.DUOFRIEND_XCM&&socketIntent==null){//暂时这么写
+                    socketIntent=new Intent(GTWebViewFrameLayout.this.getContext(),PrintSocketService.class);
                     GTWebViewFrameLayout.this.getContext().startService(socketIntent);
-                }
+                }*/
                 return null;
             }
         };
@@ -193,8 +192,8 @@ public class GTWebViewFrameLayout extends FrameLayout {
     }
 
     public void loadUrl(){
-            mWebView.loadUrl(mUrl);
-            //mWebView.loadUrl("file:///android_asset/dist/views/Slide/list.html");
+        mWebView.loadUrl(mUrl);
+        //mWebView.loadUrl("file:///android_asset/dist/views/Slide/list.html");
     }
 
     public WebView getWebView(){

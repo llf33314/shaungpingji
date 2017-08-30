@@ -9,7 +9,9 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.gt.doubledisplay.base.MyApplication;
-import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
+import com.gt.doubledisplay.bean.ScreenMsgBean;
+import com.gt.doubledisplay.printer.extraposition.PrintESCOrTSCUtil;
+import com.gt.doubledisplay.utils.RxBus;
 
 
 /**
@@ -45,7 +47,24 @@ public class DuofenJSBridge {
         return new String []{MyApplication.USER_ID,MyApplication.DEVICE_ID};
     }
 
-
+    /**
+     * 主屏点击扫码支付 显示副副屏二维码
+     * 这个方法命名不正确
+     * @param data
+     */
+    @JavascriptInterface
+    public void showPayQRCode(String data){
+        Log.d(TAG,"showPayQRCode:"+data);
+        RxBus.get().post(new ScreenMsgBean(data));
+    }
+    /**
+     * 打印不干胶
+     */
+    @JavascriptInterface
+    public void printTscOrder(String jsonMsg){
+        Log.d(TAG,"printTscOrder:"+jsonMsg);
+        PrintESCOrTSCUtil.printXCM(jsonMsg);
+    }
 
   /**
      * web打印接口

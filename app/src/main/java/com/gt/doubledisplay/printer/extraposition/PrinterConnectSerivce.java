@@ -180,6 +180,9 @@ public class PrinterConnectSerivce extends Service {
     private final BroadcastReceiver mBluetoothReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (mGpService==null){
+                return;
+            }
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
                 try {
@@ -315,16 +318,18 @@ public class PrinterConnectSerivce extends Service {
                     showHintNotConnectDialog();
                 }
             }
-            //这里很关键   打印机类型是ESC 还是TSC
+            //这里很关键   打印机类型是ESC 还是TSC     佳博有毒 同一台打印机获取出来的  有时候是ESC 有时候是TSC
+            //暂时不支持   一般热敏打印机
             int type = mGpService.getPrinterCommandType(mPrinterIndex);
-            if (type == GpCom.ESC_COMMAND) {
+            /*if (type == GpCom.ESC_COMMAND) {
               //return sendESCReceipt("");
               return -2;
-            }else if (type == GpCom.LABEL_COMMAND){ //TSC
+            }else if (type == GpCom.LABEL_COMMAND){ //TSC*/
                 return sendLabelReceipt(number,name,size,remark);
-            }
+            //}
         } catch (RemoteException e1) {
             e1.printStackTrace();
+            ToastUtil.getInstance().showToast("打印机异常，请尝试重启打印机跟收银设备");
         }
         return -1;
     }

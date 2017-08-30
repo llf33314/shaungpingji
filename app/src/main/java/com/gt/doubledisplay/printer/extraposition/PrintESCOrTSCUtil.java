@@ -1,7 +1,19 @@
 package com.gt.doubledisplay.printer.extraposition;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.gprinter.command.EscCommand;
 import com.gprinter.command.LabelCommand;
+import com.gt.doubledisplay.bean.TscOrderPrintBean;
+import com.gt.doubledisplay.utils.commonutil.ToastUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce.PRINTER_NOT_INTI;
 
 /**
  * Created by wzb on 2017/8/16 0016.
@@ -106,6 +118,69 @@ public class PrintESCOrTSCUtil {
         tsc.addPrint(1, 1); // 打印标签
         tsc.addCashdrwer(LabelCommand.FOOT.F5, 255, 255);
         return tsc;
+    }
+
+    /**
+     * 打印不干胶
+     * @param
+     *
+     * {
+    "result": 1,
+    "menus": [
+    {
+    "menu_no": "1003",
+    "num": 1,
+    "name": "小白兔套餐",
+    "norms": "",
+    "money": 0.01,
+    "commnt": ""
+    }
+    ],
+    "integral_deduction": 1,
+    "pay_time": "",
+    "shop_adress": "广东省江门市江海区江海区滘头街道勤政路政府c栋513",
+    "order_code": "DD1504063488834",
+    "shop_name": "谷通科技",
+    "pay_money": 0,
+    "order_time": "2017-08-30 11:24:16",
+    "pay_type": 0,
+    "print_type": 1,
+    "consumption_money": 0.01,
+    "fansCurrency_deduction": 1,
+    "cashier": "",
+    "member_deduction": 0,
+    "shop_phone": "13528307867"
+    }
+     */
+    public static void printXCM(String s){
+        JSONObject json= null;
+        try {
+            json = new JSONObject(s);
+            String jsonMenus=json.getString("menus");
+            Gson gson=new Gson();
+            List<TscOrderPrintBean.Menus> menus=gson.fromJson(jsonMenus,new TypeToken<ArrayList<TscOrderPrintBean.Menus>>(){}.getType());
+            if (menus!=null&&menus.size()>0){
+                for (TscOrderPrintBean.Menus m:menus){
+                    String size=m.getNorms()+" x1";
+                    for (int i=0;i<m.getNum();i++){
+
+                        int res=PrinterConnectSerivce.printReceiptClicked(m.getMenu_no(),m.getName(),size,m.getCommnt());
+
+                        if (res==PRINTER_NOT_INTI){//打印机未初始化
+                            break;
+                        }
+                        if (res==-2){
+                            ToastUtil.getInstance().showToast("打印机非不干胶类型，请连接正确打印机");
+                            break;
+                        }
+                    }
+                }
+            }
+
+        } catch (JSONException e) {
+            //后面处理
+            e.printStackTrace();
+        }
     }
 
   /*private static int sendLabelReceipt() {

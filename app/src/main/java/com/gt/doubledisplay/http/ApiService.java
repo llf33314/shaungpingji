@@ -15,20 +15,16 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
+    //暂时去掉sign参数
     @FormUrlEncoded
     @POST("doubleScreenMobile/getBusId")
-    Observable<BaseResponse<LoginBean>> login(@Field("login_name")String account, @Field("password")String psd,@Field("sign")String sign);
-
-    /*@FormUrlEncoded
-    @POST("doubleScreenMobile/getBusId")
-    Observable<BaseResponse<LoginBean>> login(@Field("login_name")String account, @Field("password")String psd);*/
+    Observable<BaseResponse<LoginBean>> login(@Field("login_name")String account, @Field("password")String psd/*,@Field("sign")String sign*/);
 
     @FormUrlEncoded
     @POST("doubleScreenMobile/getSign")
     Observable<BaseResponse<LoginSignBean>> getSign(@Field("login_name")String account, @Field("password")String psd, @Field("signCode") String signCode);
 
     @FormUrlEncoded
-   // @POST("http://192.168.3.44:8081/doubleScreenMobile/redisKey")
     @POST("doubleScreenMobile/getPrintData")
     Observable<String> getPrintTscOrder(@Field("orderId")String orderId);
 
