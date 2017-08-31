@@ -12,20 +12,16 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.ConsoleMessage;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.socket.PrintSocketService;
 import com.gt.doubledisplay.utils.commonutil.ConvertUtils;
+
+import org.xwalk.core.XWalkResourceClient;
+import org.xwalk.core.XWalkSettings;
+import org.xwalk.core.XWalkView;
 
 /**
  * Created by wzb on 2017/8/9 0009.
@@ -38,7 +34,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
 
     HorizontalProgress mBar;
 
-    private WebView mWebView;
+    private XWalkView mWebView;
 
     private Intent socketIntent;
     private static final String USERAGENT="Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36";
@@ -56,7 +52,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
 
         //先执行上面代码 下载一些资源一边初始化 webView
         mBar=new HorizontalProgress(context);
-        mWebView =new WebView(context);
+        mWebView =new XWalkView(context);
 
         FrameLayout.LayoutParams webViewLp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         this.addView(mWebView,webViewLp);
@@ -79,7 +75,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
             return;
         }
 
-        WebSettings webSettings = mWebView.getSettings();
+        XWalkSettings webSettings = mWebView.getSettings();
 
         // add java script interface
         // note:if api level lower than 17(android 4.2), addJavascriptInterface has security
@@ -94,16 +90,13 @@ public class GTWebViewFrameLayout extends FrameLayout {
         webSettings.setAllowContentAccess(true);
         webSettings.setDatabaseEnabled(true);
         webSettings.setDomStorageEnabled(true);
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setSavePassword(false);
         webSettings.setSaveFormData(false);
         webSettings.setUseWideViewPort(false);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUserAgentString(USERAGENT);
 
-        mWebView.setWebChromeClient(getWebChromeClient());
+        mWebView.setResourceClient(getWebChromeClient());
         //拦截url
-        mWebView.setWebViewClient(getWebViewClient());
 
     }
 
@@ -117,39 +110,12 @@ public class GTWebViewFrameLayout extends FrameLayout {
         this.addView(tv,tvLp);
     }
 
-    public WebViewClient getWebViewClient(){
-        return new WebViewClient() {
 
-            @TargetApi(21)
-            @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                return shouldInterceptRequest(view, request.getUrl().toString());
-            }
+    public XWalkResourceClient getWebChromeClient(){
+        return new XWalkResourceClient(mWebView) {
 
             @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-                //拦截登录url跳转到登录页面
-                /*if (HttpConfig.WEB_LOGIN.equals(url)){
-                    Intent intent=new Intent(view.getContext(), LoginActivity.class);
-                    view.getContext().startActivity(intent);
-                    ((Activity)view.getContext()).finish();
-                }*/
-
-                //不启用socket
-                /*if (url!=HttpConfig.DUOFRIEND_XCM&&socketIntent==null){//暂时这么写
-                    socketIntent=new Intent(GTWebViewFrameLayout.this.getContext(),PrintSocketService.class);
-                    GTWebViewFrameLayout.this.getContext().startService(socketIntent);
-                }*/
-                return null;
-            }
-        };
-    }
-
-    public WebChromeClient getWebChromeClient(){
-        return new WebChromeClient() {
-
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
+            public void onProgressChanged(XWalkView view, int newProgress) {
                 mBar.setVisibility(View.VISIBLE);
                 mBar.setProgress(newProgress);
                 if (newProgress >= 100) {
@@ -182,11 +148,6 @@ public class GTWebViewFrameLayout extends FrameLayout {
                 return true;
             }*/
 
-            @Override
-            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-                //Log.d("GTWebViewFrameLayout",consoleMessage.message());
-                return super.onConsoleMessage(consoleMessage);
-            }
 
         };
     }
@@ -196,7 +157,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
         //mWebView.loadUrl("file:///android_asset/dist/views/Slide/list.html");
     }
 
-    public WebView getWebView(){
+    public XWalkView getWebView(){
         return  mWebView;
     }
 }

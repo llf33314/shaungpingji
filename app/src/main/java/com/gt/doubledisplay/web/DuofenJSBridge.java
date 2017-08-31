@@ -5,13 +5,15 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.bean.ScreenMsgBean;
 import com.gt.doubledisplay.printer.extraposition.PrintESCOrTSCUtil;
 import com.gt.doubledisplay.utils.RxBus;
+
+import org.xwalk.core.JavascriptInterface;
+import org.xwalk.core.XWalkView;
 
 
 /**
@@ -24,10 +26,10 @@ public class DuofenJSBridge {
 
     private Context context; // 传进来一个context，便于访问各种资源
 
-    private WebView mWebView;
+    private XWalkView mWebView;
 
     // 构造器
-    public DuofenJSBridge(Context context, WebView webView){
+    public DuofenJSBridge(Context context, XWalkView webView){
         this.context = context;
         this.mWebView=webView;
     }
@@ -37,7 +39,7 @@ public class DuofenJSBridge {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                mWebView.reload();
+               // mWebView.reload();
             }
         });
     }

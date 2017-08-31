@@ -85,11 +85,11 @@ public class WebViewActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if (keyCode == KeyEvent.KEYCODE_BACK && mGTWebViewFrameLayout.getWebView().canGoBack()) {
-            mGTWebViewFrameLayout.getWebView().goBack();
-        }else{
-            ToastUtil.getInstance().showToast("已是最后一页");
-        }
+//        if (keyCode == KeyEvent.KEYCODE_BACK && mGTWebViewFrameLayout.getWebView().canGoBack()) {
+//            mGTWebViewFrameLayout.getWebView().goBack();
+//        }else{
+//            ToastUtil.getInstance().showToast("已是最后一页");
+//        }
         return true;
     }
 }
