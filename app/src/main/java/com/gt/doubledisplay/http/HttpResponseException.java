@@ -6,7 +6,7 @@ public class HttpResponseException extends RuntimeException {
 
     private  int code;
 
-    public HttpResponseException(String message, int code) {
+    public HttpResponseException(int code,String message) {
         super(message);
         this.code = code;
     }

@@ -9,6 +9,7 @@ public class BaseResponse<T> {
 
     private int code;
     private T data;
+    private String msg="";
 
     public boolean isSuccess() {
         return  code == SUCCESS_STATUS;
@@ -28,5 +29,13 @@ public class BaseResponse<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }

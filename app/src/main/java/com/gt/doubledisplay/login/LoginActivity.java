@@ -121,11 +121,11 @@ public class LoginActivity extends RxAppCompatActivity {
                         })*/
                 HttpCall.getApiService()
                         .login(account,psd)
-                        .flatMap(new Function<BaseResponse<LoginBean>, ObservableSource<BaseResponse<DeviceBean>>>(){
+                        .flatMap(ResultTransformer.<LoginBean>flatMap())//这里会去处理 非成功的code
+                        .flatMap(new Function<LoginBean, ObservableSource<BaseResponse<DeviceBean>>>(){
                             @Override
-                            public ObservableSource<BaseResponse<DeviceBean>> apply(@NonNull BaseResponse<LoginBean> loginBeanBaseResponse) throws Exception {
-                                LoginBean loginBean=loginBeanBaseResponse.getData();
-                                if ("0".equals(loginBean.getError())){
+                            public ObservableSource<BaseResponse<DeviceBean>> apply(@NonNull LoginBean loginBean) throws Exception {
+                                if ("0".equals(loginBean.getError())){//登录成功
                                     MyApplication.USER_ID= HttpConfig.SOCKET_ANDROID_AUTH_KEY+loginBean.getStyle()+"_"+loginBean.getUserId();
                                     if (cbPsd.isChecked()){
                                         Hawk.put(ACCOUNT,account);
@@ -134,9 +134,6 @@ public class LoginActivity extends RxAppCompatActivity {
                                         Hawk.delete(ACCOUNT);
                                         Hawk.delete(PSD);
                                     }
-                                }else{
-                                    //ToastUtil.getInstance().showToast(loginBean.getMessage());
-                                    throw new HttpResponseException(loginBean.getMessage(),Integer.valueOf(loginBean.getError()));
                                 }
                                 return HttpCall.getApiService().getDeviceId(String.valueOf(loginBean.getUserId()));
                             }
@@ -163,9 +160,13 @@ public class LoginActivity extends RxAppCompatActivity {
 
                             @Override
                             protected void onFailed(HttpResponseException responseException) {
-                                super.onFailed(responseException);
                                 Hawk.delete(ACCOUNT);
                                 Hawk.delete(PSD);
+                                if (responseException.getCode()==9999){
+                                    ToastUtil.getInstance().showToast("账号密码错误");
+                                }else{
+                                    super.onFailed(responseException);
+                                }
                             }
                         });
 

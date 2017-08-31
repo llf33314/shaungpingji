@@ -1,6 +1,8 @@
 package com.gt.doubledisplay.http.rxjava.observable;
 
 
+import android.text.TextUtils;
+
 import com.gt.doubledisplay.http.BaseResponse;
 import com.gt.doubledisplay.http.HttpResponseException;
 import com.gt.doubledisplay.bean.LoginBean;
@@ -29,7 +31,7 @@ public class ResultTransformer {
         };
     }
 
-    private static <T> Function<BaseResponse<T>, ObservableSource<T>> flatMap() {
+    public static <T> Function<BaseResponse<T>, ObservableSource<T>> flatMap() {
         return new Function<BaseResponse<T>, ObservableSource<T>>() {
             @Override
             public ObservableSource<T> apply(@NonNull final BaseResponse<T> tBaseResponse) throws Exception {
@@ -37,10 +39,16 @@ public class ResultTransformer {
                     @Override
                     protected void subscribeActual(Observer<? super T> observer) {
                         if (tBaseResponse.isSuccess()) {
-                            observer.onNext(tBaseResponse.getData());
+                            if (tBaseResponse.getData()!=null){//data为null时不调用 onSuccess  并且不返回原始数据
+                                observer.onNext(tBaseResponse.getData());
+                            }
                             observer.onComplete();
                         } else {
-                            observer.onError(new HttpResponseException("服务器数据有误", tBaseResponse.getCode()));
+                            String msg="";
+                            if (!TextUtils.isEmpty(tBaseResponse.getMsg())){
+                                msg=tBaseResponse.getMsg();
+                            }
+                            observer.onError(new HttpResponseException(tBaseResponse.getCode(),msg));//这个msg让Observer处理
                         }
                     }
                 };
@@ -49,23 +57,22 @@ public class ResultTransformer {
     }
 
     /**
-     * 无data BaseResponse  也会预处理  处理后返回BaseResponse
-     * @param <
+     * 预处理后返回BaseResponse
      * @return
      */
-    public static ObservableTransformer<BaseResponse,BaseResponse> transformerNoData(){
+    public static ObservableTransformer<BaseResponse,BaseResponse> transformerBaseResponse(){
         return new ObservableTransformer<BaseResponse, BaseResponse>() {
 
             @Override
             public ObservableSource<BaseResponse> apply(@NonNull final Observable<BaseResponse> upstream) {
                 return upstream
-                        .flatMap(ResultTransformer.<BaseResponse>mapNoDta())
+                        .flatMap(ResultTransformer.<BaseResponse>flatMapResponse())
                         .compose(SchedulerTransformer.<BaseResponse>transformer());
             }
         };
     }
 
-    private static Function<BaseResponse,ObservableSource<BaseResponse>> mapNoDta(){
+    private static Function<BaseResponse,ObservableSource<BaseResponse>> flatMapResponse(){
         return new Function<BaseResponse, ObservableSource<BaseResponse>>() {
             @Override
             public ObservableSource<BaseResponse> apply(@NonNull final BaseResponse baseResponse) throws Exception {
@@ -76,8 +83,11 @@ public class ResultTransformer {
                             observer.onNext(baseResponse);
                             observer.onComplete();
                         } else {
-
-                            observer.onError(new HttpResponseException("服务器错误", baseResponse.getCode()));
+                            String msg="";
+                            if (!TextUtils.isEmpty(baseResponse.getMsg())){
+                                msg=baseResponse.getMsg();
+                            }
+                            observer.onError(new HttpResponseException(baseResponse.getCode(),msg));//这个msg让Observer处理
                         }
                     }
                 };

@@ -56,11 +56,17 @@ public abstract class BaseObserver<T> implements Observer<T> {
 
     }
 
+    /**
+     * 若没有data数据执行该方法
+     */
     @Override
     public void onComplete() {
     }
 
-    protected abstract void onSuccess(T t);
+    //非必须重写  兼容没有data的接口
+    protected void onSuccess(T t){
+
+    }
 
     /**
      * 简单提示 服务器返回信息 若需要处理 则重写
