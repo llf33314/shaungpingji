@@ -11,9 +11,14 @@ import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.bean.ScreenMsgBean;
 import com.gt.doubledisplay.printer.extraposition.PrintESCOrTSCUtil;
 import com.gt.doubledisplay.utils.RxBus;
+import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 import org.xwalk.core.JavascriptInterface;
 import org.xwalk.core.XWalkView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -45,8 +50,12 @@ public class DuofenJSBridge {
     }
 
     @JavascriptInterface
-    public String[] getDeviceInfo() {
-        return new String []{MyApplication.USER_ID,MyApplication.DEVICE_ID};
+    public String getUserId(){
+        return MyApplication.USER_ID;
+    }
+    @JavascriptInterface
+    public String getDeviceId(){
+        return MyApplication.DEVICE_ID;
     }
 
     /**

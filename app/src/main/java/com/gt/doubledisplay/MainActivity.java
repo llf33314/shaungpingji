@@ -16,6 +16,7 @@ import com.gt.doubledisplay.web.GTWebViewFrameLayout;
 import com.gt.doubledisplay.web.WebViewActivity;
 import com.gt.doubledisplay.web.WebViewDiffDisplayPresentation;
 
+@Deprecated
 public class MainActivity extends BaseActivity {
     WebViewDiffDisplayPresentation mp ;
     @Override

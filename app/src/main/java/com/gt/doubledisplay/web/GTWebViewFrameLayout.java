@@ -19,8 +19,10 @@ import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.socket.PrintSocketService;
 import com.gt.doubledisplay.utils.commonutil.ConvertUtils;
 
+import org.xwalk.core.XWalkJavascriptResult;
 import org.xwalk.core.XWalkResourceClient;
 import org.xwalk.core.XWalkSettings;
+import org.xwalk.core.XWalkUIClient;
 import org.xwalk.core.XWalkView;
 
 /**
@@ -96,6 +98,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
         webSettings.setUserAgentString(USERAGENT);
 
         mWebView.setResourceClient(getWebChromeClient());
+        mWebView.setUIClient(getUIClient());
         //拦截url
 
     }
@@ -110,6 +113,24 @@ public class GTWebViewFrameLayout extends FrameLayout {
         this.addView(tv,tvLp);
     }
 
+    public XWalkUIClient getUIClient(){
+        return new XWalkUIClient(mWebView){
+            @Override
+            public boolean onJsAlert(XWalkView view, String url, String message, XWalkJavascriptResult result) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+
+                builder.setTitle("温馨提示")
+                        .setMessage(message)
+                        .setPositiveButton("确定", null);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                result.confirm();//  因为没有绑定事件，需要强行confirm,否则页面会变黑显示不了内容。*//**//*
+                return true;
+            }
+
+        };
+    }
 
     public XWalkResourceClient getWebChromeClient(){
         return new XWalkResourceClient(mWebView) {
@@ -125,17 +146,20 @@ public class GTWebViewFrameLayout extends FrameLayout {
                 super.onProgressChanged(view, newProgress);
             }
 
-           /* @Override
+
+
+
+           /*@Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-*//*
+
                 builder.setTitle("温馨提示")
                         .setMessage(message)
                         .setPositiveButton("确定", null);
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
-                result.confirm();//  因为没有绑定事件，需要强行confirm,否则页面会变黑显示不了内容。*//*
+                result.confirm();//  因为没有绑定事件，需要强行confirm,否则页面会变黑显示不了内容。*//**//*
                 return true;// 不需要绑定按键事件
             }*/
 

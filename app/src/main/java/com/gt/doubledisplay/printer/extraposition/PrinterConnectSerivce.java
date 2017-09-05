@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Base64;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.gprinter.aidl.GpService;
@@ -43,6 +44,8 @@ import io.reactivex.functions.Consumer;
  * Created by wzb on 2017/7/21 0021.
  * 蓝牙与USB能互相切换 主要通过广播操作
  * 一台蓝牙打印机只能跟一部设备配对
+ *
+ * 连接打印机阻塞UI线程没办法修改，GP封装在里面
  */
 
 public class PrinterConnectSerivce extends Service {
@@ -157,7 +160,7 @@ public class PrinterConnectSerivce extends Service {
      */
     public void openBluetoothOrUsbProt() {
         BluetoothDevice printDevice= GPBluetoothUtil.getConnectingBluetooth(mBluetoothAdapter);
-        if (printDevice!=null){
+        if (printDevice!=null){//有连接蓝牙
             openBluetoothProtFromDevice(printDevice);
         }else if(isHasUsbDevice()){
             openUsbProt();
@@ -271,7 +274,7 @@ public class PrinterConnectSerivce extends Service {
     private static void showHintNotConnectDialog(){
         if (hintNotConnectDialog==null){
             //0824 客户急着要
-            hintNotConnectDialog=new MoreFunctionDialog(MyApplication.getAppContext(),"不干胶打印机未连接请连接后再打印", R.style.HttpRequestDialogStyle);
+            hintNotConnectDialog=new MoreFunctionDialog(MyApplication.getAppContext(),"不干胶打印机未连接请连接后再打印\n若连接后任不能使用请尝试重启双屏设备", R.style.HttpRequestDialogStyle);
             hintNotConnectDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         }
         hintNotConnectDialog.show();

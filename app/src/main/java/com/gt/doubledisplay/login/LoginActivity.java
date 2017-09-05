@@ -75,7 +75,7 @@ public class LoginActivity extends RxAppCompatActivity {
         ButterKnife.bind(this);
         init();
         //连接socket  暂时这么写 如果是登录页面就不启动
-       // UpdateManager updateManager=new UpdateManager(this,"DoubleScreen");
+        //UpdateManager updateManager=new UpdateManager(this,"DoubleScreen");
         //updateManager.requestUpdate();
     }
 

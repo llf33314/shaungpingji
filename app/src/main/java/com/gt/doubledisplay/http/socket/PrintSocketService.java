@@ -13,8 +13,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.gt.doubledisplay.base.MyApplication;
-import com.gt.doubledisplay.bean.CallWebViewJS;
-import com.gt.doubledisplay.bean.TscOrderPrintBean;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.retrofit.HttpCall;
 import com.gt.doubledisplay.http.rxjava.observable.ResultTransformer;
@@ -46,6 +44,7 @@ import static com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce.P
  * Created by jack-lin on 2017/7/24 0024.
  */
 
+@Deprecated
 public class PrintSocketService extends Service {
     public static final String TAG = "PrintSocketService";
     private Socket mSocket;
@@ -102,7 +101,6 @@ public class PrintSocketService extends Service {
         public void call(Object... objects) {
             String json=objects[0].toString();
             Log.d(TAG, "socketData:"+json);
-            RxBus.get().post(new CallWebViewJS());
             try {
                 JSONObject jsonResult=new JSONObject(json);
 

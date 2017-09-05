@@ -149,13 +149,15 @@ public class PrintESCOrTSCUtil {
     "fansCurrency_deduction": 1,
     "cashier": "",
     "member_deduction": 0,
-    "shop_phone": "13528307867"
+    "shop_phone": "13528307867",
+    "order_id": "A00005"
     }
      */
     public static void printXCM(String s){
         JSONObject json= null;
         try {
             json = new JSONObject(s);
+            String orderId=json.getString("order_id");
             String jsonMenus=json.getString("menus");
             Gson gson=new Gson();
             List<TscOrderPrintBean.Menus> menus=gson.fromJson(jsonMenus,new TypeToken<ArrayList<TscOrderPrintBean.Menus>>(){}.getType());
@@ -164,7 +166,8 @@ public class PrintESCOrTSCUtil {
                     String size=m.getNorms()+" x1";
                     for (int i=0;i<m.getNum();i++){
 
-                        int res=PrinterConnectSerivce.printReceiptClicked(m.getMenu_no(),m.getName(),size,m.getCommnt());
+                       // int res=PrinterConnectSerivce.printReceiptClicked(m.getMenu_no(),m.getName(),size,m.getCommnt());
+                        int res=PrinterConnectSerivce.printReceiptClicked(orderId,m.getName(),size,m.getCommnt());
 
                         if (res==PRINTER_NOT_INTI){//打印机未初始化
                             break;
@@ -179,6 +182,7 @@ public class PrintESCOrTSCUtil {
 
         } catch (JSONException e) {
             //后面处理
+            ToastUtil.getInstance().showToast("服务器订单信息有误");
             e.printStackTrace();
         }
     }

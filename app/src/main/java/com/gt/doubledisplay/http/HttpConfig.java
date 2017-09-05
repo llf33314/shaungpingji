@@ -24,7 +24,7 @@ public class HttpConfig {
     //测试
     //public static final String DUOFRIEND_XCM="http://canyin.deeptel.com.cn/";
 
-     public static final String ADVERTISING_RUL=BASE_URL+"doubleScreenIndex/mobileIndex";
+    public static final String ADVERTISING_RUL=BASE_URL+"doubleScreenIndex/mobileIndex";
     //public static final String ADVERTISING_RUL="http://192.168.3.39:8091/views/Slide/list.html";
 
 
