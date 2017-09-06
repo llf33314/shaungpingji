@@ -41,7 +41,9 @@ public class UpdateManager {
     private Context context;
 
     private String appId = "";
-    String VERSION_URL = "https://deeptel.com.cn/app/79B4DE7C/getInfoByAppId.do?appId=";
+    //String VERSION_URL = "https://deeptel.com.cn/app/79B4DE7C/getInfoByAppId.do?appId=";
+    String VERSION_URL = "https://duofriend.com/app/79B4DE7C/getInfoByAppId.do?appId=";
+
     String APK_FILE_NAME = "DoubleScreen.apk";
     private static final int NEED_UPDATE = 0;
     private static final int DOWNLOADING = 1;
