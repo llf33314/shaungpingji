@@ -39,8 +39,9 @@ import okhttp3.Response;
 public class UpdateManager {
     private final static String TAG = "update";
     private Context context;
+
     private String appId = "";
-    String VERSION_URL = "http://deeptel.com.cn/app/79B4DE7C/getInfoByAppId.do";
+    String VERSION_URL = "https://deeptel.com.cn/app/79B4DE7C/getInfoByAppId.do?appId=";
     String APK_FILE_NAME = "DoubleScreen.apk";
     private static final int NEED_UPDATE = 0;
     private static final int DOWNLOADING = 1;
@@ -115,15 +116,12 @@ public class UpdateManager {
 
     OkHttpClient client = new OkHttpClient();
 
-    public String post() {
+    public String requestByGet() {
 
-        FormBody body = new FormBody.Builder()
-                .add("appId", appId)
-                .build();
 
         Request request = new Request.Builder()
-                .url(VERSION_URL)
-                .post(body)
+                .url(VERSION_URL+appId)
+                .get()
                 .build();
         Log.d("requestUpdate", "request==" + request.toString());
         Response response = null;
@@ -163,7 +161,7 @@ public class UpdateManager {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            String response = post();
+            String response = requestByGet();
             Log.d(TAG, "response==" + response);
             String str = ConvertUtils.unicode2String(response);
             AppUpdateBean updateBean = new Gson().fromJson(str, AppUpdateBean.class);
