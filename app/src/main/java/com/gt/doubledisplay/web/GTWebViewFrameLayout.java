@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Message;
 import android.text.TextUtils;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.gt.doubledisplay.base.BaseActivity;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.socket.PrintSocketService;
 import com.gt.doubledisplay.utils.commonutil.ConvertUtils;
@@ -116,20 +118,48 @@ public class GTWebViewFrameLayout extends FrameLayout {
     public XWalkUIClient getUIClient(){
         return new XWalkUIClient(mWebView){
             @Override
-            public boolean onJsAlert(XWalkView view, String url, String message, XWalkJavascriptResult result) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-
-                builder.setTitle("温馨提示")
-                        .setMessage(message)
-                        .setPositiveButton("确定", null);
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-                result.confirm();//  因为没有绑定事件，需要强行confirm,否则页面会变黑显示不了内容。*//**//*
+            public boolean onJsAlert(XWalkView view, String url, String message, final XWalkJavascriptResult result) {
+                showWebDialog(message,result);
                 return true;
             }
 
+            @Override
+            public boolean onJsConfirm(XWalkView view, String url, String message, final XWalkJavascriptResult result) {
+                showWebDialog(message,result);
+                return true;
+            }
+
+            @Override
+            public void onReceivedTitle(XWalkView view, String title) {
+                try {
+                    //副屏幕不走这里
+                    BaseActivity activity=(BaseActivity) GTWebViewFrameLayout.this.getContext();
+                    activity.setToolBarTitle(title);
+                }catch (ClassCastException e){
+                    super.onReceivedTitle(view,title);
+                }
+            }
         };
+    }
+
+    private void showWebDialog(String message,final XWalkJavascriptResult result){
+        new AlertDialog.Builder(this.getContext())
+                .setTitle("温馨提示")
+                .setMessage(message)
+                .setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        result.confirm();
+                    }
+                })
+                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        result.cancel();
+                    }
+                })
+                .show();
+
     }
 
     public XWalkResourceClient getWebChromeClient(){
@@ -178,7 +208,6 @@ public class GTWebViewFrameLayout extends FrameLayout {
 
     public void loadUrl(){
         mWebView.loadUrl(mUrl);
-        //mWebView.loadUrl("file:///android_asset/dist/views/Slide/list.html");
     }
 
     public XWalkView getWebView(){

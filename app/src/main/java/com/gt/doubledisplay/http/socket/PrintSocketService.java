@@ -41,7 +41,7 @@ import static com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce.P
 
 /**
  * Description:
- * Created by jack-lin on 2017/7/24 0024.
+ *暂时留着
  */
 
 @Deprecated

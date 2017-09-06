@@ -11,16 +11,16 @@ public class HttpConfig {
     //测试
     //public static final String BASE_URL = "http://yj.deeptel.com.cn/";
     //堡垒
-    public static final String BASE_URL = "http://nb.yj.deeptel.com.cn/";
+   // public static final String BASE_URL = "http://nb.yj.deeptel.com.cn/";
     //正式
-    //public static final String BASE_URL = " http://yj.duofriend.com/";
+    public static final String BASE_URL = " http://yj.duofriend.com/";
 
     public static final String LOGIN_URL=BASE_URL+"/ErpMenus/79B4DE7C/Erplogin.do";
 
     //正式
-   // public static final String DUOFRIEND_XCM="http://canyin.duofriend.com/";
+    public static final String DUOFRIEND_XCM="http://canyin.duofriend.com/";
     //堡垒
-    public static final String DUOFRIEND_XCM="http://nb.canyin.deeptel.com.cn/";
+   // public static final String DUOFRIEND_XCM="http://nb.canyin.deeptel.com.cn/";
     //测试
     //public static final String DUOFRIEND_XCM="http://canyin.deeptel.com.cn/";
 

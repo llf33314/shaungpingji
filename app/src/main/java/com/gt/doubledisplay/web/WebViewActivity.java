@@ -3,9 +3,13 @@ package com.gt.doubledisplay.web;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.KeyEvent;
 
 import com.gt.doubledisplay.base.BaseActivity;
 import com.gt.doubledisplay.utils.RxBus;
+import com.gt.doubledisplay.utils.commonutil.ToastUtil;
+
+import org.xwalk.core.XWalkNavigationHistory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -59,6 +63,17 @@ public class WebViewActivity extends BaseActivity {
             mWebView = null;*/
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+             if (keyCode == KeyEvent.KEYCODE_BACK) {
+                 if (mGTWebViewFrameLayout.getWebView().getNavigationHistory().canGoBack()) {
+                     mGTWebViewFrameLayout.getWebView().getNavigationHistory().navigate(XWalkNavigationHistory.Direction.BACKWARD, 1);//返回上一页面
+                     } else {
+                     ToastUtil.getInstance().showToast("已是最后一页");
+                    } return true;
+               }
+        return super.onKeyDown(keyCode, event);
+    }
 
 }
 
