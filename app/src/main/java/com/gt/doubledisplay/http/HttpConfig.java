@@ -5,29 +5,25 @@ package com.gt.doubledisplay.http;
  */
 
 public class HttpConfig {
-    public static final int SUCCESS_CODE=200;
-
 
     //测试
     //public static final String BASE_URL = "http://yj.deeptel.com.cn/";
     //堡垒
-   // public static final String BASE_URL = "http://nb.yj.deeptel.com.cn/";
+   public static final String BASE_URL = "http://nb.yj.deeptel.com.cn/";
     //正式
-    public static final String BASE_URL = " http://yj.duofriend.com/";
+   // public static final String BASE_URL = " http://yj.duofriend.com/";
 
     public static final String LOGIN_URL=BASE_URL+"/ErpMenus/79B4DE7C/Erplogin.do";
 
     //正式
-    public static final String DUOFRIEND_XCM="http://canyin.duofriend.com/";
+   // public static final String DUOFRIEND_XCM="http://canyin.duofriend.com/";
     //堡垒
-   // public static final String DUOFRIEND_XCM="http://nb.canyin.deeptel.com.cn/";
+    public static final String DUOFRIEND_XCM="http://nb.canyin.deeptel.com.cn/";
     //测试
     //public static final String DUOFRIEND_XCM="http://canyin.deeptel.com.cn/";
 
     public static final String ADVERTISING_RUL=BASE_URL+"doubleScreenIndex/mobileIndex";
     //public static final String ADVERTISING_RUL="http://192.168.3.39:8091/views/Slide/list.html";
-
-
 
      //socket auth 链接socket时的key值  测试
    // public static final String SOCKET_SERVER_URL = "http://113.106.202.51:8881";

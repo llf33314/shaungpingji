@@ -224,6 +224,10 @@ public class PrinterConnectSerivce extends Service {
         }
     }
 
+    /**
+     * 0911这个方法会异常  因为连接了其他的USB就会去打开端口
+     * @return
+     */
     private static int openUsbProt( ){
         if (mUsbDevice==null){
             ToastUtil.getInstance().showToast("请连接USB打印机");

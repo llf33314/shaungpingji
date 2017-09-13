@@ -39,13 +39,6 @@ public class WebViewActivity extends BaseActivity {
         showBtnBlu();
         mGTWebViewFrameLayout.loadUrl();
 
-
-        Observable.interval(5, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
-            @Override
-            public void accept(@NonNull Long aLong) throws Exception {
-
-            }
-        });
     }
 
     @Override

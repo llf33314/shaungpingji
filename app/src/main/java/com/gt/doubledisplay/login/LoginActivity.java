@@ -30,6 +30,7 @@ import com.gt.doubledisplay.http.rxjava.observer.BaseObserver;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.update.UpdateManager;
 import com.gt.doubledisplay.utils.RxBus;
+import com.gt.doubledisplay.utils.commonutil.ScreenUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.gt.doubledisplay.web.GTWebViewFrameLayout;
 import com.gt.doubledisplay.web.WebViewActivity;
@@ -73,7 +74,10 @@ public class LoginActivity extends RxAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+       // float a= ScreenUtils.getDensity();
         init();
+
+
         //连接socket  暂时这么写 如果是登录页面就不启动
         //UpdateManager updateManager=new UpdateManager(this,"DoubleScreen");
         //updateManager.requestUpdate();
@@ -204,7 +208,8 @@ public class LoginActivity extends RxAppCompatActivity {
             cbPsd.setChecked(true);
         }
         portIntent = new Intent(this, PrinterConnectSerivce.class);
-        startService(portIntent);
+        //0911 新设备展示屏蔽 否则打开usb端口会抱错
+        //startService(portIntent);
     }
 
 }

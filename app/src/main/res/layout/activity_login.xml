@@ -8,23 +8,23 @@
     android:focusableInTouchMode="true"
     >
     <LinearLayout
-        android:layout_width="425dp"
-        android:layout_height="310dp"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_130"
         android:orientation="vertical"
-        android:paddingTop="50dp"
-        android:paddingBottom="50dp"
-        android:paddingLeft="45dp"
-        android:paddingRight="45dp"
+        android:paddingTop="@dimen/dp_15"
+        android:paddingBottom="@dimen/dp_15"
+        android:paddingLeft="@dimen/dp_12"
+        android:paddingRight="@dimen/dp_12"
         android:layout_gravity="center_vertical|right"
-        android:layout_marginRight="170dp"
+        android:layout_marginRight="@dimen/dp_75"
         android:background="@color/white"
         >
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="@dimen/dp_22"
     android:orientation="horizontal"
     android:background="@drawable/bg_gray_border"
-    android:paddingLeft="15dp"
+    android:paddingLeft="@dimen/dp_8"
     >
     <TextView
         android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
         android:gravity="center"
         android:text="账号："
         android:textColor="@color/black"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="@dimen/dp_8"
         android:textSize="18sp"
         />
     <EditText
@@ -56,10 +56,10 @@
             />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/dp_22"
             android:orientation="horizontal"
             android:background="@drawable/bg_gray_border"
-            android:paddingLeft="15dp"
+            android:paddingLeft="@dimen/dp_8"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -67,7 +67,7 @@
                 android:gravity="center"
                 android:text="密码："
                 android:textColor="@color/black"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="@dimen/dp_8"
                 android:textSize="18sp"
                 />
             <EditText
@@ -120,7 +120,7 @@
         <Button
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/dp_20"
             android:text="登录"
             android:textSize="18sp"
             android:textColor="@color/white"
