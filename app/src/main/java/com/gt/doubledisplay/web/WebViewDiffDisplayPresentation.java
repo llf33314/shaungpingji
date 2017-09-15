@@ -76,7 +76,7 @@ public class WebViewDiffDisplayPresentation extends Presentation {
                     @Override
                     public void accept(@NonNull ScreenMsgBean screenMsgBean) throws Exception {
                         mGTWebViewFrameLayout.getWebView().loadUrl("javascript:getDataAndShow('"+screenMsgBean.getMsg()+"')");
-                        Log.d("WebView","javascript:getDataAndShow('"+screenMsgBean.getMsg()+"')");
+                       // Log.d("WebView","javascript:getDataAndShow('"+screenMsgBean.getMsg()+"')");
                     }
                 });
 

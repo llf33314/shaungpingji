@@ -1,3 +1,4 @@
+/*
 package com.gt.doubledisplay.http.socket;
 
 import android.app.Service;
@@ -39,10 +40,12 @@ import io.socket.emitter.Emitter;
 
 import static com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce.PRINTER_NOT_INTI;
 
+*/
 /**
  * Description:
  *暂时留着
- */
+ *//*
+
 
 @Deprecated
 public class PrintSocketService extends Service {
@@ -157,9 +160,11 @@ public class PrintSocketService extends Service {
         }
     };
 
-    /**
+    */
+/**
      * 初始化Socket,Http的连接方式
-     */
+     *//*
+
     public void initSocketHttp() {
         try {
             mSocket = IO.socket(HttpConfig.SOCKET_SERVER_URL); // 初始化Socket
@@ -170,9 +175,11 @@ public class PrintSocketService extends Service {
 
     }
 
-    /**
+    */
+/**
      * 初始化socket，并建立连接
-     */
+     *//*
+
     public void connectSocket() {
         if (mSocket==null){
             ToastUtil.getInstance().showToast("打印机连接服务器异常");
@@ -185,9 +192,11 @@ public class PrintSocketService extends Service {
         mSocket.on("chatevent", socketEvent);
         mSocket.connect();
     }
-    /**
+    */
+/**
      * 关闭所有socket链接
-     */
+     *//*
+
     public void disSocket() {
         mSocket.disconnect();
         mSocket.off("chatevent", socketEvent);
@@ -201,3 +210,4 @@ public class PrintSocketService extends Service {
 
     }
 }
+*/

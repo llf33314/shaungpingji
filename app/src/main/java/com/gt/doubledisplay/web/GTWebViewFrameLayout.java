@@ -17,8 +17,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.gt.doubledisplay.base.BaseActivity;
-import com.gt.doubledisplay.http.HttpConfig;
-import com.gt.doubledisplay.http.socket.PrintSocketService;
 import com.gt.doubledisplay.utils.commonutil.ConvertUtils;
 
 import org.xwalk.core.XWalkJavascriptResult;

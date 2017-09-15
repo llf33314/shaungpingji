@@ -18,7 +18,7 @@ public interface ApiService {
     //暂时去掉sign参数
     @FormUrlEncoded
     @POST("doubleScreenMobile/getBusId")
-    Observable<BaseResponse<LoginBean>> login(@Field("login_name")String account, @Field("password")String psd/*,@Field("sign")String sign*/);
+    Observable<BaseResponse<LoginBean>> login(@Field("login_name")String account, @Field("password")String psd,@Field("sign")String sign);
 
     @FormUrlEncoded
     @POST("doubleScreenMobile/getSign")

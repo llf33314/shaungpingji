@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--<Button-->
+        <!--android:id="@+id/btn_cashBox"-->
+        <!--android:layout_width="300px"-->
+        <!--android:layout_height="200px"-->
+        <!--android:text="钱箱"-->
+        <!--android:textSize="50px"/>-->
+
+    <!--<Button-->
+        <!--android:layout_toRightOf="@+id/btn_cashBox"-->
+        <!--android:id="@+id/btn_printer"-->
+        <!--android:layout_width="300px"-->
+        <!--android:layout_height="200px"-->
+        <!--android:text="打印"-->
+        <!--android:textSize="50px"/>-->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll_1"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="钱箱"
+                android:textSize="100px"
+                />
+            <EditText
+                android:id="@+id/et_box_space"
+                android:layout_width="250dp"
+                android:layout_marginLeft="100dp"
+                android:textSize="50px"
+                android:layout_height="match_parent"
+                android:inputType="number"
+                android:hint="时间间隔"/>
+            <EditText
+                android:id="@+id/et_box_times"
+                android:layout_width="250dp"
+                android:layout_marginLeft="100dp"
+                android:textSize="50px"
+                android:layout_height="match_parent"
+                android:inputType="number"
+                android:hint="执行次数"/>
+            <Button
+                android:id="@+id/btn_start_box"
+                android:layout_width="300dp"
+                android:layout_marginLeft="100dp"
+                android:layout_height="match_parent"
+                android:text="开始"
+                android:textSize="50px"/>
+            <TextView
+                android:id="@+id/tv_box_count"
+                android:layout_marginLeft="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textSize="50px"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_below="@+id/ll_1"
+            android:layout_marginTop="100dp"
+            android:id="@+id/ll_2"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="打印"
+                android:textSize="100px"
+                />
+            <EditText
+                android:id="@+id/et_print_space"
+                android:layout_width="250dp"
+                android:layout_marginLeft="100dp"
+                android:textSize="50px"
+                android:layout_height="match_parent"
+                android:inputType="number"
+                android:hint="时间间隔"/>
+            <EditText
+                android:id="@+id/et_print_times"
+                android:layout_width="250dp"
+                android:layout_marginLeft="100dp"
+                android:textSize="50px"
+                android:layout_height="match_parent"
+                android:inputType="number"
+                android:hint="执行次数"/>
+            <Button
+                android:id="@+id/btn_start_print"
+                android:layout_width="300dp"
+                android:layout_marginLeft="100dp"
+                android:layout_height="match_parent"
+                android:text="开始"
+                android:textSize="50px"/>
+            <TextView
+                android:id="@+id/tv_print_count"
+                android:layout_marginLeft="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="50px"
+                android:gravity="center_vertical"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true">
+        <Button
+            android:id="@+id/btMoneyBox"
+            android:layout_width="400px"
+            android:layout_height="250px"
+            android:text="钱箱"
+            android:textSize="30dp"
+            android:textColor="#FFFFFF"
+            android:background="@color/colorPrimaryDark"/>
+
+        <Button
+            android:id="@+id/btMsPrinter"
+            android:layout_width="400px"
+            android:layout_height="250px"
+            android:text="打印机"
+            android:textSize="30dp"
+            android:textColor="#FFFFFF"
+            android:background="@color/colorPrimaryDark"
+            android:layout_marginLeft="30dp"/>
+
+        <Button
+            android:id="@+id/btMoneyBoxMsPrinter"
+            android:layout_width="400px"
+            android:layout_height="250px"
+            android:text="钱箱打印机"
+            android:textSize="30dp"
+            android:textColor="#FFFFFF"
+            android:background="@color/colorPrimaryDark"
+            android:layout_marginLeft="30dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

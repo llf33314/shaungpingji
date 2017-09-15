@@ -32,7 +32,7 @@ public class CookieJarImpl implements CookieJar {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public synchronized void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-        Log.i("test","saveFromResponse url="+url.toString()+" url.host="+url.host()+"  cookies.size="+cookies.size()+" cookies="+cookies.get(0).toString());
+        Log.i("CookieJarImpl","saveFromResponse url="+url.toString()+" url.host="+url.host()+"  cookies.size="+cookies.size()+" cookies="+cookies.get(0).toString());
         //清空缓存 否则再登录登录不上 应该与web那边有关
         if (HttpConfig.LOGIN_URL.equals(url.toString())){
             cookieManager.removeAllCookie();

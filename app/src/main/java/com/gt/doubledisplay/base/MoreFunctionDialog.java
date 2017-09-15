@@ -3,10 +3,12 @@ package com.gt.doubledisplay.base;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gt.doubledisplay.R;
@@ -19,6 +21,9 @@ import com.gt.doubledisplay.R;
 public class MoreFunctionDialog extends Dialog {
 
     private TextView tvCancel;
+
+    private TextView btnOk;
+    private TextView btnCancel;
 
     private String msg="";
 
@@ -44,6 +49,10 @@ public class MoreFunctionDialog extends Dialog {
         setContentView(R.layout.dialog_more_function);
         tvCancel= (TextView) this.findViewById(R.id.tv_more_function_cancel);
         hintMsg= (TextView) this.findViewById(R.id.hint_msg);
+        btnOk= (TextView) this.findViewById(R.id.dialog_more_ok);
+        btnCancel= (TextView) this.findViewById(R.id.dialog_more_cancel);
+
+
         if (!TextUtils.isEmpty(msg)){
             hintMsg.setText(msg);
         }
@@ -60,5 +69,19 @@ public class MoreFunctionDialog extends Dialog {
         return tvCancel;
     }
 
+    /**
+     * 弹出对话框并且显示下面俩个按钮
+     */
+    public void showButton(@Nullable View.OnClickListener okListener,@Nullable View.OnClickListener cancelListener){
+            if (okListener!=null){
+                btnOk.setVisibility(View.VISIBLE);
+            }
+            if (okListener!=null){
+                btnCancel.setVisibility(View.VISIBLE);
+            }
+            btnOk.setOnClickListener(okListener);
+            btnCancel.setOnClickListener(cancelListener);
+             this.show();
+    }
 
 }

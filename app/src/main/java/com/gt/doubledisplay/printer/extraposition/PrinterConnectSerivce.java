@@ -16,6 +16,7 @@ import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.gprinter.aidl.GpService;
@@ -32,6 +33,7 @@ import com.gt.doubledisplay.printer.extraposition.bluetooth.GPBluetoothUtil;
 import com.gt.doubledisplay.printer.extraposition.bluetooth.OpenPrinterPortMsg;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
+import com.orhanobut.hawk.Hawk;
 
 import org.apache.commons.lang.ArrayUtils;
 
@@ -67,6 +69,8 @@ public class PrinterConnectSerivce extends Service {
 
     private PrinterServiceConnection conn = null;
     private static int mPrinterIndex = 0;
+
+    private static boolean showNotConnectHint=true;
 
     UsbManager mUsbManager ;
 
@@ -278,10 +282,24 @@ public class PrinterConnectSerivce extends Service {
     private static void showHintNotConnectDialog(){
         if (hintNotConnectDialog==null){
             //0824 客户急着要
-            hintNotConnectDialog=new MoreFunctionDialog(MyApplication.getAppContext(),"不干胶打印机未连接请连接后再打印\n若连接后任不能使用请尝试重启双屏设备", R.style.HttpRequestDialogStyle);
+            hintNotConnectDialog=new MoreFunctionDialog(MyApplication.getAppContext(),"不干胶打印机未连接请连接后再打印\n若连接后仍不能使用请尝试重启设备", R.style.HttpRequestDialogStyle);
             hintNotConnectDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         }
-        hintNotConnectDialog.show();
+        if (!(Hawk.get("hideNotConnectHint",0)==1)&&showNotConnectHint){
+            hintNotConnectDialog.showButton(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Hawk.put("hideNotConnectHint",1);
+                    hintNotConnectDialog.dismiss();
+                }
+            }, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showNotConnectHint=false;
+                    hintNotConnectDialog.dismiss();
+                }
+            });
+        }
     }
 
     /**
@@ -414,7 +432,7 @@ public class PrinterConnectSerivce extends Service {
                          //  ToastUtil.getInstance().showToast("无效的打印机");
                               break;
                         case  GpDevice. STATE_VALID_PRINTER : //有效的打印机
-                            ToastUtil.getInstance().showToast("已连接打印机");
+                            ToastUtil.getInstance().showToast("外置打印机已连接");
                               break;
 
                     }

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gprinter.command.EscCommand;
 import com.gprinter.command.LabelCommand;
-import com.gt.doubledisplay.bean.TscOrderPrintBean;
+import com.gt.doubledisplay.bean.OrderPrintBean;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 import org.json.JSONException;
@@ -120,49 +120,14 @@ public class PrintESCOrTSCUtil {
         return tsc;
     }
 
-    /**
-     * 打印不干胶
-     * @param
-     *
-     * {
-    "result": 1,
-    "menus": [
-    {
-    "menu_no": "1003",
-    "num": 1,
-    "name": "小白兔套餐",
-    "norms": "",
-    "money": 0.01,
-    "commnt": ""
-    }
-    ],
-    "integral_deduction": 1,
-    "pay_time": "",
-    "shop_adress": "广东省江门市江海区江海区滘头街道勤政路政府c栋513",
-    "order_code": "DD1504063488834",
-    "shop_name": "谷通科技",
-    "pay_money": 0,
-    "order_time": "2017-08-30 11:24:16",
-    "pay_type": 0,
-    "print_type": 1,
-    "consumption_money": 0.01,
-    "fansCurrency_deduction": 1,
-    "cashier": "",
-    "member_deduction": 0,
-    "shop_phone": "13528307867",
-    "order_id": "A00005"
-    }
-     */
-    public static void printXCM(String s){
-        JSONObject json= null;
-        try {
-            json = new JSONObject(s);
-            String orderId=json.getString("order_id");
-            String jsonMenus=json.getString("menus");
-            Gson gson=new Gson();
-            List<TscOrderPrintBean.Menus> menus=gson.fromJson(jsonMenus,new TypeToken<ArrayList<TscOrderPrintBean.Menus>>(){}.getType());
+    public static void printXCM(String orderId,List<OrderPrintBean.MenusBean> menus){
+        //JSONObject json= null;
+           // json = new JSONObject(s);
+           // String orderId=json.getString("order_id");
+           // String jsonMenus=json.getString("menus");
+           // Gson gson=new Gson();
             if (menus!=null&&menus.size()>0){
-                for (TscOrderPrintBean.Menus m:menus){
+                for (OrderPrintBean.MenusBean m:menus){
                     String size=m.getNorms()+" x1";
                     for (int i=0;i<m.getNum();i++){
 
@@ -179,12 +144,6 @@ public class PrintESCOrTSCUtil {
                     }
                 }
             }
-
-        } catch (JSONException e) {
-            //后面处理
-            ToastUtil.getInstance().showToast("服务器订单信息有误");
-            e.printStackTrace();
-        }
     }
 
   /*private static int sendLabelReceipt() {

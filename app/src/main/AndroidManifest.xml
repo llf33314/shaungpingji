@@ -52,11 +52,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+
         <activity
             android:name=".printer.extraposition.bluetooth.BluetoothSettingActivity" >
         </activity>
         <activity
-            android:name=".setting.SettingActivity" >
+            android:name=".setting.SettingActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
         </activity>
         <service android:name=".printer.extraposition.PrinterConnectSerivce"/>
         <service
@@ -69,8 +74,6 @@
             </intent-filter>
         </service>
         <service android:name="com.gprinter.service.AllService" >
-        </service>
-        <service android:name=".http.socket.PrintSocketService" >
         </service>
 
     </application>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="180dp"
+    android:layout_width="@dimen/dp_150"
+    android:layout_height="@dimen/dp_90"
     android:background="@drawable/white_radius_bg"
     >
     <TextView
         android:layout_alignParentRight="true"
         android:id="@+id/tv_more_function_cancel"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:textSize="28sp"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:textSize="30sp"
         android:text="×"
         android:gravity="center"
         android:textColor="@color/wifi_connection_tv_color"
@@ -19,18 +19,47 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
-            android:maxLines="1"
             android:id="@+id/hint_msg"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="wrap_content"
             android:textColor="@color/wifi_connection_tv_color"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:text="精彩功能即将开启，敬请期待。"
             android:gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             />
 
     </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_20"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        >
+        <TextView
+            android:id="@+id/dialog_more_ok"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="永久不提示"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:background="@drawable/bg_gray_border_not_radius"
+            android:textColor="@color/wifi_connection_tv_color"
+            />
+        <TextView
+            android:id="@+id/dialog_more_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="本次不提示"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textColor="@color/wifi_connection_tv_color"
+            android:background="@drawable/bg_gray_border_not_radius"
+            />
+
+    </LinearLayout>
 
 </RelativeLayout>

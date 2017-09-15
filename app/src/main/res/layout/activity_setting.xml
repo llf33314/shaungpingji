@@ -15,17 +15,50 @@
         android:textColor="@color/loginNotP"
         android:background="@drawable/btn_green_border_and_white"
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/btn_green_border_and_white"
+        android:gravity="center"
+        >
+        <CheckBox
+            android:id="@+id/setting_cb_use_printer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="是否使用内置打印机"
+            android:textColor="@color/loginNotP"
+            android:textSize="20sp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/btn_green_border_and_white"
+        android:gravity="center"
+        >
+        <CheckBox
+            android:id="@+id/setting_cb_use_money_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="是否使用钱箱            "
+            android:textColor="@color/loginNotP"
+            android:textSize="20sp"
+            />
+    </LinearLayout>
+
     <Button
         android:id="@+id/check_update"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="检查更新"
-        android:textSize="20sp"
-        android:gravity="center"
         android:layout_marginTop="25dp"
-        android:textColor="@color/loginNotP"
         android:background="@drawable/btn_green_border_and_white"
-        />
+        android:gravity="center"
+        android:text="检查更新"
+        android:textColor="@color/loginNotP"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/setting_imei"

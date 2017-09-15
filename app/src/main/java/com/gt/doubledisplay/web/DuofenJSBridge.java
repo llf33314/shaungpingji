@@ -7,11 +7,14 @@ import android.os.Looper;
 import android.util.Log;
 import android.webkit.WebView;
 
+import com.google.gson.Gson;
 import com.gt.doubledisplay.base.MyApplication;
+import com.gt.doubledisplay.bean.OrderPrintBean;
 import com.gt.doubledisplay.bean.ScreenMsgBean;
 import com.gt.doubledisplay.printer.extraposition.PrintESCOrTSCUtil;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
+import com.weitoo.printer.MsPrinter;
 
 import org.xwalk.core.JavascriptInterface;
 import org.xwalk.core.XWalkView;
@@ -32,6 +35,8 @@ public class DuofenJSBridge {
     private Context context; // 传进来一个context，便于访问各种资源
 
     private XWalkView mWebView;
+
+    private Gson gson=new Gson();
 
     // 构造器
     public DuofenJSBridge(Context context, XWalkView webView){
@@ -60,21 +65,77 @@ public class DuofenJSBridge {
 
     /**
      * 主屏点击扫码支付 显示副副屏二维码
-     * 这个方法命名不正确
-     * @param data
+     * @param data 里面字段能标记是否开还是关
      */
     @JavascriptInterface
     public void showPayQRCode(String data){
         Log.d(TAG,"showPayQRCode:"+data);
         RxBus.get().post(new ScreenMsgBean(data));
     }
+
     /**
      * 打印不干胶
+     * {
+     "cashier": "",
+     "consumption_money": 4.32,
+     "fansCurrency_deduction": 1,
+     "integral_deduction": 1,
+     "member_deduction": 0,
+     "menus": [
+     {
+     "commnt": "",
+     "money": 3.3,
+     "name": "叉烧包",
+     "norms": "微辣  紫色",
+     "num": 1
+     },
+     {
+     "commnt": "",
+     "menu_no": "1003",
+     "money": 1,
+     "name": "黄金叉烧",
+     "norms": "微辣  小份  白色",
+     "num": 1
+     },
+     {
+     "commnt": "",
+     "menu_no": "3362",
+     "money": 0.02,
+     "name": "洋葱炒肉片",
+     "norms": "小份  中辣",
+     "num": 2
+     }
+     ],
+     "order_code": "DD1505292021472",
+     "order_id": "A00001",
+     "order_time": "2017-09-13 16:40:21",
+     "pay_money": 4.32,
+     "pay_time": "2017-09-13 16:40:33",
+     "pay_type": 1,
+     "print_type": 1,
+     "result": 1,
+     "shop_adress": "广东省深圳市南山区兰光科技园C座513",
+     "shop_name": "谷通科技",
+     "shop_phone": "0755-26609632"
+     }
      */
     @JavascriptInterface
     public void printTscOrder(String jsonMsg){
-        Log.d(TAG,"printTscOrder:"+jsonMsg);
-        PrintESCOrTSCUtil.printXCM(jsonMsg);
+        //Log.d(TAG,"printTscOrder:"+jsonMsg);
+        OrderPrintBean order=gson.fromJson(jsonMsg,OrderPrintBean.class);
+        if (order.getPay_type()==1){//现金支付打开钱箱
+            MsPrinter.openMoneyBox();
+        }
+
+        //微兔打印内置打印机
+        MsPrinter.printOrder(order);
+        //打印不干胶
+        PrintESCOrTSCUtil.printXCM(order.getOrder_id(),order.getMenus());
+    }
+
+    @JavascriptInterface
+    public void openMoneyBox(){
+        MsPrinter.openMoneyBox();
     }
 
   /**

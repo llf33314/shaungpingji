@@ -50,8 +50,6 @@ import io.reactivex.functions.Function;
 
 public class LoginActivity extends RxAppCompatActivity {
 
-
-
     @BindView(R.id.login_forget_psd)
     TextView loginForgetPsd;
     @BindView(R.id.btn_login)
@@ -63,7 +61,6 @@ public class LoginActivity extends RxAppCompatActivity {
     @BindView(R.id.login_cb_psd)
     CheckBox cbPsd;
 
-
     private static final String ACCOUNT="login_account";
     private static final String PSD="login_psd";
     //打印机连接
@@ -74,16 +71,13 @@ public class LoginActivity extends RxAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-       // float a= ScreenUtils.getDensity();
+        float a= ScreenUtils.getDensity();
         init();
-
 
         //连接socket  暂时这么写 如果是登录页面就不启动
         //UpdateManager updateManager=new UpdateManager(this,"DoubleScreen");
         //updateManager.requestUpdate();
     }
-
-
 
     @OnClick({R.id.login_forget_psd, R.id.btn_login})
     public void onViewClicked(View view) {
@@ -94,19 +88,13 @@ public class LoginActivity extends RxAppCompatActivity {
                 break;
 
             case R.id.btn_login:
-            /*    Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
-                intent.putExtra(GTWebViewFrameLayout.PARAM_URL,"http://canyin.duofriend.com");
-                startActivity(intent);*/
+
+                /*if (true){
+                    new ChooseBusinessDialog(LoginActivity.this,R.style.HttpRequestDialogStyle).show();
+                    return;
+                }*/
 
 
-              //  ESCUtil.printInternal("12025477484","你尚未成为会员","￥128.00","￥50.00","-￥0.00","-￥0.00","-￥0.00","￥178.00");
-             /*   if (test%2==0){
-                    PrinterConnectSerivce.printReceiptClicked("100");
-                }else{
-                    printInternal("12025477484","你尚未成为会员","¥128.00","¥50.00","-¥0.00","-¥0.00","-¥0.00","178.00");
-                }
-                test++;*/
-                // printInternal("12025477484","你尚未成为会员","¥128.00","¥50.00","-¥0.00","-¥0.00","-¥0.00","178.00");
                 final String account=etAccount.getText().toString().trim();
                 final String psd=etPsd.getText().toString().trim();
                 if (TextUtils.isEmpty(account)||TextUtils.isEmpty(psd)){
@@ -115,16 +103,16 @@ public class LoginActivity extends RxAppCompatActivity {
                 }
 
                 //暂时去掉 等session共享再放上去
-              /* HttpCall.getApiService()
+               HttpCall.getApiService()
                         .getSign(account,psd,"double_screen_sign_code_is_ok")
                         .flatMap(new Function<BaseResponse<LoginSignBean>, ObservableSource<BaseResponse<LoginBean>>>() {
                             @Override
                             public ObservableSource<BaseResponse<LoginBean>> apply(@NonNull BaseResponse<LoginSignBean> loginSignBeanBaseResponse) throws Exception {
 
                                 return  HttpCall.getApiService().login(account,psd,loginSignBeanBaseResponse.getData().getSign());}
-                        })*/
-                HttpCall.getApiService()
-                        .login(account,psd)
+                        })
+               /* HttpCall.getApiService()
+                        .login(account,psd)*/
                         .flatMap(ResultTransformer.<LoginBean>flatMap())//这里会去处理 非成功的code
                         .flatMap(new Function<LoginBean, ObservableSource<BaseResponse<DeviceBean>>>(){
                             @Override
@@ -208,8 +196,8 @@ public class LoginActivity extends RxAppCompatActivity {
             cbPsd.setChecked(true);
         }
         portIntent = new Intent(this, PrinterConnectSerivce.class);
-        //0911 新设备展示屏蔽 否则打开usb端口会抱错
-        //startService(portIntent);
+        //0911 新设备暂时屏蔽 否则打开佳博usb端口会报错
+        startService(portIntent);
     }
 
 }
