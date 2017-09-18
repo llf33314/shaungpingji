@@ -26,7 +26,7 @@ public class PrintESCOrTSCUtil {
         esc.addPrintAndFeedLines((byte) 1);
         esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);// 设置打印居中
         esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF);// 设置为倍高倍宽
-        esc.addText("多粉餐厅（赛格）\n"); // 打印文字
+        esc.addText("多粉\n"); // 打印文字
         esc.addPrintAndLineFeed();
 
         // 打印文字 *//*

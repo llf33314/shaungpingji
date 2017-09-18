@@ -26,7 +26,6 @@ import android.widget.TextView;
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.base.BaseActivity;
 import com.gt.doubledisplay.base.OnRecyclerViewItemClickListener;
-import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.BluetoothUtil;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
@@ -54,8 +53,8 @@ public class BluetoothSettingActivity extends BaseActivity {
 
     @BindView(R.id.rv_bluetooth_bonded)
     RecyclerView rvBluetoothBonded;
-    @BindView(R.id.rv_bluetooto_scan_result)
-    RecyclerView rvBluetootoScanResult;
+    @BindView(R.id.rv_bluetooth_scan_result)
+    RecyclerView rvBluetoothScanResult;
     @BindView(R.id.btn_scan_bluetooth)
     Button btnScanBluetooth;
     @BindView(R.id.sw_bluetooth)
@@ -65,6 +64,7 @@ public class BluetoothSettingActivity extends BaseActivity {
 
     @BindView(R.id.bluetooth_scan_pb)
     ProgressBar scanProgressBar;
+
     public static final String PIN="0000";
 
     BluetoothAdapter mBluetoothAdapter;
@@ -103,7 +103,7 @@ public class BluetoothSettingActivity extends BaseActivity {
                 case REFRESH_BOND:
                     refreshBonded();
                     rvBluetoothBonded.requestLayout();
-                    rvBluetootoScanResult.requestLayout();
+                    rvBluetoothScanResult.requestLayout();
                     break;
                 case REFRESH_BOND_SCAN:
                     refreshBonded();
@@ -134,8 +134,10 @@ public class BluetoothSettingActivity extends BaseActivity {
     private void init() {
         rvBluetoothBonded.setLayoutManager(new LinearLayoutManager(this));
         rvBluetoothBonded.setHasFixedSize(true);
-        rvBluetootoScanResult.setLayoutManager(new LinearLayoutManager(this));
-        rvBluetootoScanResult.setHasFixedSize(true);
+
+        rvBluetoothScanResult.setLayoutManager(new LinearLayoutManager(this));
+        rvBluetoothScanResult.setHasFixedSize(true);
+
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (mBluetoothAdapter.isEnabled()){
@@ -195,7 +197,7 @@ public class BluetoothSettingActivity extends BaseActivity {
         //已配对的蓝牙
         refreshBonded();
 
-        rvBluetootoScanResult.setAdapter(scanResultAdapter=new BondedRecyclerviewAdapter(scanDevices));
+        rvBluetoothScanResult.setAdapter(scanResultAdapter=new BondedRecyclerviewAdapter(scanDevices));
 
         //点击断开连接
         mBondedRecyclerviewAdapter.setOnItemClickListener(new OnRecyclerViewItemClickListener() {
@@ -237,7 +239,7 @@ public class BluetoothSettingActivity extends BaseActivity {
             @Override
             public void onItemClick(View view) {
 
-                String mac=scanResultAdapter.getMacAddress(rvBluetootoScanResult.getChildLayoutPosition(view));
+                String mac=scanResultAdapter.getMacAddress(rvBluetoothScanResult.getChildLayoutPosition(view));
                 if (TextUtils.isEmpty(mac)){
                     ToastUtil.getInstance().showToast("目标蓝牙地址为空，无法连接");
                     return;
@@ -463,6 +465,7 @@ public class BluetoothSettingActivity extends BaseActivity {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // If it's already paired, skip it, because it's been listed
                 // already
+                //这里可以判断去除名称相同的蓝牙？
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED&&device.getBondState()!=BluetoothDevice.BOND_BONDING) {
                     scanResultAdapter.addItem(device);
                 }

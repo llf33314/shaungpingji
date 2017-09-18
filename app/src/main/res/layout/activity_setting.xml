@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
-    >
+    android:orientation="vertical"
+    android:padding="15dp">
+
     <Button
         android:id="@+id/blu_setting"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="蓝牙设置"
-        android:textSize="20sp"
-        android:gravity="center"
         android:layout_marginTop="10dp"
-        android:textColor="@color/loginNotP"
         android:background="@drawable/btn_green_border_and_white"
-        />
+        android:gravity="center"
+        android:text="蓝牙设置"
+        android:textColor="@color/loginNotP"
+        android:textSize="20sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="25dp"
         android:background="@drawable/btn_green_border_and_white"
-        android:gravity="center"
-        >
+        android:gravity="center">
+
         <CheckBox
             android:id="@+id/setting_cb_use_printer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="是否使用内置打印机"
             android:textColor="@color/loginNotP"
-            android:textSize="20sp"
-            />
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -37,16 +37,15 @@
         android:layout_height="60dp"
         android:layout_marginTop="25dp"
         android:background="@drawable/btn_green_border_and_white"
-        android:gravity="center"
-        >
+        android:gravity="center">
+
         <CheckBox
             android:id="@+id/setting_cb_use_money_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="是否使用钱箱            "
             android:textColor="@color/loginNotP"
-            android:textSize="20sp"
-            />
+            android:textSize="20sp" />
     </LinearLayout>
 
     <Button
@@ -64,13 +63,11 @@
         android:id="@+id/setting_imei"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:textSize="20sp"
-        android:gravity="center"
         android:layout_marginTop="25dp"
+        android:gravity="center"
         android:textColor="@color/loginNotP"
-        android:visibility="gone"
-        />
-
+        android:textSize="20sp"
+        android:visibility="gone" />
 
 
 </LinearLayout>

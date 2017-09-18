@@ -432,7 +432,7 @@ public class PrinterConnectSerivce extends Service {
                          //  ToastUtil.getInstance().showToast("无效的打印机");
                               break;
                         case  GpDevice. STATE_VALID_PRINTER : //有效的打印机
-                            ToastUtil.getInstance().showToast("外置打印机已连接");
+                              ToastUtil.getInstance().showToast("外置打印机已连接");
                               break;
 
                     }

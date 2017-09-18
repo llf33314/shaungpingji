@@ -94,7 +94,6 @@ public class LoginActivity extends RxAppCompatActivity {
                     return;
                 }*/
 
-
                 final String account=etAccount.getText().toString().trim();
                 final String psd=etPsd.getText().toString().trim();
                 if (TextUtils.isEmpty(account)||TextUtils.isEmpty(psd)){
