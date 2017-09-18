@@ -1,27 +1,21 @@
 package com.gt.doubledisplay.web;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.webkit.WebView;
 
 import com.google.gson.Gson;
 import com.gt.doubledisplay.base.MyApplication;
-import com.gt.doubledisplay.bean.OrderPrintBean;
+import com.gt.doubledisplay.bean.StoreOrderBean;
 import com.gt.doubledisplay.bean.ScreenMsgBean;
+import com.gt.doubledisplay.bean.TakeOutOrderBean;
 import com.gt.doubledisplay.printer.extraposition.PrintESCOrTSCUtil;
 import com.gt.doubledisplay.utils.RxBus;
-import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.weitoo.printer.MsPrinter;
 
 import org.xwalk.core.JavascriptInterface;
 import org.xwalk.core.XWalkView;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -119,18 +113,38 @@ public class DuofenJSBridge {
      "shop_phone": "0755-26609632"
      }
      */
-    @JavascriptInterface
+
+     /*  @JavascriptInterface
     public void printTscOrder(String jsonMsg){
-        //Log.d(TAG,"printTscOrder:"+jsonMsg);
-        OrderPrintBean order=gson.fromJson(jsonMsg,OrderPrintBean.class);
-        if (order.getPay_type()==1){//现金支付打开钱箱
-            MsPrinter.openMoneyBox();
-        }
+        StoreOrderBean order=gson.fromJson(jsonMsg,StoreOrderBean.class);
 
         //微兔打印内置打印机
-        MsPrinter.printOrder(order);
+        MsPrinter.printStoreOrder(order);
         //打印不干胶
-        PrintESCOrTSCUtil.printXCM(order.getOrder_id(),order.getMenus());
+        PrintESCOrTSCUtil.printStoreXCM(order.getOrder_id(),order.getMenus());
+    }*/
+
+
+    @JavascriptInterface
+    public void printStoreOrder(String jsonMsg){
+        StoreOrderBean order=gson.fromJson(jsonMsg,StoreOrderBean.class);
+
+        //微兔打印内置打印机
+        MsPrinter.printStoreOrder(order);
+        //打印不干胶
+        PrintESCOrTSCUtil.printStoreXCM(order.getOrder_id(),order.getMenus());
+    }
+
+
+
+    @JavascriptInterface
+    public void printTakeOutOrder(String jsonMsg){
+        TakeOutOrderBean order=gson.fromJson(jsonMsg,TakeOutOrderBean.class);
+
+        //微兔打印内置打印机
+        MsPrinter.printTakeOutOrder(order);
+        //打印不干胶
+        PrintESCOrTSCUtil.printTakeOutXCM(order.getOrder_id(),order.getMenus());
     }
 
     @JavascriptInterface

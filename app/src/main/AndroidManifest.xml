@@ -56,7 +56,7 @@
             android:name=".setting.SettingActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <service android:name=".printer.extraposition.PrinterConnectSerivce" />
+        <service android:name=".printer.extraposition.PrinterConnectService" />
         <service
             android:name="com.gprinter.service.GpPrintService"
             android:enabled="true"

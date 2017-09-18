@@ -19,7 +19,6 @@ import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.bean.DeviceBean;
 import com.gt.doubledisplay.bean.LoginBean;
 import com.gt.doubledisplay.bean.LoginSignBean;
-import com.gt.doubledisplay.http.ApiService;
 import com.gt.doubledisplay.http.BaseResponse;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.HttpResponseException;
@@ -27,8 +26,7 @@ import com.gt.doubledisplay.http.retrofit.HttpCall;
 import com.gt.doubledisplay.http.rxjava.observable.DialogTransformer;
 import com.gt.doubledisplay.http.rxjava.observable.ResultTransformer;
 import com.gt.doubledisplay.http.rxjava.observer.BaseObserver;
-import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
-import com.gt.doubledisplay.update.UpdateManager;
+import com.gt.doubledisplay.printer.extraposition.PrinterConnectService;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.ScreenUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
@@ -194,8 +192,8 @@ public class LoginActivity extends RxAppCompatActivity {
         if(!TextUtils.isEmpty(psd)||!TextUtils.isEmpty(account)){
             cbPsd.setChecked(true);
         }
-        portIntent = new Intent(this, PrinterConnectSerivce.class);
-        //0911 新设备暂时屏蔽 否则打开佳博usb端口会报错
+        portIntent = new Intent(this, PrinterConnectService.class);
+
         startService(portIntent);
     }
 

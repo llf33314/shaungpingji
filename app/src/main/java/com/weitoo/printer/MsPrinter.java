@@ -1,17 +1,14 @@
 package com.weitoo.printer;
 
-import android.util.Log;
-
 import com.gt.doubledisplay.base.MyApplication;
-import com.gt.doubledisplay.bean.OrderPrintBean;
+import com.gt.doubledisplay.bean.StoreOrderBean;
+import com.gt.doubledisplay.bean.TakeOutOrderBean;
 import com.gt.doubledisplay.setting.SettingActivity;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
-import com.orhanobut.hawk.Hawk;
-import com.printsdk.cmd.PrintCmd;
 import com.printsdk.usbsdk.UsbDriver;
 
 /**
- * Created by Administrator on 2017/3/17 0017.
+ * 操作微兔硬件相关的放在这里
  */
 public class MsPrinter {
 
@@ -28,31 +25,46 @@ public class MsPrinter {
         msUsbDriver.write(PrintCmd.PrintFeedline(3));// 走纸换行
     }*/
 
-    public static void printOrder(OrderPrintBean order){
-
+    private static boolean checkCanPrintOrder(Object orderObject){
         //用户设置不适用内置打印机
         if (MyApplication.getMsUsbDriver()==null
                 ||(MyApplication.getSettingCode()&SettingActivity.DEVICE_SETTING_USE_PRINTER)==0){//不使用内置打印机
-            return;
+            return false;
         }
 
-
-        if (order==null){
+        if (orderObject==null){
             ToastUtil.getInstance().showToast("无订单数据");
-            return;
+            return false;
         }
         int status=UsbPrinterUtil.getPrinterStatus();
         //打印机不正常
         if (status!=0){
             ToastUtil.getInstance().showToast(UsbPrinterUtil.getStatusMsg(status));
-            return;
+            return false;
         }
-        UsbDriver msUsbDriver = MyApplication.getMsUsbDriver();
-        MsTicketPrintModel model=MsTicketPrintModel.getInstance();
-        //他们打印机有BUG 打二维码的时候要分开打
-        model.printOrder(msUsbDriver,order);
-
+        return true;
     }
+
+    public static void printStoreOrder(StoreOrderBean storeOrderBean){
+
+        if (checkCanPrintOrder(storeOrderBean)){//检查是否可用打印
+            UsbDriver msUsbDriver = MyApplication.getMsUsbDriver();
+            MsTicketPrintModel model=MsTicketPrintModel.getInstance();
+            //他们打印机有BUG 打二维码的时候要分开打
+            model.printStoreOrder(msUsbDriver,storeOrderBean);
+        }
+    }
+
+    public static void printTakeOutOrder(TakeOutOrderBean takeOutOrderBean){
+        if (checkCanPrintOrder(takeOutOrderBean)){//检查是否可用打印
+            UsbDriver msUsbDriver = MyApplication.getMsUsbDriver();
+            MsTicketPrintModel model=MsTicketPrintModel.getInstance();
+            //他们打印机有BUG 打二维码的时候要分开打
+            model.printTakeOutOrder(msUsbDriver,takeOutOrderBean);
+        }
+    }
+
+
 
     public static void openMoneyBox(){
         UsbDriver msUsbDriver =MyApplication.getMsUsbDriver();

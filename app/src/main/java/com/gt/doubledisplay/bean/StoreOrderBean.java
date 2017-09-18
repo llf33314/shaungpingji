@@ -6,26 +6,30 @@ import java.util.List;
  * Created by wzb on 2017/9/13 0013.
  */
 
-public class OrderPrintBean {
+public class StoreOrderBean {
 
     /**
      * cashier :
-     * consumption_money : 4.32
-     * fansCurrency_deduction : 1
-     * integral_deduction : 1
+     * consumption_money : 0.01
+     * fansCurrency_deduction : 0
+     * integral_deduction : 0
      * member_deduction : 0
-     * menus : [{"commnt":"","money":3.3,"name":"叉烧包","norms":"微辣  紫色","num":1},{"commnt":"","menu_no":"1003","money":1,"name":"黄金叉烧","norms":"微辣  小份  白色","num":1},{"commnt":"","menu_no":"3362","money":0.02,"name":"洋葱炒肉片","norms":"小份  中辣","num":2}]
-     * order_code : DD1505292021472
-     * order_id : A00001
-     * order_time : 2017-09-13 16:40:21
-     * pay_money : 4.32
-     * pay_time : 2017-09-13 16:40:33
+     * menus : [{"commnt":"","menu_no":"1003","money":0.01,"name":"小白兔套餐","norms":"油炸  小份  热销","num":1}]
+     * order_code : DD1505726826378
+     * order_id : A00029
+     * order_time : 2017-09-18 17:27:06
+     * payWay : 现金支付
+     * pay_money : 0.01
+     * pay_time : 2017-09-18 17:27:08
      * pay_type : 1
      * print_type : 1
+     * qrUrl : http://nb.canyin.deeptel.com.cn//simple/79B4DE7C/orderDetailtoxp.do?orderId=2723
+     * remark :
      * result : 1
-     * shop_adress : 广东省深圳市南山区兰光科技园C座513
+     * shop_adress : 广东省江门市江海区江海区滘头街道勤政路政府c栋513
      * shop_name : 谷通科技
-     * shop_phone : 0755-26609632
+     * shop_phone : 13528307867
+     * yhq_deduction : 0
      */
 
     private String cashier;
@@ -36,14 +40,18 @@ public class OrderPrintBean {
     private String order_code;
     private String order_id;
     private String order_time;
+    private String payWay;
     private double pay_money;
     private String pay_time;
     private int pay_type;
     private int print_type;
+    private String qrUrl;
+    private String remark;
     private int result;
     private String shop_adress;
     private String shop_name;
     private String shop_phone;
+    private int yhq_deduction;
     private List<MenusBean> menus;
 
     public String getCashier() {
@@ -110,6 +118,14 @@ public class OrderPrintBean {
         this.order_time = order_time;
     }
 
+    public String getPayWay() {
+        return payWay;
+    }
+
+    public void setPayWay(String payWay) {
+        this.payWay = payWay;
+    }
+
     public double getPay_money() {
         return pay_money;
     }
@@ -140,6 +156,22 @@ public class OrderPrintBean {
 
     public void setPrint_type(int print_type) {
         this.print_type = print_type;
+    }
+
+    public String getQrUrl() {
+        return qrUrl;
+    }
+
+    public void setQrUrl(String qrUrl) {
+        this.qrUrl = qrUrl;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public int getResult() {
@@ -174,6 +206,14 @@ public class OrderPrintBean {
         this.shop_phone = shop_phone;
     }
 
+    public int getYhq_deduction() {
+        return yhq_deduction;
+    }
+
+    public void setYhq_deduction(int yhq_deduction) {
+        this.yhq_deduction = yhq_deduction;
+    }
+
     public List<MenusBean> getMenus() {
         return menus;
     }
@@ -185,19 +225,19 @@ public class OrderPrintBean {
     public static class MenusBean {
         /**
          * commnt :
-         * money : 3.3
-         * name : 叉烧包
-         * norms : 微辣  紫色
-         * num : 1
          * menu_no : 1003
+         * money : 0.01
+         * name : 小白兔套餐
+         * norms : 油炸  小份  热销
+         * num : 1
          */
 
         private String commnt;
+        private String menu_no;
         private double money;
         private String name;
         private String norms;
         private int num;
-        private String menu_no;
 
         public String getCommnt() {
             return commnt;
@@ -205,6 +245,14 @@ public class OrderPrintBean {
 
         public void setCommnt(String commnt) {
             this.commnt = commnt;
+        }
+
+        public String getMenu_no() {
+            return menu_no;
+        }
+
+        public void setMenu_no(String menu_no) {
+            this.menu_no = menu_no;
         }
 
         public double getMoney() {
@@ -237,14 +285,6 @@ public class OrderPrintBean {
 
         public void setNum(int num) {
             this.num = num;
-        }
-
-        public String getMenu_no() {
-            return menu_no;
-        }
-
-        public void setMenu_no(String menu_no) {
-            this.menu_no = menu_no;
         }
     }
 }

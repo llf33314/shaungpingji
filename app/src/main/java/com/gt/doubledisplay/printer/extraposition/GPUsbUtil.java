@@ -18,7 +18,7 @@ public class GPUsbUtil {
     //不干胶打印机 ID 1280   名称 GP-58
     private static final int GP_PRODEUCT_ID=1280;
 
-    public static UsbDevice getExtrapositionUsbDevice(UsbManager usbManager){
+    public static UsbDevice getGPExtrapositionUsbDevice(UsbManager usbManager){
         HashMap<String, UsbDevice> deviceList = usbManager.getDeviceList();
         Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
         while(deviceIterator.hasNext()){

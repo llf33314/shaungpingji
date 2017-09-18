@@ -2,6 +2,8 @@ package com.weitoo.printer;
 
 import java.io.UnsupportedEncodingException;
 
+import static com.weitoo.printer.MsTicketPrintModel.SPCE;
+
 /**
  * 只是简单帮你组织byte[] 数组
  */
@@ -11,7 +13,7 @@ public final class MsTicketPrintHelper {
     private final int LINE_CHAR_COUNT = 48;
     public final String NextLine = "\n";
     public final String PRINTER_ENCODING = "GBK";
-    public final String DIVIDING_LINE = "————————————————————————" + NextLine;
+    public final String DIVIDING_LINE = SPCE+"……………………………………………………" +NextLine;
     private static MsTicketPrintHelper instance;
     private StringBuffer sb = new StringBuffer();
 
@@ -56,10 +58,22 @@ public final class MsTicketPrintHelper {
 
     private String getLine(int totalWidth, String left, String right, boolean needNextLine) {
         int spaceNum = totalWidth - getCustomByteLen(left) - getCustomByteLen(right) - 4;
+        //wzb 缩进去一点点
         if (spaceNum < 0) {
             spaceNum = 0;
         }
         return left + getNString(spaceNum, " ") + right + (needNextLine ? NextLine : "");
+    }
+
+    /**
+     * 右边粗体
+     */
+    public String getBigRightLine(String left, String right){
+        int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(left) - getCustomByteLen(right)*2 - 4;
+        if (spaceNum < 0) {
+            spaceNum = 0;
+        }
+        return left + getNString(spaceNum, " ") + right + NextLine;
     }
 
     public String getGoodsLine(String name, String unitPrice, String num, String sum) {

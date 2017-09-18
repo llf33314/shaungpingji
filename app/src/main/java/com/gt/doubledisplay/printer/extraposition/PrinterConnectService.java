@@ -15,7 +15,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -48,15 +47,15 @@ import io.reactivex.functions.Consumer;
  * 一台蓝牙打印机只能跟一部设备配对
  *
  * 连接打印机阻塞UI线程没办法修改，GP封装在里面
+ *
+ * 这个类是连接佳博打印机的  包括不干胶跟普通热敏打印机
  */
 
-public class PrinterConnectSerivce extends Service {
+public class PrinterConnectService extends Service {
 
     private static final String ACTION_USB_PERMISSION ="com.android.example.USB_PERMISSION";
 
     public static final String CONNECTION_ACTION="action.connect.status";
-
-    private static final int [] INTERNAL_USB={300017,1,46880,14370};
 
     public static final int PRINTER_CONNECTING=14;
     public static final int PRINTER_NOT_INTI=15;
@@ -167,13 +166,14 @@ public class PrinterConnectSerivce extends Service {
         if (printDevice!=null){//有连接蓝牙
             openBluetoothProtFromDevice(printDevice);
         }else if(isHasUsbDevice()){
+            //0918 暂时只支持GP不干胶打印机
             openUsbProt();
         }
     }
 
     //这个方法很关键  根据判断是否会去自动连接 蓝牙或者usb productId如果改变了会影响连接
     private boolean isHasUsbDevice(){
-        mUsbDevice  = GPUsbUtil.getExtrapositionUsbDevice(mUsbManager);
+        mUsbDevice  = GPUsbUtil.getGPExtrapositionUsbDevice(mUsbManager);
        // ToastUtil.getInstance().showToast( mUsbDevice!=null?"有USB":"没USB");
         return  mUsbDevice!=null;
     }
@@ -218,10 +218,10 @@ public class PrinterConnectSerivce extends Service {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mGpService = GpService.Stub.asInterface(service);
-            if (mPortConnectionStateBroad==null){
+            if (mPortConnectionStateBroad==null){ //注册佳博打印机连接广播
                 mPortConnectionStateBroad=new PortConnectionStateBroad();
                 IntentFilter intentFilter=new IntentFilter(CONNECTION_ACTION);
-                PrinterConnectSerivce.this.registerReceiver(mPortConnectionStateBroad,intentFilter);
+                PrinterConnectService.this.registerReceiver(mPortConnectionStateBroad,intentFilter);
             }
             //打开端口
             openBluetoothOrUsbProt();
@@ -229,7 +229,7 @@ public class PrinterConnectSerivce extends Service {
     }
 
     /**
-     * 0911这个方法会异常  因为连接了其他的USB就会去打开端口
+     * 连接成功会通过广播接受做操作
      * @return
      */
     private static int openUsbProt( ){

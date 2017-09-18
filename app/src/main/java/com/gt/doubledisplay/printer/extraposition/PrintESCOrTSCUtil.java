@@ -1,19 +1,14 @@
 package com.gt.doubledisplay.printer.extraposition;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.gprinter.command.EscCommand;
 import com.gprinter.command.LabelCommand;
-import com.gt.doubledisplay.bean.OrderPrintBean;
+import com.gt.doubledisplay.bean.StoreOrderBean;
+import com.gt.doubledisplay.bean.TakeOutOrderBean;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce.PRINTER_NOT_INTI;
+import static com.gt.doubledisplay.printer.extraposition.PrinterConnectService.PRINTER_NOT_INTI;
 
 /**
  * Created by wzb on 2017/8/16 0016.
@@ -120,19 +115,24 @@ public class PrintESCOrTSCUtil {
         return tsc;
     }
 
-    public static void printXCM(String orderId,List<OrderPrintBean.MenusBean> menus){
+    /**
+     *
+     * @param orderId
+     * @param menus
+     */
+    public static void printStoreXCM(String orderId,List<StoreOrderBean.MenusBean> menus){
         //JSONObject json= null;
            // json = new JSONObject(s);
            // String orderId=json.getString("order_id");
            // String jsonMenus=json.getString("menus");
            // Gson gson=new Gson();
             if (menus!=null&&menus.size()>0){
-                for (OrderPrintBean.MenusBean m:menus){
+                for (StoreOrderBean.MenusBean m:menus){
                     String size=m.getNorms()+" x1";
                     for (int i=0;i<m.getNum();i++){
 
                        // int res=PrinterConnectSerivce.printReceiptClicked(m.getMenu_no(),m.getName(),size,m.getCommnt());
-                        int res=PrinterConnectSerivce.printReceiptClicked(orderId,m.getName(),size,m.getCommnt());
+                        int res= PrinterConnectService.printReceiptClicked(orderId,m.getName(),size,m.getCommnt());
 
                         if (res==PRINTER_NOT_INTI){//打印机未初始化
                             break;
@@ -145,6 +145,32 @@ public class PrintESCOrTSCUtil {
                 }
             }
     }
+
+
+    /**
+     * 打印外卖不干胶订单
+     */
+    public static void printTakeOutXCM(String orderId,List<TakeOutOrderBean.MenusBean> menus){
+        if (menus!=null&&menus.size()>0){
+            for (TakeOutOrderBean.MenusBean m:menus){
+                String size=m.getNorms()+" x1";
+                for (int i=0;i<m.getDet_food_num();i++){
+
+                    // int res=PrinterConnectSerivce.printReceiptClicked(m.getMenu_no(),m.getName(),size,m.getCommnt());
+                    int res= PrinterConnectService.printReceiptClicked(orderId,m.getDet_food_name(),size,m.getRemark());
+
+                    if (res==PRINTER_NOT_INTI){//打印机未初始化
+                        break;
+                    }
+                    if (res==-2){
+                        ToastUtil.getInstance().showToast("打印机非不干胶类型，请连接正确打印机");
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
 
   /*private static int sendLabelReceipt() {
         //总共320*240

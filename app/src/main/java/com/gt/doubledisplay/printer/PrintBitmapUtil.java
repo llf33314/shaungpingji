@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.base.MyApplication;
-import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.printer.internal.ESCUtil;
 
 import java.io.IOException;

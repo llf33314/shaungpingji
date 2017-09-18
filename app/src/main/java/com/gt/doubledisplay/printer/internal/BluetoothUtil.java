@@ -10,6 +10,9 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+/**
+ * 065内置打印机
+ */
 public class BluetoothUtil {
 
 	private static final UUID PRINTER_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");

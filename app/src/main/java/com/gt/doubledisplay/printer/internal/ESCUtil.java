@@ -3,28 +3,17 @@ package com.gt.doubledisplay.printer.internal;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.text.format.Time;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
-import com.gt.doubledisplay.base.MyApplication;
-import com.gt.doubledisplay.printer.extraposition.PrinterConnectSerivce;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
-import static android.graphics.Paint.ANTI_ALIAS_FLAG;
-
+/**
+ * 065内置打印机
+ */
 public class ESCUtil {
 
 	public static final byte ESC = 27;// Escape

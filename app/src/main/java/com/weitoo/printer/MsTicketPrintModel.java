@@ -1,6 +1,9 @@
 package com.weitoo.printer;
 
-import com.gt.doubledisplay.bean.OrderPrintBean;
+import android.text.TextUtils;
+
+import com.gt.doubledisplay.bean.StoreOrderBean;
+import com.gt.doubledisplay.bean.TakeOutOrderBean;
 import com.gt.doubledisplay.utils.commonutil.TimeUtils;
 import com.printsdk.cmd.PrintCmd;
 import com.printsdk.usbsdk.UsbDriver;
@@ -16,7 +19,7 @@ public  class MsTicketPrintModel {
     final StringBuilder data = new StringBuilder();
     public final String PRINTER_ENCODING = "GBK";
     //调整位置用
-    private final String SPCE="   ";
+    public static final String SPCE="   ";
     protected MsTicketPrintHelper mTicketPrintHelper;
 
     private final int LINE_SPCE=40;
@@ -56,10 +59,6 @@ public  class MsTicketPrintModel {
 
     }
 
-    protected void appendRunLine(int lines) {
-        appendData(PrintCmd.PrintFeedline(lines));
-    }
-
     //public abstract void packPrintData(String orderNo, int payType, BigDecimal receiveCash, BigDecimal reducePrice,  byte[] extraData);
 
     public byte[] getPrintData() {
@@ -68,47 +67,131 @@ public  class MsTicketPrintModel {
         return getCustomByte(data.toString());
     }
 
+    /**
+     * 打印到店订单   由于微兔打印机BUG 需要将二维码分开打
+     */
+    public void printStoreOrder(UsbDriver msUsbDriver,StoreOrderBean storeOrderBean){
+        CleanPrinter();
+        msUsbDriver.write(getStoreOrderData1(storeOrderBean));
+        printQRCode(msUsbDriver,storeOrderBean.getQrUrl(),18);
+        msUsbDriver.write(getPrintOtherMsg(storeOrderBean.getShop_name(),storeOrderBean.getShop_phone(),storeOrderBean.getShop_adress()));
+    }
+    /**
+     * 打印外卖订单
+     */
+    public void printTakeOutOrder(UsbDriver msUsbDriver,TakeOutOrderBean takeOutOrderBean){
+        CleanPrinter();
+        msUsbDriver.write(getTakeOutOrderData1(takeOutOrderBean));
+        printQRCode(msUsbDriver,takeOutOrderBean.getQrUrl(),16);
+        msUsbDriver.write(getPrintOtherMsg(takeOutOrderBean.getResName(),takeOutOrderBean.getResPhone(),takeOutOrderBean.getResAddress()));
+    }
 
-    public byte[] getOrderPrintData1(OrderPrintBean order){
+    public byte[] getStoreOrderData1(StoreOrderBean storeOrderBean){
         data.setLength(0);
-        //汉字模式
-        appendData(PrintCmd.SetReadZKmode(0));
+        //appendData(PrintCmd.SetBold(1));
+        appendData(PrintCmd.SetSizechar(1,1,0,9*17));
+        appendCenterData("编号："+storeOrderBean.getOrder_id());
+        //appendData(PrintCmd.SetBold(0));
+        appendData(PrintCmd.SetSizechar(0,0,0,0));
+        //汉字模式`
+       // appendData(PrintCmd.SetReadZKmode(0));
 
-        appendData(PrintCmd.SetBold(1));
-        appendData(PrintCmd.SetSizechinese(1,1,0,24*24));
-        appendCenterData(order.getShop_name());
-        appendData(PrintCmd.SetBold(0));
-        appendData(PrintCmd.SetSizechinese(0,0,0,24*24));
-        appendDividingLine();
+        //行间距
         appendData(PrintCmd.SetLinespace(LINE_SPCE));
-        appendLeftData("流水号："+order.getOrder_code());
+        appendData(PrintCmd.SetAlignment(0));
+        appendDividingLine();
+        appendLeftData(storeOrderBean.getShop_name());
+        appendDividingLine();
 
-        appendLeftData("下单时间："+order.getOrder_time());
+        appendLeftData("下单时间："+storeOrderBean.getOrder_time());
         appendData(PrintCmd.SetLinespace(LINE_SPCE*2));
         appendLeftData("打印时间："+ TimeUtils.getNowString());
-        appendOrderMenu(order.getMenus());
-        appendLeftRightData("会员折扣：",String.valueOf(order.getMember_deduction()));
-        appendLeftRightData("积分：",String.valueOf(order.getIntegral_deduction()));
-        appendLeftRightData("粉币：",String.valueOf(order.getFansCurrency_deduction()));
+        appendStoreOrderMenu(storeOrderBean.getMenus());
 
-        appendLeftRightData("总计：",String.valueOf(order.getPay_money()));
+        if (storeOrderBean.getMember_deduction()!=0){
+            appendLeftRightData("会员折扣：",String.valueOf(storeOrderBean.getMember_deduction()));
+        }
+        if (storeOrderBean.getYhq_deduction()!=0){
+            appendLeftRightData("优惠券：",String.valueOf(storeOrderBean.getYhq_deduction()));
+        }
 
-        appendLeftData("备注：");
-        appendLeftData("支付方式：");
-        appendLeftData("配送地址：");
-        appendLeftData("联系人：");
-        appendLeftData("联系方式：");
+        if (storeOrderBean.getFansCurrency_deduction()!=0){
+            appendLeftRightData("粉币：",String.valueOf(storeOrderBean.getFansCurrency_deduction()));
+        }
+
+        if (storeOrderBean.getIntegral_deduction()!=0){
+            appendLeftRightData("积分：",String.valueOf(storeOrderBean.getIntegral_deduction()));
+        }
+
+        appendLeftRightData("总计：",String.valueOf(storeOrderBean.getPay_money()));
+        //appendLeftBigNumberRightData("总计：",String.valueOf(storeOrderBean.getPay_money()));
+
+
+        if (!TextUtils.isEmpty(storeOrderBean.getRemark())){
+            appendLeftData("备注："+storeOrderBean.getRemark());
+        }
+
+        appendLeftData("支付方式："+storeOrderBean.getPayWay());
+        appendLeftData(""); //换行
 
         appendDividingLine();
 
         //二维码不能这么添加打  他们打印机BUG
         //appendQRCode();
-        //
-
         return getCustomByte(data.toString());
     }
 
-    public byte[] getOrderPrintData2(OrderPrintBean order){
+    private byte[] getTakeOutOrderData1(TakeOutOrderBean takeOutOrderBean){
+        data.setLength(0);
+        //汉字模式
+       // appendData(PrintCmd.SetReadZKmode(0));
+
+        appendData(PrintCmd.SetBold(1));
+        appendData(PrintCmd.SetSizechinese(1,1,0,24*24));
+        appendCenterData(takeOutOrderBean.getResName());
+        appendData(PrintCmd.SetBold(0));
+        appendData(PrintCmd.SetSizechinese(0,0,0,24*24));
+        appendData(PrintCmd.SetAlignment(0));
+        appendDividingLine();
+        appendData(PrintCmd.SetLinespace(LINE_SPCE));
+        appendLeftData("流水号："+takeOutOrderBean.getOrder_no());
+
+        appendLeftData("下单时间："+takeOutOrderBean.getOrder_time());
+        appendData(PrintCmd.SetLinespace(LINE_SPCE*2));
+        appendLeftData("打印时间："+ TimeUtils.getNowString());
+        appendTakeOutOrderMenu(takeOutOrderBean.getMenus());
+
+        if (takeOutOrderBean.getMember_deduction()!=0){
+            appendLeftRightData("会员折扣：",String.valueOf(takeOutOrderBean.getMember_deduction()));
+        }
+
+        if (takeOutOrderBean.getFansCurrency_deduction()!=0){
+            appendLeftRightData("粉币：",String.valueOf(takeOutOrderBean.getFansCurrency_deduction()));
+        }
+
+        if (takeOutOrderBean.getIntegral_deduction()!=0){
+            appendLeftRightData("积分：",String.valueOf(takeOutOrderBean.getIntegral_deduction()));
+        }
+
+        appendLeftRightData("总计：",String.valueOf(takeOutOrderBean.getConsumption_money()));
+
+        if (!TextUtils.isEmpty(takeOutOrderBean.getRemark())){
+            appendLeftData("备注："+takeOutOrderBean.getRemark());
+        }
+        appendLeftData("支付方式："+takeOutOrderBean.getPayWay());
+        appendLeftData("配送地址："+takeOutOrderBean.getMenAddress());
+        appendLeftData("联系人："+takeOutOrderBean.getMenName());
+        appendLeftData("联系方式："+takeOutOrderBean.getMenPhone());
+
+        appendDividingLine();
+
+        //二维码不能这么添加打  他们打印机BUG
+        //appendQRCode();
+        return getCustomByte(data.toString());
+    }
+
+
+    /*private byte[] getTakeOutOrderData2(TakeOutOrderBean takeOutOrderBean){
         data.setLength(0);
         appendCenterData("扫描上方二维码查看订单详情");
         appendRunLine(1);
@@ -120,24 +203,25 @@ public  class MsTicketPrintModel {
         SetFeedCutClean(0);
 
         return getCustomByte(data.toString());
+    }*/
+
+    /**
+     * 打印二维码下部分信息  到店跟外卖都的都一样 统一调用这个方法
+     */
+    private byte[] getPrintOtherMsg(String shopName,String shopPhone,String shopAddress){
+        data.setLength(0);
+        appendCenterData("扫描上方二维码查看订单详情");
+        appendRunLine(1);
+        appendLeftData("感谢您使用"+shopName+"，订餐热线："+shopPhone);
+        appendLeftData("联系地址："+shopAddress);
+
+        appendRunLine(1);
+        appendCenterData("技术支持·多粉 400-899-4522");
+        SetFeedCutClean(0);
+
+        return getCustomByte(data.toString());
     }
-
-
-
-    public void printOrder(UsbDriver msUsbDriver,OrderPrintBean order){
-        CleanPrinter();
-        msUsbDriver.write(getOrderPrintData1(order));
-        printQRCode(msUsbDriver);
-        msUsbDriver.write(getOrderPrintData2(order));
-    }
-
-    public void printQRCode(UsbDriver msUsbDriver){
-        msUsbDriver.write(PrintCmd.SetAlignment(1));
-        msUsbDriver.write(PrintCmd.PrintQrcode("https://www.duofriend.com", 25, 8, 1));
-        msUsbDriver.write(PrintCmd.PrintFeedline(1));
-    }
-
-    private void appendOrderMenu(List<OrderPrintBean.MenusBean> menus){
+    private void appendTakeOutOrderMenu(List<TakeOutOrderBean.MenusBean> menus){
         //共几份
         int allNum=0;
         appendData(PrintCmd.SetLinespace(5));
@@ -145,7 +229,29 @@ public  class MsTicketPrintModel {
         appendDividingLine();
         appendData(PrintCmd.SetLinespace(LINE_SPCE));
         for (int i=0;i<menus.size();i++){
-            OrderPrintBean.MenusBean m=menus.get(i);
+            TakeOutOrderBean.MenusBean m=menus.get(i);
+            if (i==menus.size()-1){
+                appendData(PrintCmd.SetLinespace(5));
+            }
+            appendGoods(m.getDet_food_name(),String.valueOf(m.getDet_food_price()),String.valueOf(m.getDet_food_num()),String.valueOf(m.getPayPrice()));
+            allNum+=m.getDet_food_num() ;
+        }
+
+        appendData(PrintCmd.SetLinespace(5));
+        appendDividingLine();
+        appendData(PrintCmd.SetLinespace(LINE_SPCE));
+        appendLeftRightData("","共"+allNum+"份");
+    }
+
+    private void appendStoreOrderMenu(List<StoreOrderBean.MenusBean> menus){
+        //共几份
+        int allNum=0;
+        appendData(PrintCmd.SetLinespace(5));
+        appendGoods("名称","单价","数量","金额");
+        appendDividingLine();
+        appendData(PrintCmd.SetLinespace(LINE_SPCE));
+        for (int i=0;i<menus.size();i++){
+            StoreOrderBean.MenusBean m=menus.get(i);
             if (i==menus.size()-1){
                 appendData(PrintCmd.SetLinespace(5));
             }
@@ -159,7 +265,16 @@ public  class MsTicketPrintModel {
         appendLeftRightData("","共"+allNum+"份");
     }
 
+    protected void appendRunLine(int lines) {
+        appendData(PrintCmd.PrintFeedline(lines));
+    }
 
+
+    public void printQRCode(UsbDriver msUsbDriver,String url,int leftMagin){
+        msUsbDriver.write(PrintCmd.SetAlignment(1));
+        msUsbDriver.write(PrintCmd.PrintQrcode(url, leftMagin, 8, 1));
+        msUsbDriver.write(PrintCmd.PrintFeedline(1));
+    }
 
     public byte[] getCustomByte(String src) {
         try {
@@ -214,6 +329,17 @@ public  class MsTicketPrintModel {
     protected void appendLeftRightData(String left, String right) {
         left=SPCE+left;
         appendData(PrintCmd.PrintString(mTicketPrintHelper.getLineForPrint(left, right), 1));
+    }
+
+    /**
+     * wzb 右边数字变大
+     */
+    @Deprecated
+    protected void appendLeftBigNumberRightData(String left, String right){
+        appendData(PrintCmd.SetSizechar(1,1,0,9*17));
+        left=SPCE+left;
+        appendData(PrintCmd.PrintString(mTicketPrintHelper.getBigRightLine(left, right), 1));
+        appendData(PrintCmd.SetSizechar(0,0,0,0));
     }
 
     protected void appendGoods(String goodsName, String unitPrice, String num, String sum) {
