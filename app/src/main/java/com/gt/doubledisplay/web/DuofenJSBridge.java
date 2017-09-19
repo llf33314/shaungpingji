@@ -12,6 +12,7 @@ import com.gt.doubledisplay.bean.ScreenMsgBean;
 import com.gt.doubledisplay.bean.TakeOutOrderBean;
 import com.gt.doubledisplay.printer.extraposition.PrintESCOrTSCUtil;
 import com.gt.doubledisplay.utils.RxBus;
+import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.weitoo.printer.MsPrinter;
 
 import org.xwalk.core.JavascriptInterface;
@@ -128,23 +129,31 @@ public class DuofenJSBridge {
     @JavascriptInterface
     public void printStoreOrder(String jsonMsg){
         StoreOrderBean order=gson.fromJson(jsonMsg,StoreOrderBean.class);
-
-        //微兔打印内置打印机
-        MsPrinter.printStoreOrder(order);
         //打印不干胶
         PrintESCOrTSCUtil.printStoreXCM(order.getOrder_id(),order.getMenus());
+        //微兔打印内置打印机
+        if (MyApplication.getPrinter()!=null){
+            MyApplication.getPrinter().printStoreOrder(order);
+        }else{
+            ToastUtil.getInstance().showToast("设备非打印机设备",5000);
+        }
+
     }
-
-
 
     @JavascriptInterface
     public void printTakeOutOrder(String jsonMsg){
         TakeOutOrderBean order=gson.fromJson(jsonMsg,TakeOutOrderBean.class);
 
-        //微兔打印内置打印机
-        MsPrinter.printTakeOutOrder(order);
         //打印不干胶
         PrintESCOrTSCUtil.printTakeOutXCM(order.getOrder_id(),order.getMenus());
+        //微兔打印内置打印机
+        if (MyApplication.getPrinter()!=null){
+            MyApplication.getPrinter().printTakeOutOrder(order);
+        }else{
+            ToastUtil.getInstance().showToast("设备非打印机设备",5000);
+        }
+
+
     }
 
     @JavascriptInterface

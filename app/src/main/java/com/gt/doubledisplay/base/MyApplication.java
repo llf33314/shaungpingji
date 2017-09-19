@@ -16,7 +16,10 @@ import android.widget.Toast;
 
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.login.LoginActivity;
+import com.gt.doubledisplay.printer.policy.PrinterPolicy;
+import com.gt.doubledisplay.printer.policy.WeituPrinter;
 import com.gt.doubledisplay.setting.SettingActivity;
+import com.gt.doubledisplay.utils.commonutil.DeviceUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.gt.doubledisplay.web.WebViewDiffDisplayPresentation;
 import com.orhanobut.hawk.Hawk;
@@ -42,6 +45,8 @@ public class MyApplication extends Application {
     public static String DEVICE_ID="";
 
     WebViewDiffDisplayPresentation mp;
+
+    private static PrinterPolicy printer;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -51,9 +56,21 @@ public class MyApplication extends Application {
         if ((getSettingCode()&(SettingActivity.DEVICE_SETTING_USE_PRINTER|SettingActivity.DEVICE_SETTING_USE_MONEY_BOX))!=0){
             getUsbDriverService();
         }
-
+        initPrinter();
         showScreen();
     }
+
+    private void initPrinter(){
+        if ("NATIVE".equals(DeviceUtils.getModel())){//微兔设备
+            printer=new WeituPrinter();
+        }
+    }
+
+    public static PrinterPolicy getPrinter(){
+        return printer;
+    }
+
+
     public static Context getAppContext(){
         if (applicationContext==null){ //后台挂着 applicationContext被回收
             appExit();

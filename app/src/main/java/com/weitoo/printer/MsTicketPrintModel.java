@@ -123,8 +123,8 @@ public  class MsTicketPrintModel {
             appendLeftRightData("积分：",String.valueOf(storeOrderBean.getIntegral_deduction()));
         }
 
-        appendLeftRightData("总计：",String.valueOf(storeOrderBean.getPay_money()));
-        //appendLeftBigNumberRightData("总计：",String.valueOf(storeOrderBean.getPay_money()));
+          appendLeftRightData("总计：",String.valueOf(storeOrderBean.getPay_money()));
+       // appendLeftBigNumberRightData("总计：",String.valueOf(storeOrderBean.getPay_money()));
 
 
         if (!TextUtils.isEmpty(storeOrderBean.getRemark())){
@@ -336,9 +336,10 @@ public  class MsTicketPrintModel {
      */
     @Deprecated
     protected void appendLeftBigNumberRightData(String left, String right){
+        appendData(PrintCmd.PrintString(SPCE+left,1));
         appendData(PrintCmd.SetSizechar(1,1,0,9*17));
-        left=SPCE+left;
-        appendData(PrintCmd.PrintString(mTicketPrintHelper.getBigRightLine(left, right), 1));
+        appendData(PrintCmd.PrintString(mTicketPrintHelper.getBigRightLine(left,right), 0));
+       // appendData(PrintCmd.PrintString(right, 0));
         appendData(PrintCmd.SetSizechar(0,0,0,0));
     }
 

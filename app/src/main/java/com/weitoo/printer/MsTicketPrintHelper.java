@@ -68,12 +68,15 @@ public final class MsTicketPrintHelper {
     /**
      * 右边粗体
      */
-    public String getBigRightLine(String left, String right){
-        int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(left) - getCustomByteLen(right)*2 - 4;
+    public String getBigRightLine(String left,String right){
+       // int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(right)*2-4;  //这个4是右边距
+        //int num=8-right.length(); //这个算法不靠谱 纯粹是试出来的
+        int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(left) - getCustomByteLen(right)*2;
         if (spaceNum < 0) {
             spaceNum = 0;
         }
-        return left + getNString(spaceNum, " ") + right + NextLine;
+        return  getNString(spaceNum, " ") + right ;
+
     }
 
     public String getGoodsLine(String name, String unitPrice, String num, String sum) {
