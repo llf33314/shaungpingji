@@ -21,6 +21,7 @@ import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.login.LoginActivity;
 import com.gt.doubledisplay.printer.policy.PrinterPolicy;
 import com.gt.doubledisplay.printer.policy.WeituPrinter;
+import com.gt.doubledisplay.printer.policy.ZeroSixFivePrinter;
 import com.gt.doubledisplay.setting.SettingActivity;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.DeviceUtils;
@@ -121,9 +122,12 @@ public class MyApplication extends Application {
     }
 
     private void initPrinter(){
-        if ("NATIVE".equals(DeviceUtils.getModel())){//微兔设备
+        String deviceName=DeviceUtils.getModel();
+        if ("NATIVE".equals(deviceName)){//微兔设备
             initWeituPrinter();
             printerType=new WeituPrinter();
+        }else if ("065".equals(deviceName)){
+            printerType=new ZeroSixFivePrinter();
         }
     }
 
