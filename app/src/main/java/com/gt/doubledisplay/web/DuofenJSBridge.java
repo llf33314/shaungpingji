@@ -128,6 +128,8 @@ public class DuofenJSBridge {
 
     @JavascriptInterface
     public void printStoreOrder(String jsonMsg){
+        Log.d(TAG,"printStoreOrder:"+jsonMsg);
+      //  ToastUtil.getInstance().showToast("printStoreOrder");
         StoreOrderBean order=gson.fromJson(jsonMsg,StoreOrderBean.class);
         //打印不干胶
         PrintESCOrTSCUtil.printStoreXCM(order.getOrder_id(),order.getMenus());
@@ -142,6 +144,8 @@ public class DuofenJSBridge {
 
     @JavascriptInterface
     public void printTakeOutOrder(String jsonMsg){
+        Log.d(TAG,"printTakeOutOrder:"+jsonMsg);
+       // ToastUtil.getInstance().showToast("printTakeOutOrder");
         TakeOutOrderBean order=gson.fromJson(jsonMsg,TakeOutOrderBean.class);
 
         //打印不干胶

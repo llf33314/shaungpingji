@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.gt.doubledisplay.bean.StoreOrderBean;
 import com.gt.doubledisplay.bean.TakeOutOrderBean;
+import com.gt.doubledisplay.utils.commonutil.StringUtils;
 import com.gt.doubledisplay.utils.commonutil.TimeUtils;
 import com.printsdk.cmd.PrintCmd;
 import com.printsdk.usbsdk.UsbDriver;
@@ -109,22 +110,23 @@ public  class MsTicketPrintModel {
         appendStoreOrderMenu(storeOrderBean.getMenus());
 
         if (storeOrderBean.getMember_deduction()!=0){
-            appendLeftRightData("会员折扣：",String.valueOf(storeOrderBean.getMember_deduction()));
+            appendLeftRightData("会员折扣：","-"+String.valueOf(storeOrderBean.getMember_deduction()));
         }
         if (storeOrderBean.getYhq_deduction()!=0){
-            appendLeftRightData("优惠券：",String.valueOf(storeOrderBean.getYhq_deduction()));
+            appendLeftRightData("优惠券：","-"+String.valueOf(storeOrderBean.getYhq_deduction()));
         }
 
         if (storeOrderBean.getFansCurrency_deduction()!=0){
-            appendLeftRightData("粉币：",String.valueOf(storeOrderBean.getFansCurrency_deduction()));
+            appendLeftRightData("粉币：","-"+String.valueOf(storeOrderBean.getFansCurrency_deduction()));
         }
 
         if (storeOrderBean.getIntegral_deduction()!=0){
-            appendLeftRightData("积分：",String.valueOf(storeOrderBean.getIntegral_deduction()));
+            appendLeftRightData("积分：","-"+String.valueOf(storeOrderBean.getIntegral_deduction()));
         }
 
-          appendLeftRightData("总计：",String.valueOf(storeOrderBean.getPay_money()));
-       // appendLeftBigNumberRightData("总计：",String.valueOf(storeOrderBean.getPay_money()));
+          //appendLeftRightData("总计：",String.valueOf(storeOrderBean.getPay_money()));
+
+        appendLeftBigNumberRightData("总计：",String.valueOf(storeOrderBean.getPay_money()));
 
 
         if (!TextUtils.isEmpty(storeOrderBean.getRemark())){
@@ -162,18 +164,22 @@ public  class MsTicketPrintModel {
         appendTakeOutOrderMenu(takeOutOrderBean.getMenus());
 
         if (takeOutOrderBean.getMember_deduction()!=0){
-            appendLeftRightData("会员折扣：",String.valueOf(takeOutOrderBean.getMember_deduction()));
+            appendLeftRightData("会员折扣：","-"+String.valueOf(takeOutOrderBean.getMember_deduction()));
+        }
+
+        if (takeOutOrderBean.getYhq_deduction()!=0){
+            appendLeftRightData("优惠券：","-"+String.valueOf(takeOutOrderBean.getYhq_deduction()));
         }
 
         if (takeOutOrderBean.getFansCurrency_deduction()!=0){
-            appendLeftRightData("粉币：",String.valueOf(takeOutOrderBean.getFansCurrency_deduction()));
+            appendLeftRightData("粉币：","-"+String.valueOf(takeOutOrderBean.getFansCurrency_deduction()));
         }
 
         if (takeOutOrderBean.getIntegral_deduction()!=0){
-            appendLeftRightData("积分：",String.valueOf(takeOutOrderBean.getIntegral_deduction()));
+            appendLeftRightData("积分：","-"+String.valueOf(takeOutOrderBean.getIntegral_deduction()));
         }
 
-        appendLeftRightData("总计：",String.valueOf(takeOutOrderBean.getConsumption_money()));
+        appendLeftBigNumberRightData("总计：",String.valueOf(takeOutOrderBean.getConsumption_money()));
 
         if (!TextUtils.isEmpty(takeOutOrderBean.getRemark())){
             appendLeftData("备注："+takeOutOrderBean.getRemark());
@@ -216,7 +222,7 @@ public  class MsTicketPrintModel {
         appendLeftData("联系地址："+shopAddress);
 
         appendRunLine(1);
-        appendCenterData("技术支持·多粉 400-899-4522");
+        appendCenterData("技术支持·微站 400-899-4522");
         SetFeedCutClean(0);
 
         return getCustomByte(data.toString());
@@ -233,7 +239,7 @@ public  class MsTicketPrintModel {
             if (i==menus.size()-1){
                 appendData(PrintCmd.SetLinespace(5));
             }
-            appendGoods(m.getDet_food_name(),String.valueOf(m.getDet_food_price()),String.valueOf(m.getDet_food_num()),String.valueOf(m.getPayPrice()));
+            appendGoods(StringUtils.wipeOffSymbol(m.getDet_food_name()),String.valueOf(m.getDet_food_price()),String.valueOf(m.getDet_food_num()),String.valueOf(m.getPayPrice()));
             allNum+=m.getDet_food_num() ;
         }
 
@@ -255,7 +261,7 @@ public  class MsTicketPrintModel {
             if (i==menus.size()-1){
                 appendData(PrintCmd.SetLinespace(5));
             }
-            appendGoods(m.getName(),String.valueOf(m.getMoney()/m.getNum()),String.valueOf(m.getNum()),String.valueOf(m.getMoney()));
+            appendGoods(m.getName(),String.valueOf(m.getOriginal_price()),String.valueOf(m.getNum()),String.valueOf(m.getMoney()));
             allNum+=m.getNum() ;
         }
 
@@ -334,9 +340,9 @@ public  class MsTicketPrintModel {
     /**
      * wzb 右边数字变大
      */
-    @Deprecated
     protected void appendLeftBigNumberRightData(String left, String right){
-        appendData(PrintCmd.PrintString(SPCE+left,1));
+        left=SPCE+left;
+        appendData(PrintCmd.PrintString(left,1));
         appendData(PrintCmd.SetSizechar(1,1,0,9*17));
         appendData(PrintCmd.PrintString(mTicketPrintHelper.getBigRightLine(left,right), 0));
        // appendData(PrintCmd.PrintString(right, 0));

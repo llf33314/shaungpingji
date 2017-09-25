@@ -30,4 +30,9 @@ public interface ApiService {
 
     @POST("doubleScreenMobile/getEqCode")
     Observable<BaseResponse<DeviceBean>>getDeviceId(@Query("busId") String busId);
+
+    @POST("http://www.baidu.com")
+    Observable<String>test();
+
+
 }

@@ -189,4 +189,14 @@ public final class StringUtils {
         }
         return new String(chars);
     }
+
+    /**
+     * 0921 去除中括号  暂时外卖这么处理
+     */
+    public static String wipeOffSymbol(String name){
+        if (name.contains("[")&&name.contains("]")){
+            name= name.substring(0,name.indexOf("["));
+        }
+        return name;
+    }
 }

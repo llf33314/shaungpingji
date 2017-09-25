@@ -55,9 +55,11 @@ dependencies {
     compile files('libs/json.jar')
     compile files('libs/ksoap2-android-assembly-2.5.2-jar-with-dependencies.jar')
     compile files('libs/xUtils-2.6.14.jar')
-    compile project(':CrosswalkWebview')
+
     compile files('libs/2247d5d9-01c9-37ee-a3f5-7266bb206419.jar')
     compile files('libs/c2912bb6-3eec-360d-8507-edf7840fa588.jar')
     compile files('libs/printsdk-v2.2.jar')
     compile files('libs/usbprintsdk-v2.1.jar')
+    compile files('libs/electriscale.jar')
+    compile project(':CrosswalkWebview')
 }

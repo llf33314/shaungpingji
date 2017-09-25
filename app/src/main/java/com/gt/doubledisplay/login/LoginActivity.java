@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -25,6 +26,7 @@ import com.gt.doubledisplay.http.HttpResponseException;
 import com.gt.doubledisplay.http.retrofit.HttpCall;
 import com.gt.doubledisplay.http.rxjava.observable.DialogTransformer;
 import com.gt.doubledisplay.http.rxjava.observable.ResultTransformer;
+import com.gt.doubledisplay.http.rxjava.observable.SchedulerTransformer;
 import com.gt.doubledisplay.http.rxjava.observer.BaseObserver;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectService;
 import com.gt.doubledisplay.utils.RxBus;
@@ -39,7 +41,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 /**
@@ -98,6 +103,34 @@ public class LoginActivity extends RxAppCompatActivity {
                     ToastUtil.getInstance().showToast("账号密码不能为空");
                     return;
                 }
+
+                /*if (true){
+                    HttpCall.getApiService()
+                            .test()
+                            .compose(SchedulerTransformer.<String>transformer())
+                            .subscribe(new Observer<String>() {
+                                @Override
+                                public void onSubscribe(@NonNull Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(@NonNull String s) {
+                                    Log.i("onNext",s);
+
+                                }
+
+                                @Override
+                                public void onError(@NonNull Throwable e) {
+                                    Log.i("onError",e.getMessage());
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }*/
 
                 //暂时去掉 等session共享再放上去
                HttpCall.getApiService()
@@ -193,7 +226,6 @@ public class LoginActivity extends RxAppCompatActivity {
             cbPsd.setChecked(true);
         }
         portIntent = new Intent(this, PrinterConnectService.class);
-
         startService(portIntent);
     }
 

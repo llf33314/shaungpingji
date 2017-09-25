@@ -11,6 +11,7 @@ public final class MsTicketPrintHelper {
 
     //这个变量不同打印机的最大字符宽度
     private final int LINE_CHAR_COUNT = 48;
+    private final int LINE_BIG_CHAR_COUNT=36;
     public final String NextLine = "\n";
     public final String PRINTER_ENCODING = "GBK";
     public final String DIVIDING_LINE = SPCE+"……………………………………………………" +NextLine;
@@ -70,11 +71,12 @@ public final class MsTicketPrintHelper {
      */
     public String getBigRightLine(String left,String right){
        // int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(right)*2-4;  //这个4是右边距
-        //int num=8-right.length(); //这个算法不靠谱 纯粹是试出来的
-        int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(left) - getCustomByteLen(right)*2;
+
+        int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(left) - getCustomByteLen(right)*LINE_CHAR_COUNT/LINE_BIG_CHAR_COUNT-4;
         if (spaceNum < 0) {
             spaceNum = 0;
         }
+        spaceNum=spaceNum*LINE_BIG_CHAR_COUNT/LINE_CHAR_COUNT;
         return  getNString(spaceNum, " ") + right ;
 
     }

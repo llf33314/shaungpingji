@@ -4,6 +4,7 @@ import com.gprinter.command.EscCommand;
 import com.gprinter.command.LabelCommand;
 import com.gt.doubledisplay.bean.StoreOrderBean;
 import com.gt.doubledisplay.bean.TakeOutOrderBean;
+import com.gt.doubledisplay.utils.commonutil.StringUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class PrintESCOrTSCUtil {
         esc.addPrintAndFeedLines((byte) 1);
         esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);// 设置打印居中
         esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF);// 设置为倍高倍宽
-        esc.addText("多粉\n"); // 打印文字
+        esc.addText("微站\n"); // 打印文字
         esc.addPrintAndLineFeed();
 
         // 打印文字 *//*
@@ -38,7 +39,7 @@ public class PrintESCOrTSCUtil {
         esc.addText("会员折扣：8.5\n");
         esc.addText("--------------------------------\n");
         esc.addText("开单时间：2017-07-21 14:23\n");
-        esc.addText("收银员：多粉\n");
+        esc.addText("收银员：微站\n");
         esc.addText("--------------------------------\n");
         esc.addText("联系电话：0752-3851585\n");
         esc.addText("地址：惠州市惠城区赛格假日广场1007室\n");
@@ -157,7 +158,7 @@ public class PrintESCOrTSCUtil {
                 for (int i=0;i<m.getDet_food_num();i++){
 
                     // int res=PrinterConnectSerivce.printReceiptClicked(m.getMenu_no(),m.getName(),size,m.getCommnt());
-                    int res= PrinterConnectService.printReceiptClicked(orderId,m.getDet_food_name(),size,m.getRemark());
+                    int res= PrinterConnectService.printReceiptClicked(orderId, StringUtils.wipeOffSymbol(m.getDet_food_name()),size,m.getRemark());
 
                     if (res==PRINTER_NOT_INTI){//打印机未初始化
                         break;
@@ -170,6 +171,7 @@ public class PrintESCOrTSCUtil {
             }
         }
     }
+
 
 
   /*private static int sendLabelReceipt() {

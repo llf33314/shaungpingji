@@ -9,18 +9,28 @@ public class HttpConfig {
     //测试
     //public static final String BASE_URL = "https://yj.deeptel.com.cn/";
     //堡垒
-    public static final String BASE_URL = "http://nb.yj.deeptel.com.cn/";
+   // public static final String BASE_URL = "http://nb.yj.deeptel.com.cn/";
     //正式
    // public static final String BASE_URL = " http://yj.duofriend.com/";
+    //微站测试
+   // public static final String BASE_URL = "http://wz.yj.deeptel.com.cn/";
+    //微站正式
+    public static final String BASE_URL = "http://yj.gutong.114zan.com/";
 
-    public static final String LOGIN_URL=BASE_URL+"/ErpMenus/79B4DE7C/Erplogin.do";
+
+    //public static final String LOGIN_URL=BASE_URL+"/ErpMenus/79B4DE7C/Erplogin.do";
 
     //正式
    // public static final String DUOFRIEND_XCM="http://canyin.duofriend.com/";
     //堡垒
-     public static final String DUOFRIEND_XCM="http://nb.canyin.deeptel.com.cn/";
+     //public static final String DUOFRIEND_XCM="http://nb.canyin.deeptel.com.cn/";
     //测试
    // public static final String DUOFRIEND_XCM="http://canyin.deeptel.com.cn/";
+    //微站测试
+   // public static final String DUOFRIEND_XCM="http://wz.canyin.deeptel.com.cn/login/index.do";
+    //微站正式
+    public static final String DUOFRIEND_XCM="http://cy.gutong.114zan.com/login/index.do";
+
 
     public static final String ADVERTISING_RUL=BASE_URL+"doubleScreenIndex/mobileIndex";
     //public static final String ADVERTISING_RUL="http://192.168.3.39:8091/views/Slide/list.html";

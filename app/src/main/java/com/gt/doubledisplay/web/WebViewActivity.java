@@ -1,11 +1,15 @@
 package com.gt.doubledisplay.web;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import com.gt.doubledisplay.base.BaseActivity;
+import com.gt.doubledisplay.http.HttpConfig;
+import com.gt.doubledisplay.printer.extraposition.PrinterConnectService;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
@@ -27,17 +31,24 @@ public class WebViewActivity extends BaseActivity {
     private final String TAG=WebViewActivity.class.getSimpleName();
 
     GTWebViewFrameLayout mGTWebViewFrameLayout;
-
+    public static Intent portIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        portIntent = new Intent(this, PrinterConnectService.class);
+        startService(portIntent);
+
         String url=getIntent().getStringExtra(GTWebViewFrameLayout.PARAM_URL);
         //String url= HttpConfig.DUOFRIEND_LOGIN;
+        if (TextUtils.isEmpty(url)){
+            url= HttpConfig.DUOFRIEND_XCM;
+        }
         mGTWebViewFrameLayout =new GTWebViewFrameLayout(this,url);
         setContentView(mGTWebViewFrameLayout);
         showBtnBlu();
         mGTWebViewFrameLayout.loadUrl();
+
 
     }
 

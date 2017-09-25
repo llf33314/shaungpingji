@@ -34,9 +34,9 @@ public class StoreOrderBean {
 
     private String cashier;
     private double consumption_money;
-    private int fansCurrency_deduction;
-    private int integral_deduction;
-    private int member_deduction;
+    private double fansCurrency_deduction;
+    private double integral_deduction;
+    private double member_deduction;
     private String order_code;
     private String order_id;
     private String order_time;
@@ -51,7 +51,7 @@ public class StoreOrderBean {
     private String shop_adress;
     private String shop_name;
     private String shop_phone;
-    private int yhq_deduction;
+    private double yhq_deduction;
     private List<MenusBean> menus;
 
     public String getCashier() {
@@ -70,27 +70,27 @@ public class StoreOrderBean {
         this.consumption_money = consumption_money;
     }
 
-    public int getFansCurrency_deduction() {
+    public double getFansCurrency_deduction() {
         return fansCurrency_deduction;
     }
 
-    public void setFansCurrency_deduction(int fansCurrency_deduction) {
+    public void setFansCurrency_deduction(double fansCurrency_deduction) {
         this.fansCurrency_deduction = fansCurrency_deduction;
     }
 
-    public int getIntegral_deduction() {
+    public double getIntegral_deduction() {
         return integral_deduction;
     }
 
-    public void setIntegral_deduction(int integral_deduction) {
+    public void setIntegral_deduction(double integral_deduction) {
         this.integral_deduction = integral_deduction;
     }
 
-    public int getMember_deduction() {
+    public double getMember_deduction() {
         return member_deduction;
     }
 
-    public void setMember_deduction(int member_deduction) {
+    public void setMember_deduction(double member_deduction) {
         this.member_deduction = member_deduction;
     }
 
@@ -206,11 +206,11 @@ public class StoreOrderBean {
         this.shop_phone = shop_phone;
     }
 
-    public int getYhq_deduction() {
+    public double getYhq_deduction() {
         return yhq_deduction;
     }
 
-    public void setYhq_deduction(int yhq_deduction) {
+    public void setYhq_deduction(double yhq_deduction) {
         this.yhq_deduction = yhq_deduction;
     }
 
@@ -235,9 +235,18 @@ public class StoreOrderBean {
         private String commnt;
         private String menu_no;
         private double money;
+        private double original_price;
         private String name;
         private String norms;
         private int num;
+
+        public double getOriginal_price() {
+            return original_price;
+        }
+
+        public void setOriginal_price(double original_price) {
+            this.original_price = original_price;
+        }
 
         public String getCommnt() {
             return commnt;

@@ -9,16 +9,20 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.display.DisplayManager;
 import android.hardware.usb.UsbManager;
+import android.os.Build;
 import android.os.Process;
 import android.util.Log;
 import android.view.Display;
 import android.widget.Toast;
 
+import com.cashier.electricscale.manager.ElectricScaleManager;
+import com.gt.doubledisplay.bean.DeviceBean;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.login.LoginActivity;
 import com.gt.doubledisplay.printer.policy.PrinterPolicy;
 import com.gt.doubledisplay.printer.policy.WeituPrinter;
 import com.gt.doubledisplay.setting.SettingActivity;
+import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.DeviceUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.gt.doubledisplay.web.WebViewDiffDisplayPresentation;
@@ -46,28 +50,85 @@ public class MyApplication extends Application {
 
     WebViewDiffDisplayPresentation mp;
 
-    private static PrinterPolicy printer;
+    private static PrinterPolicy printerType;
     @Override
     public void onCreate() {
         super.onCreate();
+
         applicationContext=getApplicationContext();
         mSharedPreferences = this.getSharedPreferences("printer_box_test",Context.MODE_PRIVATE);
         Hawk.init(applicationContext).build();
+
+        initPrinter();
+        showScreen();
+        //initScale();
+    }
+
+    /**
+     * 初始化电子秤
+     */
+    private void initScale(){
+        ElectricScaleManager.getInstance().findElectricScale(this);
+        //ElectricScaleManager.getInstance().findElectricScaleReconnect(this);
+       // ElectricScaleManager.getInstance().initElectricScaleLabelSize(this);
+        ElectricScaleManager.getInstance().setOnBaseElectronicScaleOperationListen(new ElectricScaleManager.OnBaseElectronicScaleOperationListen() {
+            @Override
+            public void electronicScaleConnectSuccess() {
+                Log.d("Scale","electronicScaleConnectSuccess");
+            }
+
+            @Override
+            public void electronicScaleConnectFailed() {
+                Log.d("Scale","electronicScaleConnectFailed");
+            }
+
+            @Override
+            public void electronicScaleReconnectSuccess() {
+                Log.d("Scale","electronicScaleReconnectSuccess");
+
+            }
+
+            @Override
+            public void electronicScaleReconnectFailed() {
+                Log.d("Scale","electronicScaleReconnectFailed");
+
+            }
+
+            @Override
+            public void electronicScaleOperationSuccessful(String s) {
+                Log.d("Scale","electronicScaleOperationSuccessful");
+
+            }
+
+            @Override
+            public void electronicScaleOperationFailed() {
+                Log.d("Scale","electronicScaleOperationFailed");
+
+            }
+
+            @Override
+            public void electronicScaleMessageSuccessful() {
+                Log.d("Scale","electronicScaleMessageSuccessful");
+
+            }
+        });
+    }
+
+    private void initWeituPrinter(){
         if ((getSettingCode()&(SettingActivity.DEVICE_SETTING_USE_PRINTER|SettingActivity.DEVICE_SETTING_USE_MONEY_BOX))!=0){
             getUsbDriverService();
         }
-        initPrinter();
-        showScreen();
     }
 
     private void initPrinter(){
         if ("NATIVE".equals(DeviceUtils.getModel())){//微兔设备
-            printer=new WeituPrinter();
+            initWeituPrinter();
+            printerType=new WeituPrinter();
         }
     }
 
     public static PrinterPolicy getPrinter(){
-        return printer;
+        return printerType;
     }
 
 
@@ -95,6 +156,8 @@ public class MyApplication extends Application {
             mp= new WebViewDiffDisplayPresentation(this,displays[1], HttpConfig.ADVERTISING_RUL);
         }
         mp.show();
+        //0921 微站调试用 因为除去了登录页面
+        RxBus.get().post(new DeviceBean());
     }
     public static void appExit(){
         //getAppContext().stopService(portIntent);

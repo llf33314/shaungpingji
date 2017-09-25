@@ -33,15 +33,15 @@ public class TakeOutOrderBean {
      */
 
     private double consumption_money;
-    private int fansCurrency_deduction;
-    private int integral_deduction;
-    private int member_deduction;
+    private double fansCurrency_deduction;
+    private double integral_deduction;
+    private double member_deduction;
     private String menAddress;
     private String menName;
     private String menPhone;
     private String order_id;
     private String order_no;
-    private long order_time;
+    private String order_time;
     private String payWay;
     private String print_time;
     private String qrUrl;
@@ -50,7 +50,7 @@ public class TakeOutOrderBean {
     private String resName;
     private String resPhone;
     private int totalNum;
-    private int yhq_deduction;
+    private double yhq_deduction;
     private List<MenusBean> menus;
 
     public double getConsumption_money() {
@@ -61,27 +61,27 @@ public class TakeOutOrderBean {
         this.consumption_money = consumption_money;
     }
 
-    public int getFansCurrency_deduction() {
+    public double getFansCurrency_deduction() {
         return fansCurrency_deduction;
     }
 
-    public void setFansCurrency_deduction(int fansCurrency_deduction) {
+    public void setFansCurrency_deduction(double fansCurrency_deduction) {
         this.fansCurrency_deduction = fansCurrency_deduction;
     }
 
-    public int getIntegral_deduction() {
+    public double getIntegral_deduction() {
         return integral_deduction;
     }
 
-    public void setIntegral_deduction(int integral_deduction) {
+    public void setIntegral_deduction(double integral_deduction) {
         this.integral_deduction = integral_deduction;
     }
 
-    public int getMember_deduction() {
+    public double getMember_deduction() {
         return member_deduction;
     }
 
-    public void setMember_deduction(int member_deduction) {
+    public void setMember_deduction(double member_deduction) {
         this.member_deduction = member_deduction;
     }
 
@@ -125,11 +125,11 @@ public class TakeOutOrderBean {
         this.order_no = order_no;
     }
 
-    public long getOrder_time() {
+    public String getOrder_time() {
         return order_time;
     }
 
-    public void setOrder_time(long order_time) {
+    public void setOrder_time(String order_time) {
         this.order_time = order_time;
     }
 
@@ -197,11 +197,11 @@ public class TakeOutOrderBean {
         this.totalNum = totalNum;
     }
 
-    public int getYhq_deduction() {
+    public double getYhq_deduction() {
         return yhq_deduction;
     }
 
-    public void setYhq_deduction(int yhq_deduction) {
+    public void setYhq_deduction(double yhq_deduction) {
         this.yhq_deduction = yhq_deduction;
     }
 
