@@ -222,7 +222,7 @@ public  class MsTicketPrintModel {
         appendLeftData("联系地址："+shopAddress);
 
         appendRunLine(1);
-        appendCenterData("技术支持·微站 400-899-4522");
+        appendCenterData("技术支持·多粉 400-899-4522");
         SetFeedCutClean(0);
 
         return getCustomByte(data.toString());

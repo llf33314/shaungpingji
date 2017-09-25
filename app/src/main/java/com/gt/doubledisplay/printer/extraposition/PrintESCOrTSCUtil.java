@@ -22,7 +22,7 @@ public class PrintESCOrTSCUtil {
         esc.addPrintAndFeedLines((byte) 1);
         esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);// 设置打印居中
         esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF);// 设置为倍高倍宽
-        esc.addText("微站\n"); // 打印文字
+        esc.addText("多粉\n"); // 打印文字
         esc.addPrintAndLineFeed();
 
         // 打印文字 *//*
@@ -39,7 +39,7 @@ public class PrintESCOrTSCUtil {
         esc.addText("会员折扣：8.5\n");
         esc.addText("--------------------------------\n");
         esc.addText("开单时间：2017-07-21 14:23\n");
-        esc.addText("收银员：微站\n");
+        esc.addText("收银员：多粉\n");
         esc.addText("--------------------------------\n");
         esc.addText("联系电话：0752-3851585\n");
         esc.addText("地址：惠州市惠城区赛格假日广场1007室\n");
