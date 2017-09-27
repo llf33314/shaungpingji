@@ -74,7 +74,6 @@ public class LoginActivity extends RxAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        float a= ScreenUtils.getDensity();
         init();
 
         //连接socket  暂时这么写 如果是登录页面就不启动
@@ -104,49 +103,21 @@ public class LoginActivity extends RxAppCompatActivity {
                     return;
                 }
 
-                /*if (true){
-                    HttpCall.getApiService()
-                            .test()
-                            .compose(SchedulerTransformer.<String>transformer())
-                            .subscribe(new Observer<String>() {
-                                @Override
-                                public void onSubscribe(@NonNull Disposable d) {
 
-                                }
-
-                                @Override
-                                public void onNext(@NonNull String s) {
-                                    Log.i("onNext",s);
-
-                                }
-
-                                @Override
-                                public void onError(@NonNull Throwable e) {
-                                    Log.i("onError",e.getMessage());
-                                }
-
-                                @Override
-                                public void onComplete() {
-
-                                }
-                            });
-                }*/
-
-                //暂时去掉 等session共享再放上去
-               HttpCall.getApiService()
+             /*  HttpCall.getApiService()
                         .getSign(account,psd,"double_screen_sign_code_is_ok")
                         .flatMap(new Function<BaseResponse<LoginSignBean>, ObservableSource<BaseResponse<LoginBean>>>() {
                             @Override
                             public ObservableSource<BaseResponse<LoginBean>> apply(@NonNull BaseResponse<LoginSignBean> loginSignBeanBaseResponse) throws Exception {
 
                                 return  HttpCall.getApiService().login(account,psd,loginSignBeanBaseResponse.getData().getSign());}
-                        })
-               /* HttpCall.getApiService()
-                        .login(account,psd)*/
+                        })*/
+              //0926 暂时去掉原生登录 下面代码不一定能登录
+                HttpCall.getApiService().login(account,psd)
                         .flatMap(ResultTransformer.<LoginBean>flatMap())//这里会去处理 非成功的code
-                        .flatMap(new Function<LoginBean, ObservableSource<BaseResponse<DeviceBean>>>(){
+                        .flatMap(new Function<LoginBean, ObservableSource<String>>(){
                             @Override
-                            public ObservableSource<BaseResponse<DeviceBean>> apply(@NonNull LoginBean loginBean) throws Exception {
+                            public ObservableSource<String> apply(@NonNull LoginBean loginBean) throws Exception {
                                 if ("0".equals(loginBean.getError())){//登录成功
                                     MyApplication.USER_ID= HttpConfig.SOCKET_ANDROID_AUTH_KEY+loginBean.getStyle()+"_"+loginBean.getUserId();
                                     if (cbPsd.isChecked()){
@@ -156,8 +127,19 @@ public class LoginActivity extends RxAppCompatActivity {
                                         Hawk.delete(ACCOUNT);
                                         Hawk.delete(PSD);
                                     }
+
+                                    MyApplication.setLoginBean(loginBean);
                                 }
-                                return HttpCall.getApiService().getDeviceId(String.valueOf(loginBean.getUserId()));
+                                //return HttpCall.getApiService().getDeviceId(String.valueOf(loginBean.getUserId()));
+                                return HttpCall.getApiService().getErpLogin(account,psd,loginBean.getSign().getSign());
+                            }
+                        })
+                        .flatMap(new Function<String, ObservableSource<BaseResponse<DeviceBean>>>() {
+                            @Override
+                            public ObservableSource<BaseResponse<DeviceBean>> apply(@NonNull String s) throws Exception {
+
+                                return HttpCall.getApiService().getDeviceId(String.valueOf(MyApplication.getLoginBean().getUserId()));
+
                             }
                         })
                         .compose(LoginActivity.this.<BaseResponse<DeviceBean>>bindToLifecycle())
@@ -185,6 +167,7 @@ public class LoginActivity extends RxAppCompatActivity {
                                 Hawk.delete(ACCOUNT);
                                 Hawk.delete(PSD);
                                 if (responseException.getCode()==9999){
+                                    //这个不一定 没文档暂时这么处理
                                     ToastUtil.getInstance().showToast("账号密码错误");
                                 }else{
                                     super.onFailed(responseException);

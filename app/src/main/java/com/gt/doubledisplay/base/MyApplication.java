@@ -17,8 +17,10 @@ import android.widget.Toast;
 
 import com.cashier.electricscale.manager.ElectricScaleManager;
 import com.gt.doubledisplay.bean.DeviceBean;
+import com.gt.doubledisplay.bean.LoginBean;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.login.LoginActivity;
+import com.gt.doubledisplay.printer.extraposition.PrinterConnectService;
 import com.gt.doubledisplay.printer.policy.PrinterPolicy;
 import com.gt.doubledisplay.printer.policy.WeituPrinter;
 import com.gt.doubledisplay.printer.policy.ZeroSixFivePrinter;
@@ -52,6 +54,13 @@ public class MyApplication extends Application {
     WebViewDiffDisplayPresentation mp;
 
     private static PrinterPolicy printerType;
+
+    /**
+     * 保存登录返回信息
+     */
+    private static LoginBean loginBean;
+
+    public static Intent portIntent;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -62,9 +71,15 @@ public class MyApplication extends Application {
 
         initPrinter();
         showScreen();
+        startGpSerivce();
+
         //initScale();
     }
 
+    private void startGpSerivce(){
+        portIntent = new Intent(this, PrinterConnectService.class);
+        startService(portIntent);
+    }
     /**
      * 初始化电子秤
      */
@@ -214,6 +229,14 @@ public class MyApplication extends Application {
             }
         }
     };
+
+    public static LoginBean getLoginBean() {
+        return loginBean;
+    }
+
+    public static void setLoginBean(LoginBean loginBean) {
+        MyApplication.loginBean = loginBean;
+    }
 
     public static UsbDriver getMsUsbDriver() {
         return mMsUsbDriver;

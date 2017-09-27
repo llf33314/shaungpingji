@@ -31,16 +31,13 @@ public class WebViewActivity extends BaseActivity {
     private final String TAG=WebViewActivity.class.getSimpleName();
 
     GTWebViewFrameLayout mGTWebViewFrameLayout;
-    public static Intent portIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        portIntent = new Intent(this, PrinterConnectService.class);
-        startService(portIntent);
 
         String url=getIntent().getStringExtra(GTWebViewFrameLayout.PARAM_URL);
-        //String url= HttpConfig.DUOFRIEND_LOGIN;
         if (TextUtils.isEmpty(url)){
             url= HttpConfig.DUOFRIEND_XCM;
         }
@@ -74,7 +71,8 @@ public class WebViewActivity extends BaseActivity {
                      mGTWebViewFrameLayout.getWebView().getNavigationHistory().navigate(XWalkNavigationHistory.Direction.BACKWARD, 1);//返回上一页面
                      } else {
                      ToastUtil.getInstance().showToast("已是最后一页");
-                    } return true;
+                    }
+                    return true;
                }
         return super.onKeyDown(keyCode, event);
     }

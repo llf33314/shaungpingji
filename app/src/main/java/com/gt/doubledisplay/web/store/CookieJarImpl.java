@@ -47,7 +47,7 @@ public class CookieJarImpl implements CookieJar {
 
     @Override
     public synchronized List<Cookie> loadForRequest(HttpUrl url) {
-        Log.i("test","loadForRequest url="+url.toString());
+        Log.i("CookieJarImpl","loadForRequest url="+url.toString());
         if (Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP){
             CookieSyncManager.getInstance().sync();
         }

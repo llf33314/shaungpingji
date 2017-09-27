@@ -15,5 +15,7 @@
     <color name="wifi_connection_tv_color">#999999</color>
     <color name="custom_red">#f04a4a</color>
     <color name="setting_btn_border">#bfcbd9</color>
+    <color name="setting_text_color">#333333</color>
+
 
 </resources>

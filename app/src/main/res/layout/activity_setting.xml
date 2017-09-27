@@ -3,69 +3,143 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="15dp">
+    android:padding="@dimen/dp_10"
 
-    <Button
+
+    >
+
+    <LinearLayout
         android:id="@+id/blu_setting"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/btn_green_border_and_white"
-        android:gravity="center"
-        android:text="蓝牙设置"
-        android:textColor="@color/loginNotP"
-        android:textSize="20sp" />
+        android:layout_height="@dimen/dp_25"
+        android:background="@drawable/btn_gray_border_and_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="蓝牙设置"
+            android:textColor="@color/setting_text_color"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="进入"
+            android:textColor="@color/setting_btn_border"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:layout_width="@dimen/dp_8"
+            android:layout_height="@dimen/dp_8"
+            android:src="@drawable/setting_go" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/btn_green_border_and_white"
-        android:gravity="center">
+        android:layout_height="@dimen/dp_25"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/btn_gray_border_and_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="使用内置打印机"
+            android:textColor="@color/setting_text_color"
+            android:textSize="20sp" />
 
         <CheckBox
             android:id="@+id/setting_cb_use_printer"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="是否使用内置打印机"
-            android:textColor="@color/loginNotP"
-            android:textSize="20sp" />
+            android:layout_height="match_parent"
+            android:button="@drawable/cb_setting" />
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/btn_green_border_and_white"
-        android:gravity="center">
+        android:layout_height="@dimen/dp_25"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/btn_gray_border_and_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="使用钱箱"
+            android:textColor="@color/setting_text_color"
+            android:textSize="20sp" />
 
         <CheckBox
             android:id="@+id/setting_cb_use_money_box"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="是否使用钱箱            "
-            android:textColor="@color/loginNotP"
-            android:textSize="20sp" />
+            android:layout_height="match_parent"
+            android:button="@drawable/cb_setting" />
+
     </LinearLayout>
 
-    <Button
+
+    <LinearLayout
         android:id="@+id/check_update"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/btn_green_border_and_white"
-        android:gravity="center"
-        android:text="检查更新"
-        android:textColor="@color/loginNotP"
-        android:textSize="20sp" />
+        android:layout_height="@dimen/dp_25"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/btn_gray_border_and_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
+
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="检查更新"
+            android:textColor="@color/setting_text_color"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/setting_btn_border"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:layout_width="@dimen/dp_8"
+            android:layout_height="@dimen/dp_8"
+            android:src="@drawable/setting_go" />
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/setting_imei"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="25dp"
         android:gravity="center"
-        android:textColor="@color/loginNotP"
+        android:textColor="@color/setting_text_color"
         android:textSize="20sp"
         android:visibility="gone" />
 
