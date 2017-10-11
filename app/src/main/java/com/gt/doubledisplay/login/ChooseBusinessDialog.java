@@ -56,6 +56,7 @@ public class ChooseBusinessDialog extends Dialog {
 
     }
 
+    //请求接口访问list
     private List<BusinessBean> getBusiness() {
         List<BusinessBean> listBean = new ArrayList<>();
         for (int i = 0; i < 10; i++) {

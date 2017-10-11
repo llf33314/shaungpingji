@@ -3,8 +3,6 @@ package com.gt.doubledisplay.http;
 
 
 
-import com.gt.doubledisplay.bean.DeviceBean;
-import com.gt.doubledisplay.bean.LoginBean;
 import com.gt.doubledisplay.bean.LoginSignBean;
 
 import io.reactivex.Observable;
@@ -17,19 +15,21 @@ public interface ApiService {
 
     //暂时去掉sign参数
     @FormUrlEncoded
-    @POST("doubleScreenMobile/getBusId")
-    Observable<BaseResponse<LoginBean>> login(@Field("login_name")String account, @Field("password")String psd);
+   // @POST("doubleScreenMobile/getBusId")
+    @POST(HttpConfig.LOGIN_URL)
+    //Observable<BaseResponse<LoginBean>> login(@Field("login_name")String account, @Field("password")String psd, @Field("sign")String sign);
+    Observable<String> login(@Field("login_name")String account, @Field("password")String psd, @Field("sign")String sign);
 
     @FormUrlEncoded
-    @POST("doubleScreenMobile/getSign")
-    Observable<BaseResponse<LoginSignBean>> getSign(@Field("login_name")String account, @Field("password")String psd, @Field("signCode") String signCode);
+    @POST("doubleScreenMobile/getBusId")
+    Observable<BaseResponse<LoginSignBean>> getBusId(@Field("login_name")String account, @Field("password")String psd);
 
     @FormUrlEncoded
     @POST("doubleScreenMobile/getPrintData")
     Observable<String> getPrintTscOrder(@Field("orderId")String orderId);
 
-    @POST("doubleScreenMobile/getEqCode")
-    Observable<BaseResponse<DeviceBean>>getDeviceId(@Query("busId") String busId);
+  /*  @POST("doubleScreenMobile/getEqCode")
+    Observable<BaseResponse<DeviceBean>>getDeviceId(@Query("busId") String busId);*/
 
     @POST("http://hz1.yifriend.net/ErpMenus/79B4DE7C/Erplogin.do")
     Observable<String>getErpLogin(@Query("login_name")String login_name,@Query("password")String password,@Query("sign")String sign);

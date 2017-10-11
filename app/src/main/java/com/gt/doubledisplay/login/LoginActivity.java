@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.bean.DeviceBean;
@@ -30,7 +31,6 @@ import com.gt.doubledisplay.http.rxjava.observable.SchedulerTransformer;
 import com.gt.doubledisplay.http.rxjava.observer.BaseObserver;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectService;
 import com.gt.doubledisplay.utils.RxBus;
-import com.gt.doubledisplay.utils.commonutil.ScreenUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.gt.doubledisplay.web.GTWebViewFrameLayout;
 import com.gt.doubledisplay.web.WebViewActivity;
@@ -69,6 +69,8 @@ public class LoginActivity extends RxAppCompatActivity {
     //打印机连接
     public static Intent portIntent;
 
+    Gson gson=new Gson();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +105,63 @@ public class LoginActivity extends RxAppCompatActivity {
                     return;
                 }
 
+                HttpCall.getApiService()
+                        .getBusId(account,psd)
+                        .flatMap(ResultTransformer.<LoginSignBean>flatMap())
+                        .flatMap(new Function<LoginSignBean, ObservableSource<String>>() {
+                            @Override
+                            public ObservableSource<String> apply(@NonNull LoginSignBean loginSignBean) throws Exception {
+                                LoginSignBean.SignBean sign=loginSignBean.getSign();
+
+                                //保存设备信息 给副屏调用
+                                MyApplication.USER_ID= HttpConfig.SOCKET_ANDROID_AUTH_KEY+loginSignBean.getStyle()+"_"+loginSignBean.getUserId();
+                                MyApplication.DEVICE_ID=loginSignBean.getEqCode();
+
+                                if (cbPsd.isChecked()){
+                                    Hawk.put(ACCOUNT,account);
+                                    Hawk.put(PSD,psd);
+                                }else{
+                                    Hawk.delete(ACCOUNT);
+                                    Hawk.delete(PSD);
+                                }
+                                //暂时保存
+                                MyApplication.setLoginBean(loginSignBean);
+
+
+                                return HttpCall.getApiService().login(account,psd,gson.toJson(sign));
+                            }
+                        })
+                        .compose(LoginActivity.this.<String>bindToLifecycle())
+                        .compose(SchedulerTransformer.<String>transformer())
+                        .compose(new DialogTransformer().<String>transformer())
+                        .subscribe(new BaseObserver<String>() {
+                            @Override
+                            protected void onSuccess(String s) {
+                                String jsonResult=s.substring(s.indexOf("(")+1,s.indexOf(")"));
+                                LoginBean loginBean=gson.fromJson(jsonResult,LoginBean.class);
+                                if ("1".equals(loginBean.getCode())){//登录失败
+                                    ToastUtil.getInstance().showToast(loginBean.getMsg());
+                                }else if("0".equals(loginBean.getCode())){
+
+                                    Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
+                                    intent.putExtra(GTWebViewFrameLayout.PARAM_URL, HttpConfig.DUOFRIEND_XCM);
+                                    //ToastUtil.getInstance().showNewShort("登录成功");
+                                    startActivity(intent);
+                                    //显示副屏广告
+                                    RxBus.get().post(new DeviceBean(MyApplication.getLoginBean().getEqCode()));
+                                    finish();
+
+                                }
+                            }
+
+                            @Override
+                            protected void onFailed(HttpResponseException responseException) {
+                                super.onFailed(responseException);
+                                Hawk.delete(ACCOUNT);
+                                Hawk.delete(PSD);
+                            }
+                        });
+
 
              /*  HttpCall.getApiService()
                         .getSign(account,psd,"double_screen_sign_code_is_ok")
@@ -113,7 +172,7 @@ public class LoginActivity extends RxAppCompatActivity {
                                 return  HttpCall.getApiService().login(account,psd,loginSignBeanBaseResponse.getData().getSign());}
                         })*/
               //0926 暂时去掉原生登录 下面代码不一定能登录
-                HttpCall.getApiService().login(account,psd)
+               /* HttpCall.getApiService().login(account,psd)
                         .flatMap(ResultTransformer.<LoginBean>flatMap())//这里会去处理 非成功的code
                         .flatMap(new Function<LoginBean, ObservableSource<String>>(){
                             @Override
@@ -173,7 +232,7 @@ public class LoginActivity extends RxAppCompatActivity {
                                     super.onFailed(responseException);
                                 }
                             }
-                        });
+                        });*/
 
                 break;
         }
@@ -205,11 +264,11 @@ public class LoginActivity extends RxAppCompatActivity {
         if (!TextUtils.isEmpty(psd)){
             etPsd.setText(psd);
         }
-        if(!TextUtils.isEmpty(psd)||!TextUtils.isEmpty(account)){
+        if(!TextUtils.isEmpty(psd)&&!TextUtils.isEmpty(account)){
             cbPsd.setChecked(true);
         }
-        portIntent = new Intent(this, PrinterConnectService.class);
-        startService(portIntent);
+        /*portIntent = new Intent(this, PrinterConnectService.class);
+        startService(portIntent);*/
     }
 
 }

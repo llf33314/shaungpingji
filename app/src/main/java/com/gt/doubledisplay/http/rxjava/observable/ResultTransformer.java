@@ -5,7 +5,6 @@ import android.text.TextUtils;
 
 import com.gt.doubledisplay.http.BaseResponse;
 import com.gt.doubledisplay.http.HttpResponseException;
-import com.gt.doubledisplay.bean.LoginBean;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;

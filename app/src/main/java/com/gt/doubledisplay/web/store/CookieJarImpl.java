@@ -5,11 +5,11 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 
-import com.gt.doubledisplay.http.ApiService;
+
 import com.gt.doubledisplay.http.HttpConfig;
+
+import org.xwalk.core.XWalkCookieManager;
 
 import java.util.List;
 
@@ -20,38 +20,29 @@ import okhttp3.HttpUrl;
 public class CookieJarImpl implements CookieJar {
     private CookieStore cookieStore;
     private Context context;
-    CookieManager cookieManager ;
+
+    XWalkCookieManager mCookieManager = new XWalkCookieManager();
 
     public CookieJarImpl(CookieStore cookieStore,Context context) {
         if (cookieStore == null) new IllegalArgumentException("cookieStore can not be null.");
         this.cookieStore = cookieStore;
-        CookieSyncManager.createInstance(context);
-        cookieManager = CookieManager.getInstance();
+        this.context=context;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public synchronized void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-        Log.i("CookieJarImpl","saveFromResponse url="+url.toString()+" url.host="+url.host()+"  cookies.size="+cookies.size()+" cookies="+cookies.get(0).toString());
-        //清空缓存 否则再登录登录不上 应该与web那边有关
-        /*if (HttpConfig.LOGIN_URL.equals(url.toString())){
-            cookieManager.removeAllCookie();
-            cookieStore.removeAll();
-        }*/
+        Log.i("test","saveFromResponse url="+url.toString()+" url.host="+url.host()+"  cookies.size="+cookies.size()+" cookies="+cookies.get(0).toString());
 
-        if (cookies!=null&&cookies.size()>0){
-            saveCookies(url.host(),cookies.get(0).toString());
-            cookieStore.add(url, cookies);
+        if (cookies!=null&&cookies.size()>0) {
+            saveCookies(url.toString(),cookies.get(0).toString());
         }
+        cookieStore.add(url, cookies);
     }
 
     @Override
     public synchronized List<Cookie> loadForRequest(HttpUrl url) {
-        Log.i("CookieJarImpl","loadForRequest url="+url.toString());
-        if (Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP){
-            CookieSyncManager.getInstance().sync();
-        }
-
+        Log.i("test","loadForRequest url="+url.toString());
         return cookieStore.get(url);
     }
 
@@ -59,22 +50,17 @@ public class CookieJarImpl implements CookieJar {
         return cookieStore;
     }
 
+
     /**
      * 将浏览器cookie 同步到RAM内存中
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void saveCookies(String url, String cookies) {
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
-            cookieManager.setAcceptCookie(true);
-            cookieManager.setCookie(url, cookies);//cookies是在HttpClient中获得的cookie
-            cookieManager.flush();
-        }else{
-            //api 21后被废弃
-            cookieManager = CookieManager.getInstance();
-            cookieManager.setAcceptCookie(true);
-            cookieManager.setCookie(url, cookies);//cookies是在HttpClient中获得的cookie
-            CookieSyncManager.getInstance().sync();
-        }
+
+        mCookieManager.setAcceptCookie(true);
+        mCookieManager.setAcceptFileSchemeCookies(true);
+        mCookieManager.setCookie(url,cookies);
+        mCookieManager.flushCookieStore();
 
     }
 }

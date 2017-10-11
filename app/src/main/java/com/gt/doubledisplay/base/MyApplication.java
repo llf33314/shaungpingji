@@ -16,8 +16,8 @@ import android.view.Display;
 import android.widget.Toast;
 
 import com.cashier.electricscale.manager.ElectricScaleManager;
-import com.gt.doubledisplay.bean.DeviceBean;
 import com.gt.doubledisplay.bean.LoginBean;
+import com.gt.doubledisplay.bean.LoginSignBean;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.login.LoginActivity;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectService;
@@ -58,7 +58,7 @@ public class MyApplication extends Application {
     /**
      * 保存登录返回信息
      */
-    private static LoginBean loginBean;
+    private static LoginSignBean loginBean;
 
     public static Intent portIntent;
     @Override
@@ -176,7 +176,7 @@ public class MyApplication extends Application {
         }
         mp.show();
         //0921 微站调试用 因为除去了登录页面
-        RxBus.get().post(new DeviceBean());
+       // RxBus.get().post(new DeviceBean());
     }
     public static void appExit(){
         //getAppContext().stopService(portIntent);
@@ -230,11 +230,11 @@ public class MyApplication extends Application {
         }
     };
 
-    public static LoginBean getLoginBean() {
+    public static LoginSignBean getLoginBean() {
         return loginBean;
     }
 
-    public static void setLoginBean(LoginBean loginBean) {
+    public static void setLoginBean(LoginSignBean loginBean) {
         MyApplication.loginBean = loginBean;
     }
 

@@ -17,6 +17,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.gt.doubledisplay.base.BaseActivity;
+import com.gt.doubledisplay.http.HttpConfig;
+import com.gt.doubledisplay.login.LoginActivity;
 import com.gt.doubledisplay.utils.commonutil.ConvertUtils;
 
 import org.xwalk.core.XWalkJavascriptResult;
@@ -24,6 +26,8 @@ import org.xwalk.core.XWalkResourceClient;
 import org.xwalk.core.XWalkSettings;
 import org.xwalk.core.XWalkUIClient;
 import org.xwalk.core.XWalkView;
+import org.xwalk.core.XWalkWebResourceRequest;
+import org.xwalk.core.XWalkWebResourceResponse;
 
 /**
  * Created by wzb on 2017/8/9 0009.
@@ -130,7 +134,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
             @Override
             public void onReceivedTitle(XWalkView view, String title) {
                 try {
-                    //副屏幕不走这里
+                    //副屏幕不走这里  set设置标题
                     BaseActivity activity=(BaseActivity) GTWebViewFrameLayout.this.getContext();
                     activity.setToolBarTitle(title);
                 }catch (ClassCastException e){
@@ -174,10 +178,17 @@ public class GTWebViewFrameLayout extends FrameLayout {
                 super.onProgressChanged(view, newProgress);
             }
 
+            @Override
+            public XWalkWebResourceResponse shouldInterceptLoadRequest(XWalkView view, XWalkWebResourceRequest request) {
+                if (HttpConfig.DUOFRIEND_XCM_LOGIN_OUT_URL.equals(request.getUrl())){
+                    Intent intent=new Intent(mWebView.getContext(), LoginActivity.class);
+                    mWebView.getContext().startActivity(intent);
+                    return null;
+                }
+                return super.shouldInterceptLoadRequest(view, request);
+            }
 
-
-
-           /*@Override
+            /*@Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
 
