@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.base.BaseRecyclerAdapter;
 import com.gt.doubledisplay.base.BaseViewHolder;
+import com.gt.doubledisplay.bean.LoginBean;
 import com.gt.doubledisplay.utils.commonutil.ConvertUtils;
 
 import java.util.List;
@@ -22,11 +23,11 @@ import java.util.List;
  * Created by wzb on 2017/8/4 0004.
  */
 
-public class ChooseBusinessAdapter extends BaseRecyclerAdapter<BusinessBean>{
+public class ChooseBusinessAdapter extends BaseRecyclerAdapter<LoginBean.ErplistBean>{
 
     private int space;
 
-    public ChooseBusinessAdapter(Context context, List<BusinessBean> listBean,int space) {
+    public ChooseBusinessAdapter(Context context, List<LoginBean.ErplistBean> listBean,int space) {
         super(context, listBean);
         this.space=space;
     }
@@ -66,8 +67,15 @@ public class ChooseBusinessAdapter extends BaseRecyclerAdapter<BusinessBean>{
     }
 
     @Override
-    public void onBindViewHolder(BaseViewHolder holder, BusinessBean bean, int position) {
-            holder.setImageForUrl(R.id.iv_item_choose_business,bean.getImgUrl());
+    public void onBindViewHolder(BaseViewHolder holder, LoginBean.ErplistBean bean, int position) {
+        try {//防止后台配置写错导致前端出错
+            String imgUrl=bean.getItem_remark().split(",")[1];
+            holder.setImageForUrl(R.id.iv_item_choose_business,imgUrl);
+        }catch (Exception e){
+            e.printStackTrace();
+            holder.setImageResource(R.id.iv_item_choose_business,R.mipmap.ic_launcher);
+        }
+
     }
 
     /**

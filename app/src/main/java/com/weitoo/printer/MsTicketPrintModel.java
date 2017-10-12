@@ -90,7 +90,7 @@ public  class MsTicketPrintModel {
     public byte[] getStoreOrderData1(StoreOrderBean storeOrderBean){
         data.setLength(0);
         //appendData(PrintCmd.SetBold(1));
-        appendData(PrintCmd.SetSizechar(1,1,0,9*17));
+        appendData(PrintCmd.SetSizechar(1,1,0,12*24));
         appendCenterData("编号："+storeOrderBean.getOrder_id());
         //appendData(PrintCmd.SetBold(0));
         appendData(PrintCmd.SetSizechar(0,0,0,0));

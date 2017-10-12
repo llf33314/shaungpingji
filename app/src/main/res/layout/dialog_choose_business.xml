@@ -31,7 +31,7 @@
             android:layout_width="@dimen/dp_25"
             android:layout_height="match_parent"
             android:text="×"
-            android:textSize="34sp"
+            android:textSize="46sp"
             android:gravity="center"
             android:layout_alignParentRight="true"
             />
@@ -64,6 +64,7 @@
         android:layout_weight="1"/>
 </LinearLayout>
     <CheckBox
+        android:id="@+id/login_choose_bus_cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="记住我的选择"
@@ -73,5 +74,6 @@
         android:textColor="@color/black"
         android:layout_marginRight="@dimen/dp_12"
         android:layout_marginLeft="@dimen/dp_12"
+        android:button="@drawable/cb_login_choose"
         />
 </FrameLayout>

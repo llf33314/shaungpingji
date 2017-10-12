@@ -3,6 +3,7 @@ package com.gt.doubledisplay.web;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Presentation;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,11 +16,14 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gt.doubledisplay.base.BaseActivity;
+import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.login.LoginActivity;
 import com.gt.doubledisplay.utils.commonutil.ConvertUtils;
+import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 import org.xwalk.core.XWalkJavascriptResult;
 import org.xwalk.core.XWalkResourceClient;
@@ -144,23 +148,33 @@ public class GTWebViewFrameLayout extends FrameLayout {
         };
     }
 
+    /**
+     *副屏alert 时 会报错
+     */
     private void showWebDialog(String message,final XWalkJavascriptResult result){
-        new AlertDialog.Builder(this.getContext())
-                .setTitle("温馨提示")
-                .setMessage(message)
-                .setNegativeButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.confirm();
-                    }
-                })
-                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.cancel();
-                    }
-                })
-                .show();
+       Context context=this.getContext();
+        if (!(context instanceof Activity)){
+            //ToastUtil.getInstance().showToast(message,5000);
+            Log.d("showWebDialog",message);
+        }else{
+            new AlertDialog.Builder(context)
+                    .setTitle("温馨提示")
+                    .setMessage(message)
+                    .setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.confirm();
+                        }
+                    })
+                    .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.cancel();
+                        }
+                    })
+                    .show();
+
+        }
 
     }
 
@@ -180,10 +194,17 @@ public class GTWebViewFrameLayout extends FrameLayout {
 
             @Override
             public XWalkWebResourceResponse shouldInterceptLoadRequest(XWalkView view, XWalkWebResourceRequest request) {
-                if (HttpConfig.DUOFRIEND_XCM_LOGIN_OUT_URL.equals(request.getUrl())){
-                    Intent intent=new Intent(mWebView.getContext(), LoginActivity.class);
-                    mWebView.getContext().startActivity(intent);
-                    return null;
+               // Log.d("GTWebView",request.getUrl().toString());
+
+
+                String url=request.getUrl().toString();
+                if (HttpConfig.DUOFRIEND_XCM_LOGIN_OUT_URL.equals(url)||HttpConfig.DUOFRIEND_XCM_LOGIN_OUT_URL_2.equals(url)){
+                    Context context=mWebView.getContext();
+                    Intent intent=new Intent(context, LoginActivity.class);
+                    context.startActivity(intent);
+                    if (context instanceof Activity){
+                        ((Activity) context).finish();
+                    }
                 }
                 return super.shouldInterceptLoadRequest(view, request);
             }

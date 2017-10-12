@@ -16,6 +16,7 @@ import android.view.Display;
 import android.widget.Toast;
 
 import com.cashier.electricscale.manager.ElectricScaleManager;
+import com.gt.doubledisplay.Test;
 import com.gt.doubledisplay.bean.LoginBean;
 import com.gt.doubledisplay.bean.LoginSignBean;
 import com.gt.doubledisplay.http.HttpConfig;
@@ -219,11 +220,11 @@ public class MyApplication extends Application {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
-                Log.e("printer", "ACTION_USB_DEVICE_ATTACHED");
+               // Log.e("printer", "ACTION_USB_DEVICE_ATTACHED");
                 mMsUsbDriver.usbAttached(intent);
                 mMsUsbDriver.openUsbDevice(SERIAL_BAUDRATE);
             } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
-                Log.e("printer", "ACTION_USB_DEVICE_DETACHED");
+               // Log.e("printer", "ACTION_USB_DEVICE_DETACHED");
                 mMsUsbDriver.closeUsbDevice();
                 mMsUsbDriver.usbDetached(intent);
             }

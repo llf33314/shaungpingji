@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.gt.doubledisplay.R;
@@ -37,6 +38,8 @@ import com.gt.doubledisplay.web.WebViewActivity;
 import com.orhanobut.hawk.Hawk;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,6 +49,8 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+
+import static com.gt.doubledisplay.login.ChooseBusinessDialog.REMEMBER_BUSINESS_CHOOSE;
 
 /**
  * Created by wzb on 2017/8/2 0002.
@@ -95,6 +100,7 @@ public class LoginActivity extends RxAppCompatActivity {
 
                 /*if (true){
                     new ChooseBusinessDialog(LoginActivity.this,R.style.HttpRequestDialogStyle).show();
+                    // new NoBindingBusinessDialog(LoginActivity.this,R.style.HttpRequestDialogStyle).show();
                     return;
                 }*/
 
@@ -114,7 +120,8 @@ public class LoginActivity extends RxAppCompatActivity {
                                 LoginSignBean.SignBean sign=loginSignBean.getSign();
 
                                 //保存设备信息 给副屏调用
-                                MyApplication.USER_ID= HttpConfig.SOCKET_ANDROID_AUTH_KEY+loginSignBean.getStyle()+"_"+loginSignBean.getUserId();
+                                //MyApplication.USER_ID= HttpConfig.SOCKET_ANDROID_AUTH_KEY+loginSignBean.getStyle()+"_"+loginSignBean.getUserId();
+                                MyApplication.USER_ID=loginSignBean.getUserId()+"";
                                 MyApplication.DEVICE_ID=loginSignBean.getEqCode();
 
                                 if (cbPsd.isChecked()){
@@ -139,17 +146,41 @@ public class LoginActivity extends RxAppCompatActivity {
                             protected void onSuccess(String s) {
                                 String jsonResult=s.substring(s.indexOf("(")+1,s.indexOf(")"));
                                 LoginBean loginBean=gson.fromJson(jsonResult,LoginBean.class);
+
+                                //没有绑定任何 模块返回 {}
+                                if(TextUtils.isEmpty(loginBean.getCode())){
+                                    new NoBindingBusinessDialog(LoginActivity.this,R.style.HttpRequestDialogStyle).show();
+                                    return;
+                                }
+
                                 if ("1".equals(loginBean.getCode())){//登录失败
                                     ToastUtil.getInstance().showToast(loginBean.getMsg());
-                                }else if("0".equals(loginBean.getCode())){
+                                }else if("0".equals(loginBean.getCode())){//登录成功
 
-                                    Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
-                                    intent.putExtra(GTWebViewFrameLayout.PARAM_URL, HttpConfig.DUOFRIEND_XCM);
-                                    //ToastUtil.getInstance().showNewShort("登录成功");
-                                    startActivity(intent);
-                                    //显示副屏广告
-                                    RxBus.get().post(new DeviceBean(MyApplication.getLoginBean().getEqCode()));
-                                    finish();
+                                    List<LoginBean.ErplistBean> erpList=loginBean.getErplist();
+
+                                    if (erpList!=null&&erpList.size()>0){//有绑定erp
+                                        if (erpList.size()==1){//只有一个erp时候直接跳转
+
+                                            startErp(erpList,0);
+
+                                        }else{//多个erp
+                                            String erpKey=Hawk.get(REMEMBER_BUSINESS_CHOOSE,"");
+                                            if (!TextUtils.isEmpty(erpKey)){//有选择记住我的选择
+                                                for (int i=0;i<erpList.size();i++){
+                                                    if (erpKey.equals(erpList.get(i).getItem_key())){//找到对应的erp跳转
+                                                        startErp(erpList,i);
+                                                    }
+                                                }
+                                            }else{ //多个erp并且没有记住选择
+                                                new ChooseBusinessDialog(LoginActivity.this,R.style.HttpRequestDialogStyle,erpList).show();
+                                            }
+
+                                        }
+
+                                    }else{
+                                        new NoBindingBusinessDialog(LoginActivity.this,R.style.HttpRequestDialogStyle).show();
+                                    }
 
                                 }
                             }
@@ -162,79 +193,23 @@ public class LoginActivity extends RxAppCompatActivity {
                             }
                         });
 
-
-             /*  HttpCall.getApiService()
-                        .getSign(account,psd,"double_screen_sign_code_is_ok")
-                        .flatMap(new Function<BaseResponse<LoginSignBean>, ObservableSource<BaseResponse<LoginBean>>>() {
-                            @Override
-                            public ObservableSource<BaseResponse<LoginBean>> apply(@NonNull BaseResponse<LoginSignBean> loginSignBeanBaseResponse) throws Exception {
-
-                                return  HttpCall.getApiService().login(account,psd,loginSignBeanBaseResponse.getData().getSign());}
-                        })*/
-              //0926 暂时去掉原生登录 下面代码不一定能登录
-               /* HttpCall.getApiService().login(account,psd)
-                        .flatMap(ResultTransformer.<LoginBean>flatMap())//这里会去处理 非成功的code
-                        .flatMap(new Function<LoginBean, ObservableSource<String>>(){
-                            @Override
-                            public ObservableSource<String> apply(@NonNull LoginBean loginBean) throws Exception {
-                                if ("0".equals(loginBean.getError())){//登录成功
-                                    MyApplication.USER_ID= HttpConfig.SOCKET_ANDROID_AUTH_KEY+loginBean.getStyle()+"_"+loginBean.getUserId();
-                                    if (cbPsd.isChecked()){
-                                        Hawk.put(ACCOUNT,account);
-                                        Hawk.put(PSD,psd);
-                                    }else{
-                                        Hawk.delete(ACCOUNT);
-                                        Hawk.delete(PSD);
-                                    }
-
-                                    MyApplication.setLoginBean(loginBean);
-                                }
-                                //return HttpCall.getApiService().getDeviceId(String.valueOf(loginBean.getUserId()));
-                                return HttpCall.getApiService().getErpLogin(account,psd,loginBean.getSign().getSign());
-                            }
-                        })
-                        .flatMap(new Function<String, ObservableSource<BaseResponse<DeviceBean>>>() {
-                            @Override
-                            public ObservableSource<BaseResponse<DeviceBean>> apply(@NonNull String s) throws Exception {
-
-                                return HttpCall.getApiService().getDeviceId(String.valueOf(MyApplication.getLoginBean().getUserId()));
-
-                            }
-                        })
-                        .compose(LoginActivity.this.<BaseResponse<DeviceBean>>bindToLifecycle())
-                        .compose(ResultTransformer.<DeviceBean>transformer())
-                        .compose(new DialogTransformer().<DeviceBean>transformer())
-                        .subscribe(new BaseObserver<DeviceBean>() {
-                            //{"code":0,"data":{"UserId":42,"style":1,"message":"登录成功","error":"0"}}
-                            // {"code":0,"data":{"message":"登录成功","error":"0","style":1,"UserId":3512}}
-                            // {"code":0,"data":{"message":"用户名不存在","error":"2"}}
-
-                            @Override
-                            protected void onSuccess(DeviceBean deviceBean) {
-                                MyApplication.DEVICE_ID=deviceBean.getEqCode();
-                                Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
-                                intent.putExtra(GTWebViewFrameLayout.PARAM_URL, HttpConfig.DUOFRIEND_XCM);
-                                //ToastUtil.getInstance().showNewShort("登录成功");
-                                startActivity(intent);
-                                //显示副屏广告
-                                RxBus.get().post(deviceBean);
-                                finish();
-                            }
-
-                            @Override
-                            protected void onFailed(HttpResponseException responseException) {
-                                Hawk.delete(ACCOUNT);
-                                Hawk.delete(PSD);
-                                if (responseException.getCode()==9999){
-                                    //这个不一定 没文档暂时这么处理
-                                    ToastUtil.getInstance().showToast("账号密码错误");
-                                }else{
-                                    super.onFailed(responseException);
-                                }
-                            }
-                        });*/
-
                 break;
+        }
+    }
+
+    private void startErp(List<LoginBean.ErplistBean> erpList,int erpPosition){
+        try {
+            String erpUrl=erpList.get(erpPosition).getItem_remark().split(",")[0];
+            Intent intent=new Intent(LoginActivity.this, WebViewActivity.class);
+            intent.putExtra(GTWebViewFrameLayout.PARAM_URL, erpUrl);
+            //ToastUtil.getInstance().showNewShort("登录成功");
+            startActivity(intent);
+            //显示副屏广告
+            RxBus.get().post(new DeviceBean(MyApplication.getLoginBean().getEqCode()));
+            finish();
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(LoginActivity.this,"后台信息配置有误请联系商家",Toast.LENGTH_LONG).show();
         }
     }
     private void init() {

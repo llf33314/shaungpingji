@@ -57,6 +57,7 @@ public class WebViewDiffDisplayPresentation extends Presentation {
        // mGTWebViewFrameLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
 
+        //显示轮播广告
         RxBus.get().toObservable(DeviceBean.class).compose(SchedulerTransformer.<DeviceBean>transformer()).subscribe(new Consumer<DeviceBean>() {
             @Override
             public void accept(@NonNull DeviceBean deviceBean) throws Exception {

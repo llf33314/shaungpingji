@@ -99,6 +99,7 @@
                 android:layout_height="wrap_content"
                 android:text="记住密码"
                 android:textSize="18sp"
+                android:button="@drawable/cb_login_choose"
                 />
             <TextView
                 android:id="@+id/login_forget_psd"
