@@ -68,8 +68,7 @@ public class MsPrinter {
 
     public static void openMoneyBox(){
         UsbDriver msUsbDriver =MyApplication.getMsUsbDriver();
-        if (msUsbDriver==null
-                ||(MyApplication.getSettingCode()&SettingActivity.DEVICE_SETTING_USE_MONEY_BOX)==0){//不使用钱箱
+        if (msUsbDriver==null||(MyApplication.getSettingCode()&SettingActivity.DEVICE_SETTING_USE_MONEY_BOX)==0){//不使用钱箱
             return;
         }
 

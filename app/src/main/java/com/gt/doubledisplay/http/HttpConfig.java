@@ -23,7 +23,7 @@ public class HttpConfig {
     //正式
     public static final String DUOFRIEND_XCM="http://canyin.duofriend.com/";
     //堡垒
-     //public static final String DUOFRIEND_XCM="http://nb.canyin.deeptel.com.cn";
+    // public static final String DUOFRIEND_XCM="http://nb.canyin.deeptel.com.cn";
     //测试
    // public static final String DUOFRIEND_XCM="http://canyin.deeptel.com.cn/";
     //微站测试
@@ -51,7 +51,7 @@ public class HttpConfig {
 
     //陈丹erp登录接口
     //堡垒
-   // public static final String LOGIN_URL="http://nb.deeptel.com.cn/ErpMenus/79B4DE7C/DoubleErplogin.do";
+    //public static final String LOGIN_URL="http://nb.deeptel.com.cn/ErpMenus/79B4DE7C/DoubleErplogin.do";
     //正式
-    public static final String LOGIN_URL="http://deeptel.com.cn/ErpMenus/79B4DE7C/DoubleErplogin.do";
+    public static final String LOGIN_URL="http://duofriend.com/ErpMenus/79B4DE7C/DoubleErplogin.do";
 }

@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -230,6 +231,8 @@ public class PrinterConnectService extends Service {
 
     /**
      * 连接成功会通过广播接受做操作
+     *
+     * GP sdk有bug 没有初始化成功 打开usb端口会报null  所以在插入的时候要加个延迟？
      * @return
      */
     private static int openUsbProt( ){
@@ -414,11 +417,17 @@ public class PrinterConnectService extends Service {
         public void onReceive(Context context, Intent intent) {
                     int type = intent.getIntExtra(GpPrintService.CONNECT_STATUS, 0);
                     switch (type){
+                        //卧槽  关机插入usb 再开机佳博也发这条广播  神坑
                         case GpDevice. STATE_NONE: //连接断开
                          //   ToastUtil.getInstance().showToast("打印机连接断开");
                             //蓝牙连接状态断开后判断是否有usb打印机 连接usb打印机
                             if (isHasUsbDevice()){
-                                openUsbProt();
+                                if (mGpService==null){  //这么处理 概率性mGpService为null  因为神坑
+                                    connection();
+                                }else{
+                                    openUsbProt();
+                                }
+
                             }
                             break;
                         case GpDevice. STATE_LISTEN : //监听状态
@@ -465,7 +474,7 @@ public class PrinterConnectService extends Service {
                         ToastUtil.getInstance().showToast("usb打印机连接被拒绝");
                     }
                 }
-            } else if (action.equals(UsbManager.ACTION_USB_DEVICE_DETACHED)) {
+            } else if (action.equals(UsbManager.ACTION_USB_DEVICE_DETACHED)) {//断开USB
                 // ToastUtil.getInstance().showToast("usb打印机断开...");
                 mUsbDevice=null;
                 //如果蓝牙已经连接 则打开蓝牙端口
@@ -475,7 +484,7 @@ public class PrinterConnectService extends Service {
                     openBluetoothProtFromDevice(device);
                 }
 
-            }else if (action.equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)){
+            }else if (action.equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)){ //插入USB
                     if (!isConnceted()){//如果打印机状态是蓝牙已经连接中 则什么都不干
                       //  ToastUtil.getInstance().showToast("usb打印机");
                         UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);

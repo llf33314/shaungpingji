@@ -16,7 +16,6 @@ import android.view.Display;
 import android.widget.Toast;
 
 import com.cashier.electricscale.manager.ElectricScaleManager;
-import com.gt.doubledisplay.Test;
 import com.gt.doubledisplay.bean.LoginBean;
 import com.gt.doubledisplay.bean.LoginSignBean;
 import com.gt.doubledisplay.http.HttpConfig;

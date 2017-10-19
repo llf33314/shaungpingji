@@ -144,8 +144,15 @@ public class LoginActivity extends RxAppCompatActivity {
                         .subscribe(new BaseObserver<String>() {
                             @Override
                             protected void onSuccess(String s) {
-                                String jsonResult=s.substring(s.indexOf("(")+1,s.indexOf(")"));
-                                LoginBean loginBean=gson.fromJson(jsonResult,LoginBean.class);
+                                String jsonResult;
+                                LoginBean loginBean = null;
+                                try{
+                                     jsonResult=s.substring(s.indexOf("(")+1,s.indexOf(")"));
+                                     loginBean=gson.fromJson(jsonResult,LoginBean.class);
+                                }catch (Exception e){
+                                    ToastUtil.getInstance().showToast("后台数据有误");
+                                    return;
+                                }
 
                                 //没有绑定任何 模块返回 {}
                                 if(TextUtils.isEmpty(loginBean.getCode())){
@@ -153,9 +160,7 @@ public class LoginActivity extends RxAppCompatActivity {
                                     return;
                                 }
 
-                                if ("1".equals(loginBean.getCode())){//登录失败
-                                    ToastUtil.getInstance().showToast(loginBean.getMsg());
-                                }else if("0".equals(loginBean.getCode())){//登录成功
+                                 if("0".equals(loginBean.getCode())){//登录成功
 
                                     List<LoginBean.ErplistBean> erpList=loginBean.getErplist();
 
@@ -182,6 +187,10 @@ public class LoginActivity extends RxAppCompatActivity {
                                         new NoBindingBusinessDialog(LoginActivity.this,R.style.HttpRequestDialogStyle).show();
                                     }
 
+                                }else{//登录失败
+                                    ToastUtil.getInstance().showToast(loginBean.getMsg());
+                                    /* Hawk.delete(ACCOUNT);
+                                     Hawk.delete(PSD)*/;
                                 }
                             }
 

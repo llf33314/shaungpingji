@@ -3,6 +3,7 @@ package com.gt.doubledisplay.printer.extraposition;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.gt.doubledisplay.utils.commonutil.DeviceUtils;
 
@@ -15,6 +16,8 @@ import java.util.Iterator;
  */
 public class GPUsbUtil {
 
+    private static final String TAG=GPUsbUtil.class.getSimpleName();
+
     //不干胶打印机 ID 1280   名称 GP-58
     private static final int GP_PRODEUCT_ID=1280;
 
@@ -26,6 +29,7 @@ public class GPUsbUtil {
             //065双屏内置有4个usb设备 排除这4个设备名称
             // int [] INTERNAL_USB={300017,1,46880,14370};
             int id=d.getProductId();
+            Log.i(TAG,id+"");
            if (id==GP_PRODEUCT_ID){
                return d;
            }
