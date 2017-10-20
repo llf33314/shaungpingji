@@ -36,19 +36,19 @@ public class TakeOutOrderBean {
     private double fansCurrency_deduction;
     private double integral_deduction;
     private double member_deduction;
-    private String menAddress;
-    private String menName;
-    private String menPhone;
-    private String order_id;
-    private String order_no;
-    private String order_time;
-    private String payWay;
-    private String print_time;
-    private String qrUrl;
-    private String remark;
-    private String resAddress;
-    private String resName;
-    private String resPhone;
+    private String menAddress="";
+    private String menName="";
+    private String menPhone="";
+    private String order_id="";
+    private String order_no="";
+    private String order_time="";
+    private String payWay="";
+    private String print_time="";
+    private String qrUrl="";
+    private String remark="";
+    private String resAddress="";
+    private String resName="";
+    private String resPhone="";
     private int totalNum;
     private double yhq_deduction;
     private List<MenusBean> menus;
@@ -223,11 +223,11 @@ public class TakeOutOrderBean {
          * payPrice : 0.01
          */
 
-        private String det_food_name;
+        private String det_food_name="";
         private int det_food_num;
         private double det_food_price;
-        private String food_picture;
-        private String menu_no;
+        private String food_picture="";
+        private String menu_no="";
         private double payPrice;
         private String remark="";
         private String norms="";

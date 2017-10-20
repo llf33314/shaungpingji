@@ -9,9 +9,9 @@ public class HttpConfig {
     //测试
     //public static final String BASE_URL = "https://yj.deeptel.com.cn/";
     //堡垒
-    //public static final String BASE_URL = "http://nb.yj.deeptel.com.cn/";
+   // public static final String BASE_URL = "http://nb.yj.deeptel.com.cn/";
     //正式
-     public static final String BASE_URL = " http://yj.duofriend.com/";
+     public static final String BASE_URL = "http://yj.duofriend.com/";
     //微站测试
    // public static final String BASE_URL = "http://wz.yj.deeptel.com.cn/";
     //微站正式
@@ -25,15 +25,15 @@ public class HttpConfig {
     //堡垒
     // public static final String DUOFRIEND_XCM="http://nb.canyin.deeptel.com.cn";
     //测试
-   // public static final String DUOFRIEND_XCM="http://canyin.deeptel.com.cn/";
+   // public static final String DUOFRIEND_XCM="https://canyin.deeptel.com.cn/";
     //微站测试
    // public static final String DUOFRIEND_XCM="http://wz.canyin.deeptel.com.cn/login/index.do";
     //微站正式
    // public static final String DUOFRIEND_XCM="http://cy.gutong.114zan.com/login/index.do";
 
-    public static final String DUOFRIEND_XCM_LOGIN_OUT_URL=DUOFRIEND_XCM+"/login/out.do";
+    public static final String DUOFRIEND_XCM_LOGIN_OUT_URL=DUOFRIEND_XCM+"login/out.do";
     //
-    public static final String DUOFRIEND_XCM_LOGIN_OUT_URL_2=DUOFRIEND_XCM+"/login/index.do";
+    public static final String DUOFRIEND_XCM_LOGIN_OUT_URL_2=DUOFRIEND_XCM+"login/index.do";
 
 
 
@@ -51,7 +51,7 @@ public class HttpConfig {
 
     //陈丹erp登录接口
     //堡垒
-    //public static final String LOGIN_URL="http://nb.deeptel.com.cn/ErpMenus/79B4DE7C/DoubleErplogin.do";
+   // public static final String LOGIN_URL="http://nb.deeptel.com.cn/ErpMenus/79B4DE7C/DoubleErplogin.do";
     //正式
     public static final String LOGIN_URL="http://duofriend.com/ErpMenus/79B4DE7C/DoubleErplogin.do";
 }
