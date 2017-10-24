@@ -31,13 +31,13 @@ public class WebViewActivity extends BaseActivity {
     private final String TAG=WebViewActivity.class.getSimpleName();
 
     GTWebViewFrameLayout mGTWebViewFrameLayout;
-
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String url=getIntent().getStringExtra(GTWebViewFrameLayout.PARAM_URL);
+         url=getIntent().getStringExtra(GTWebViewFrameLayout.PARAM_URL);
         if (TextUtils.isEmpty(url)){
             url= HttpConfig.DUOFRIEND_XCM;
         }
@@ -65,6 +65,11 @@ public class WebViewActivity extends BaseActivity {
     }
 
     @Override
+    protected void titleTenClick() {
+        ToastUtil.getInstance().showToast(url);
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
              if (keyCode == KeyEvent.KEYCODE_BACK) {
                  if (mGTWebViewFrameLayout.getWebView().getNavigationHistory().canGoBack()) {
@@ -76,6 +81,8 @@ public class WebViewActivity extends BaseActivity {
                }
         return super.onKeyDown(keyCode, event);
     }
+
+
 
 }
 

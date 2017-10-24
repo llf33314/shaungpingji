@@ -156,8 +156,6 @@ public class DuofenJSBridge {
         }else{
             ToastUtil.getInstance().showToast("设备非打印机设备",5000);
         }
-
-
     }
 
     @JavascriptInterface

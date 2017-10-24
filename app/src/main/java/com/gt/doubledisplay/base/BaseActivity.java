@@ -35,6 +35,10 @@ public  class BaseActivity extends RxAppCompatActivity {
     private RelativeLayout mToolbar;
     private TextView toolBarTitle;
     private Button btnSettting;
+
+    //用于web查看当前地址
+    private int titleClickCount=0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +59,26 @@ public  class BaseActivity extends RxAppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        toolBarTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                titleClickCount++;
+                if (titleClickCount%10==0){
+                    titleTenClick();
+                }
+
+            }
+        });
     }
+
+    /**
+     * 点击10次标题
+     */
+    protected void titleTenClick(){
+
+    }
+
     public void showBtnBlu(){
         btnSettting.setVisibility(View.VISIBLE);
     }
