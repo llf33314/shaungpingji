@@ -100,5 +100,7 @@ dependencies {
     compile files('libs/printsdk-v2.2.jar')
     compile files('libs/usbprintsdk-v2.1.jar')
     compile files('libs/electriscale.jar')
+    compile files('libs/talk-4.0.9.jar')
+
     compile project(':CrosswalkWebview')
 }

@@ -31,6 +31,7 @@ import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.gt.doubledisplay.web.WebViewDiffDisplayPresentation;
 import com.orhanobut.hawk.Hawk;
 import com.printsdk.usbsdk.UsbDriver;
+import com.tendcloud.tenddata.TCAgent;
 
 
 /**
@@ -72,7 +73,7 @@ public class MyApplication extends Application {
         initPrinter();
         showScreen();
         startGpSerivce();
-
+        initTalkingData();
         //initScale();
     }
 
@@ -229,7 +230,11 @@ public class MyApplication extends Application {
             }
         }
     };
-
+    private void initTalkingData(){
+        TCAgent.LOG_ON=true;
+        TCAgent.init(getAppContext(),"2F64865688104270A2DB396E43626294", "DoubleScreen");
+        TCAgent.setReportUncaughtExceptions(true);
+    }
     public static LoginSignBean getLoginBean() {
         return loginBean;
     }
