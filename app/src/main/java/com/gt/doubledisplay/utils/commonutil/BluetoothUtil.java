@@ -7,6 +7,8 @@ package com.gt.doubledisplay.utils.commonutil;
 import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
+import com.gt.doubledisplay.utils.Logger;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -37,7 +39,7 @@ public class BluetoothUtil {
             Boolean returnValue = (Boolean) removeBondMethod.invoke(btDevice,
                     new Object[]
                             {str.getBytes()});
-            Log.e("returnValue", "" + returnValue);
+            Logger.e("returnValue", "" + returnValue);
         } catch (SecurityException e) {
             // throw new RuntimeException(e.getMessage());
             e.printStackTrace();
@@ -85,12 +87,12 @@ public class BluetoothUtil {
             Method[] hideMethod = clsShow.getMethods();
             int i = 0;
             for (; i < hideMethod.length; i++) {
-                Log.e("method name", hideMethod[i].getName() + ";and the i is:"+ i);
+                Logger.e("method name", hideMethod[i].getName() + ";and the i is:"+ i);
             }
             // 取得所有常量
             Field[] allFields = clsShow.getFields();
             for (i = 0; i < allFields.length; i++) {
-                Log.e("Field name", allFields[i].getName());
+                Logger.e("Field name", allFields[i].getName());
             }
         } catch (SecurityException e) {
             // throw new RuntimeException(e.getMessage());

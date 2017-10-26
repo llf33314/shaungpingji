@@ -3,6 +3,8 @@ package com.weitoo.util;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import com.gt.doubledisplay.utils.Logger;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -420,7 +422,7 @@ public class DateUtil {
             c1.setTime(df.parse(s1));
             c2.setTime(df.parse(s2));
         } catch (ParseException e) {
-            Log.e("DateUtil", "格式不正确");
+            Logger.e("DateUtil", "格式不正确");
         }
 
         int result = c1.compareTo(c2);
@@ -444,7 +446,7 @@ public class DateUtil {
             c1.setTime(df.parse(s1));
             c2.setTime(df.parse(s2));
         } catch (ParseException e) {
-            Log.e("DateUtil", "格式不正确");
+            Logger.e("DateUtil", "格式不正确");
         }
 
         int result = c1.compareTo(c2);

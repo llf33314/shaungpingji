@@ -15,9 +15,7 @@ public interface ApiService {
 
     //暂时去掉sign参数
     @FormUrlEncoded
-   // @POST("doubleScreenMobile/getBusId")
     @POST(HttpConfig.LOGIN_URL)
-    //Observable<BaseResponse<LoginBean>> login(@Field("login_name")String account, @Field("password")String psd, @Field("sign")String sign);
     Observable<String> login(@Field("login_name")String account, @Field("password")String psd, @Field("sign")String sign);
 
     @FormUrlEncoded
@@ -33,9 +31,6 @@ public interface ApiService {
 
     @POST("http://hz1.yifriend.net/ErpMenus/79B4DE7C/Erplogin.do")
     Observable<String>getErpLogin(@Query("login_name")String login_name,@Query("password")String password,@Query("sign")String sign);
-
-    @POST("http://www.baidu.com")
-    Observable<String>test();
 
 
 }

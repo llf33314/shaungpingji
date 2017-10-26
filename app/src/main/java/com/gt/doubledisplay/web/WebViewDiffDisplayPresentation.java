@@ -84,6 +84,7 @@ public class WebViewDiffDisplayPresentation extends Presentation {
 
 
     }
+    @Override
     public void show(){
         /*if (mGTWebViewFrameLayout !=null){//已经初始化了  第一次初始化在onCreate load
             mGTWebViewFrameLayout.loadUrl();

@@ -9,6 +9,8 @@ import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.gt.doubledisplay.utils.Logger;
+
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -77,10 +79,10 @@ public final class NetworkUtils {
         ShellUtils.CommandResult result = ShellUtils.execCmd("ping -c 1 -w 1 223.5.5.5", false);
         boolean ret = result.result == 0;
         if (result.errorMsg != null) {
-            Log.d("NetworkUtils", "isAvailableByPing() called" + result.errorMsg);
+            Logger.d("NetworkUtils", "isAvailableByPing() called" + result.errorMsg);
         }
         if (result.successMsg != null) {
-            Log.d("NetworkUtils", "isAvailableByPing() called" + result.successMsg);
+            Logger.d("NetworkUtils", "isAvailableByPing() called" + result.successMsg);
         }
         return ret;
     }

@@ -12,6 +12,7 @@ import com.gt.doubledisplay.bean.ScreenMsgBean;
 import com.gt.doubledisplay.bean.TakeOutOrderBean;
 import com.gt.doubledisplay.printer.extraposition.PrintESCOrTSCUtil;
 import com.gt.doubledisplay.utils.RxBus;
+import com.gt.doubledisplay.utils.commonutil.LogUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.weitoo.printer.MsPrinter;
 
@@ -128,8 +129,8 @@ public class DuofenJSBridge {
 
     @JavascriptInterface
     public void printStoreOrder(String jsonMsg){
-        Log.d(TAG,"printStoreOrder:"+jsonMsg);
-      //  ToastUtil.getInstance().showToast("printStoreOrder");
+        LogUtils.d(TAG,"printStoreOrder:"+jsonMsg);
+       // Log.d(TAG,"printStoreOrder:"+jsonMsg);
         StoreOrderBean order=gson.fromJson(jsonMsg,StoreOrderBean.class);
         //打印不干胶
         PrintESCOrTSCUtil.printStoreXCM(order.getOrder_id(),order.getMenus());
@@ -144,8 +145,8 @@ public class DuofenJSBridge {
 
     @JavascriptInterface
     public void printTakeOutOrder(String jsonMsg){
-        Log.d(TAG,"printTakeOutOrder:"+jsonMsg);
-       // ToastUtil.getInstance().showToast("printTakeOutOrder");
+        LogUtils.d(TAG,"printTakeOutOrder:"+jsonMsg);
+       // Log.d(TAG,"printTakeOutOrder:"+jsonMsg);
         TakeOutOrderBean order=gson.fromJson(jsonMsg,TakeOutOrderBean.class);
 
         //打印不干胶
@@ -160,6 +161,7 @@ public class DuofenJSBridge {
 
     @JavascriptInterface
     public void openMoneyBox(){
+        LogUtils.d(TAG,"openMoneyBox");
         MsPrinter.openMoneyBox();
     }
 

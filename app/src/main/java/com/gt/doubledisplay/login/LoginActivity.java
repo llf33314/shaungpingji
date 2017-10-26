@@ -98,12 +98,6 @@ public class LoginActivity extends RxAppCompatActivity {
 
             case R.id.btn_login:
 
-                /*if (true){
-                    new ChooseBusinessDialog(LoginActivity.this,R.style.HttpRequestDialogStyle).show();
-                    // new NoBindingBusinessDialog(LoginActivity.this,R.style.HttpRequestDialogStyle).show();
-                    return;
-                }*/
-
                 final String account=etAccount.getText().toString().trim();
                 final String psd=etPsd.getText().toString().trim();
                 if (TextUtils.isEmpty(account)||TextUtils.isEmpty(psd)){
@@ -202,6 +196,8 @@ public class LoginActivity extends RxAppCompatActivity {
                             }
                         });
 
+                break;
+            default:
                 break;
         }
     }

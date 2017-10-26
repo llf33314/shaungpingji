@@ -16,6 +16,7 @@ import android.view.Display;
 import android.widget.Toast;
 
 import com.cashier.electricscale.manager.ElectricScaleManager;
+import com.gt.doubledisplay.BuildConfig;
 import com.gt.doubledisplay.bean.LoginBean;
 import com.gt.doubledisplay.bean.LoginSignBean;
 import com.gt.doubledisplay.http.HttpConfig;
@@ -25,6 +26,7 @@ import com.gt.doubledisplay.printer.policy.PrinterPolicy;
 import com.gt.doubledisplay.printer.policy.WeituPrinter;
 import com.gt.doubledisplay.printer.policy.ZeroSixFivePrinter;
 import com.gt.doubledisplay.setting.SettingActivity;
+import com.gt.doubledisplay.utils.Logger;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.DeviceUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
@@ -70,11 +72,21 @@ public class MyApplication extends Application {
         mSharedPreferences = this.getSharedPreferences("printer_box_test",Context.MODE_PRIVATE);
         Hawk.init(applicationContext).build();
 
+        initLog();
         initPrinter();
         showScreen();
         startGpSerivce();
         initTalkingData();
         //initScale();
+    }
+
+    private void initLog(){
+        //初始化log
+        if (BuildConfig.DEBUG){
+            Logger.LOG_LEVEL=5;
+        }else{
+            Logger.LOG_LEVEL=1;
+        }
     }
 
     private void startGpSerivce(){
@@ -91,41 +103,41 @@ public class MyApplication extends Application {
         ElectricScaleManager.getInstance().setOnBaseElectronicScaleOperationListen(new ElectricScaleManager.OnBaseElectronicScaleOperationListen() {
             @Override
             public void electronicScaleConnectSuccess() {
-                Log.d("Scale","electronicScaleConnectSuccess");
+                Logger.d("Scale","electronicScaleConnectSuccess");
             }
 
             @Override
             public void electronicScaleConnectFailed() {
-                Log.d("Scale","electronicScaleConnectFailed");
+                Logger.d("Scale","electronicScaleConnectFailed");
             }
 
             @Override
             public void electronicScaleReconnectSuccess() {
-                Log.d("Scale","electronicScaleReconnectSuccess");
+                Logger.d("Scale","electronicScaleReconnectSuccess");
 
             }
 
             @Override
             public void electronicScaleReconnectFailed() {
-                Log.d("Scale","electronicScaleReconnectFailed");
+                Logger.d("Scale","electronicScaleReconnectFailed");
 
             }
 
             @Override
             public void electronicScaleOperationSuccessful(String s) {
-                Log.d("Scale","electronicScaleOperationSuccessful");
+                Logger.d("Scale","electronicScaleOperationSuccessful");
 
             }
 
             @Override
             public void electronicScaleOperationFailed() {
-                Log.d("Scale","electronicScaleOperationFailed");
+                Logger.d("Scale","electronicScaleOperationFailed");
 
             }
 
             @Override
             public void electronicScaleMessageSuccessful() {
-                Log.d("Scale","electronicScaleMessageSuccessful");
+                Logger.d("Scale","electronicScaleMessageSuccessful");
 
             }
         });
@@ -217,6 +229,7 @@ public class MyApplication extends Application {
    *  创建一个广播接收器接收USB插拔信息：当插入USB插头插到一个USB端口，或从一个USB端口，移除装置的USB插头
    */
   public static  BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+        @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {

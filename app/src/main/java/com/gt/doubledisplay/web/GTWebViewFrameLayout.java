@@ -22,6 +22,7 @@ import com.gt.doubledisplay.base.BaseActivity;
 import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.login.LoginActivity;
+import com.gt.doubledisplay.utils.Logger;
 import com.gt.doubledisplay.utils.commonutil.ConvertUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
@@ -155,7 +156,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
        Context context=this.getContext();
         if (!(context instanceof Activity)){
             //ToastUtil.getInstance().showToast(message,5000);
-            Log.d("showWebDialog",message);
+            Logger.d("showWebDialog",message);
         }else{
             new AlertDialog.Builder(context)
                     .setTitle("温馨提示")

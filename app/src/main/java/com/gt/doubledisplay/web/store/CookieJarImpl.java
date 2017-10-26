@@ -8,6 +8,7 @@ import android.util.Log;
 
 
 import com.gt.doubledisplay.http.HttpConfig;
+import com.gt.doubledisplay.utils.Logger;
 
 import org.xwalk.core.XWalkCookieManager;
 
@@ -32,7 +33,7 @@ public class CookieJarImpl implements CookieJar {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public synchronized void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-        Log.i("test","saveFromResponse url="+url.toString()+" url.host="+url.host()+"  cookies.size="+cookies.size()+" cookies="+cookies.get(0).toString());
+        Logger.i("test","saveFromResponse url="+url.toString()+" url.host="+url.host()+"  cookies.size="+cookies.size()+" cookies="+cookies.get(0).toString());
 
         if (cookies!=null&&cookies.size()>0) {
             saveCookies(url.toString(),cookies.get(0).toString());
@@ -42,7 +43,7 @@ public class CookieJarImpl implements CookieJar {
 
     @Override
     public synchronized List<Cookie> loadForRequest(HttpUrl url) {
-        Log.i("test","loadForRequest url="+url.toString());
+        Logger.i("test","loadForRequest url="+url.toString());
         return cookieStore.get(url);
     }
 

@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.gt.doubledisplay.utils.Logger;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -65,7 +67,7 @@ public class PersistentCookieStore implements CookieStore {
 
     protected void add(HttpUrl uri, Cookie cookie) {
         String name = getCookieToken(cookie);
-        Log.i("lgx","add name="+name+"  cookie.persistent()="+cookie.persistent()+" uri.host()="+uri.host()+" cookie="+cookie.toString());
+        Logger.i("lgx","add name="+name+"  cookie.persistent()="+cookie.persistent()+" uri.host()="+uri.host()+" cookie="+cookie.toString());
 
         if (cookie.persistent()) {
             if (!cookies.containsKey(uri.host())) {
@@ -79,7 +81,7 @@ public class PersistentCookieStore implements CookieStore {
                 return;
             }
         }
-        Log.i("lgx","add SharedPreferences");
+        Logger.i("lgx","add SharedPreferences");
         // Save cookie into persistent store
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putString(uri.host(), TextUtils.join(",", cookies.get(uri.host()).keySet()));
@@ -165,7 +167,7 @@ public class PersistentCookieStore implements CookieStore {
             ObjectOutputStream outputStream = new ObjectOutputStream(os);
             outputStream.writeObject(cookie);
         } catch (IOException e) {
-            Log.d("google_lenve_fb", "IOException in encodeCookie", e);
+           // Log.d("google_lenve_fb", "IOException in encodeCookie", e);
             return null;
         }
 
@@ -180,9 +182,9 @@ public class PersistentCookieStore implements CookieStore {
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
             cookie = ((SerializableHttpCookie) objectInputStream.readObject()).getCookie();
         } catch (IOException e) {
-            Log.d("google_lenve_fb", "IOException in decodeCookie", e);
+           // Log.d("google_lenve_fb", "IOException in decodeCookie", e);
         } catch (ClassNotFoundException e) {
-            Log.d("google_lenve_fb", "ClassNotFoundException in decodeCookie", e);
+           // Log.d("google_lenve_fb", "ClassNotFoundException in decodeCookie", e);
         }
 
         return cookie;

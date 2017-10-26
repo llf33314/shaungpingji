@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.update.bean.AppUpdateBean;
 import com.gt.doubledisplay.update.ui.UpdateDialog;
+import com.gt.doubledisplay.utils.Logger;
 import com.gt.doubledisplay.utils.commonutil.AppUtils;
 import com.gt.doubledisplay.utils.commonutil.ConvertUtils;
 
@@ -125,14 +126,14 @@ public class UpdateManager {
                 .url(VERSION_URL+appId)
                 .get()
                 .build();
-        Log.d("requestUpdate", "request==" + request.toString());
+        Logger.d("requestUpdate", "request==" + request.toString());
         Response response = null;
         try {
             response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 return response.body().string();
             } else {
-                Log.e(TAG, "IOException:" + response);
+                Logger.e(TAG, "IOException:" + response);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -142,7 +143,7 @@ public class UpdateManager {
 
     private boolean compareVersion(int versionCode) {
         int currentVersionCode = AppUtils.getAppVersionCode();
-        Log.i(TAG, "checkUpdate versionCode=" + versionCode + "  currentVersionCode=" + currentVersionCode);
+        Logger.i(TAG, "checkUpdate versionCode=" + versionCode + "  currentVersionCode=" + currentVersionCode);
         if (versionCode > 0 && versionCode != currentVersionCode) {
             if (versionCode > currentVersionCode) {
                 mHandler.sendEmptyMessage(NEED_UPDATE);
@@ -164,7 +165,7 @@ public class UpdateManager {
         @Override
         protected Object doInBackground(Object[] objects) {
             String response = requestByGet();
-            Log.d(TAG, "response==" + response);
+            Logger.d(TAG, "response==" + response);
             String str = ConvertUtils.unicode2String(response);
             AppUpdateBean updateBean = new Gson().fromJson(str, AppUpdateBean.class);
             if (updateBean != null&&!TextUtils.isEmpty(updateBean.appVersionCode)) {
@@ -179,7 +180,7 @@ public class UpdateManager {
      * 显示软件下载对话框
      */
     private void showDownloadDialog() {
-        Log.d(TAG, "appUpdateBean=" + appUpdateBean.remarks);
+        Logger.d(TAG, "appUpdateBean=" + appUpdateBean.remarks);
 
         // 构造软件下载对话框
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -231,8 +232,8 @@ public class UpdateManager {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.start:
-                    Log.d(TAG, "onClickListener start");
-                    Log.i(TAG, "downloadAPK appUpdateBean.apkUrl=" + appUpdateBean.apkUrl);
+                    Logger.d(TAG, "onClickListener start");
+                    Logger.i(TAG, "downloadAPK appUpdateBean.apkUrl=" + appUpdateBean.apkUrl);
                     downloadAPK(appUpdateBean.apkUrl, APK_FILE_NAME);
                     break;
                 case R.id.pause:
@@ -264,7 +265,7 @@ public class UpdateManager {
     private void installAPK() {
         if (mDownloadDialog != null) mDownloadDialog.dismiss();
         //安装应用
-        Log.i(TAG, "installAPK APK_FILE_NAME=" + APK_FILE_NAME);
+        Logger.i(TAG, "installAPK APK_FILE_NAME=" + APK_FILE_NAME);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                         , APK_FILE_NAME)),

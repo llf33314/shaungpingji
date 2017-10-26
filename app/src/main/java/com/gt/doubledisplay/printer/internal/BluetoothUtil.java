@@ -10,6 +10,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+import com.gt.doubledisplay.utils.Logger;
+
 /**
  * 065内置打印机
  */
@@ -27,7 +29,7 @@ public class BluetoothUtil {
 		BluetoothDevice innerprinter_device = null;
 		Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
 		for (BluetoothDevice device : devices) {
-			Log.e("","device.getAddress()"+device.getAddress());
+			Logger.e("","device.getAddress()"+device.getAddress());
 			if (device.getAddress().equals(Innerprinter_Address)) {
 				
 				innerprinter_device = device;

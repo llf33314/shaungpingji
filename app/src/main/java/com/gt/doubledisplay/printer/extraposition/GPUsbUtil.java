@@ -5,6 +5,7 @@ import android.hardware.usb.UsbManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.gt.doubledisplay.utils.Logger;
 import com.gt.doubledisplay.utils.commonutil.DeviceUtils;
 
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class GPUsbUtil {
             //065双屏内置有4个usb设备 排除这4个设备名称
             // int [] INTERNAL_USB={300017,1,46880,14370};
             int id=d.getProductId();
-            Log.i(TAG,id+"");
+            Logger.i(TAG,id+"");
            if (id==GP_PRODEUCT_ID){
                return d;
            }

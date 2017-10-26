@@ -261,7 +261,7 @@ public final class ActivityUtils {
      * @return
      */
     public static String getTopActivity(Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> runningTaskInfos = manager.getRunningTasks(1);
 
         if (runningTaskInfos != null) {

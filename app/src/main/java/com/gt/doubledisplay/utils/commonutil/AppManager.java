@@ -201,7 +201,7 @@ public final class AppManager {
                 // 从操作系统中结束掉当前程序的进程
                 android.os.Process.killProcess(android.os.Process.myPid());
             } catch (Exception e) {
-                LogUtils.e("Exit exception", e);
+                //LogUtils.e("Exit exception", e);
             }
         }
     }

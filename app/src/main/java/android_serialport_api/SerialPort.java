@@ -18,6 +18,8 @@ package android_serialport_api;
 
 import android.util.Log;
 
+import com.gt.doubledisplay.utils.Logger;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -60,7 +62,7 @@ public class SerialPort {
 
 		mFd = open(device.getAbsolutePath(), baudrate, flags);
 		if (mFd == null) {
-			Log.e(TAG, "native open returns null");
+            Logger.e(TAG, "native open returns null");
 			throw new IOException();
 		}
 		mFileInputStream = new FileInputStream(mFd);

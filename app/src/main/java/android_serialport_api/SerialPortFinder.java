@@ -18,6 +18,8 @@ package android_serialport_api;
 
 import android.util.Log;
 
+import com.gt.doubledisplay.utils.Logger;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -70,7 +72,7 @@ public class SerialPortFinder {
 				String drivername = l.substring(0, 0x15).trim();
 				String[] w = l.split(" +");
 				if ((w.length >= 5) && (w[w.length-1].equals("serial"))) {
-					Log.d(TAG, "Found new driver " + drivername + " on " + w[w.length-4]);
+                    Logger.d(TAG, "Found new driver " + drivername + " on " + w[w.length-4]);
 					mDrivers.add(new Driver(drivername, w[w.length-4]));
 				}
 			}

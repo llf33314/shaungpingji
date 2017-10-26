@@ -4,6 +4,7 @@ import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.http.HttpConfig;
 import com.gt.doubledisplay.http.retrofit.converter.string.StringConverterFactory;
 import com.gt.doubledisplay.http.ApiService;
+import com.gt.doubledisplay.utils.Logger;
 import com.gt.doubledisplay.web.store.CookieJarImpl;
 import com.gt.doubledisplay.web.store.PersistentCookieStore;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -25,7 +26,11 @@ public class HttpCall {
     public static ApiService getApiService(){
         if (mApiService==null){
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            if (Logger.LOG_LEVEL>1){
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            }else{
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+            }
 
             PersistentCookieStore persistentCookieStore = new PersistentCookieStore(MyApplication.getAppContext());
             CookieJarImpl cookieJarImpl = new CookieJarImpl(persistentCookieStore,MyApplication.getAppContext());

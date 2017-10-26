@@ -5,6 +5,7 @@ import android.util.Log;
 
 
 import com.gt.doubledisplay.http.HttpResponseException;
+import com.gt.doubledisplay.utils.Logger;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ public abstract class BaseObserver<T> implements Observer<T> {
             HttpResponseException  responseException = (HttpResponseException) e;
             onFailed(responseException);
         }else {//(e instanceof RuntimeException)
-            Log.e("HTTP","程序异常"+e.getMessage());
+            Logger.e("HTTP","程序异常"+e.getMessage());
             ToastUtil.getInstance().showToast("后台数据有误！");
         }
 

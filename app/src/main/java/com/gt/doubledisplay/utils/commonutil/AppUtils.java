@@ -11,6 +11,8 @@ import android.content.pm.Signature;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import com.gt.doubledisplay.utils.Logger;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,7 +155,7 @@ public final class AppUtils {
             return true;
         }
         if (result.errorMsg != null) {
-            Log.d("AppUtils", "isAppRoot() called" + result.errorMsg);
+            Logger.d("AppUtils", "isAppRoot() called" + result.errorMsg);
         }
         return false;
     }

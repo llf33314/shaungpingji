@@ -83,7 +83,6 @@ public final class MsTicketPrintHelper {
 
     public String getGoodsLine(String name, String unitPrice, String num, String sum) {
         int len = getCustomByteLen(name);
-        //Log.d("wbl", "length = " + len);
         if (len > 18) {
             char[] chars = new char[name.length()];
             name.getChars(0, name.length(), chars, 0);
