@@ -5,6 +5,7 @@ import com.gprinter.command.LabelCommand;
 import com.gt.doubledisplay.bean.StoreOrderBean;
 import com.gt.doubledisplay.bean.TakeOutOrderBean;
 import com.gt.doubledisplay.utils.commonutil.StringUtils;
+import com.gt.doubledisplay.utils.commonutil.TimeUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 import java.util.List;
@@ -17,7 +18,178 @@ import static com.gt.doubledisplay.printer.extraposition.PrinterConnectService.P
 
 public class PrintESCOrTSCUtil {
 
-    public static EscCommand getPrintEscCommand(String money){
+    /**
+     * 打印机最大宽度字符
+     */
+    public static final int PRINTER_WIDTH=32;
+
+    /**
+     * 佳博打印机 小馋猫到店打印
+     * @return
+     */
+    public static EscCommand getStorePrintEscCommand(StoreOrderBean storeOrderBean){
+        EscCommand esc = new EscCommand();
+        esc.addPrintAndFeedLines((byte) 1);
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);// 设置打印居中
+        esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF);// 设置为倍高倍宽
+        esc.addText("编号："+storeOrderBean.getOrder_id());
+        esc.addPrintAndLineFeed();
+        // 打印文字 *//*
+        esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF);// 取消倍高倍宽
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);// 设置打印左对齐
+        esc.addText("…………………………………………\n");
+
+        esc.addText(storeOrderBean.getShop_name()+"\n");
+        esc.addText("…………………………………………\n");
+
+        esc.addText("下单时间："+storeOrderBean.getOrder_time()+"\n");
+        esc.addText("打印时间："+ TimeUtils.getNowString()+"\n");
+        esc.addPrintAndFeedLines((byte) 1);
+        addOrder(esc,storeOrderBean);
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
+        esc.addText("支付方式："+storeOrderBean.getPayWay()+"\n");
+        esc.addPrintAndFeedLines((byte) 1);
+
+        addOtherBottomMsg(esc,storeOrderBean.getQrUrl(),storeOrderBean.getShop_name(),storeOrderBean.getShop_phone(),storeOrderBean.getShop_adress());
+
+        esc.addPrintAndFeedLines((byte)5);
+        return esc;
+    }
+
+    /**
+     * 佳博打印机 小馋猫到店打印
+     * @return
+     */
+    public static EscCommand getTakeOutPrintEscCommand(TakeOutOrderBean takeOutOrderBean){
+        EscCommand esc = new EscCommand();
+        esc.addPrintAndFeedLines((byte) 1);
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);// 设置打印居中
+        esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF);// 设置为倍高倍宽
+        esc.addText(takeOutOrderBean.getResName());
+        esc.addPrintAndLineFeed();
+        // 打印文字 *//*
+        esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF);// 取消倍高倍宽
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);// 设置打印左对齐
+        esc.addText("…………………………………………\n");
+        return esc;
+    }
+
+
+    /**
+     * 添加商品订单
+     */
+    private static void addOrder(EscCommand esc,StoreOrderBean storeOrderBean){
+        List<StoreOrderBean.MenusBean> menus=storeOrderBean.getMenus();
+        int allNum=0;
+       // esc.addText("名称         数量      金额");
+        addOrderTitleText(esc,"名称","数量","金额");
+        esc.addText("…………………………………………\n");
+
+        if (menus==null||menus.size()==0){
+            return;
+        }
+
+        for (int i=0;i<menus.size();i++){
+            StoreOrderBean.MenusBean m=menus.get(i);
+            addOrderText(esc,m.getName(),m.getNum(),m.getMoney());
+            allNum+=m.getNum() ;
+            if (i==menus.size()-1){
+                esc.addText("…………………………………………\n");
+            }
+        }
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.RIGHT);
+        esc.addText("共"+allNum+"份\n");
+        addRightBigText(esc,"总计",storeOrderBean.getConsumption_money()+"\n");
+
+    }
+
+    /**
+     * 左边小右边大
+     */
+    private static void addRightBigText(EscCommand esc,String leftStr,String rightStr){
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
+        int leftLength=leftStr.length();
+        int rightLength=rightStr.length()*2;
+        int spaceLength=PRINTER_WIDTH-leftLength-rightLength;
+        StringBuilder leftStrAndSpace=new StringBuilder(leftStr);
+        for (int i=0;i<spaceLength;i++){
+            leftStrAndSpace.append(" ");
+        }
+        esc.addText(leftStrAndSpace.toString());
+        esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF);
+        esc.addText(rightStr);
+        esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF);
+
+    }
+
+    private static void addOrderTitleText(EscCommand esc,String name,String number,String money){
+        int nameLength=PRINTER_WIDTH/2;
+        StringBuilder sb=new StringBuilder(name);
+        for (int i=0;i<nameLength-name.length()*2;i++){
+            sb.append(" ");
+        }
+        sb.append(number);
+        for (int i=0;i<PRINTER_WIDTH-nameLength-number.length()*2-money.length()*2;i++){
+            sb.append(" ");
+        }
+        sb.append(money);
+
+        esc.addText(sb.toString()+"\n");
+    }
+
+    private static void addOrderText(EscCommand esc,String name,int number,double money){
+        String numberStr=String.valueOf(number);
+        String moneyStr=String.valueOf(money);
+        int nameLength=PRINTER_WIDTH/2;
+        //标记为了居中使用了多少个空格
+        int centerSpaceNum=0;
+
+        StringBuilder sb=new StringBuilder(name);
+        for (int i=0;i<nameLength-name.length()*2;i++){
+            sb.append(" ");
+        }
+        //数量居中
+        if (number<10){
+            centerSpaceNum=2;
+            sb.append("  ");
+        }else if (number<100){
+            centerSpaceNum=1;
+            sb.append(" ");
+        }
+
+        sb.append(number);
+        for (int i=0;i<PRINTER_WIDTH-nameLength-centerSpaceNum-numberStr.length()-moneyStr.length();i++){
+            sb.append(" ");
+        }
+        sb.append(money);
+
+        esc.addText(sb.toString()+"\n");
+    }
+
+    /**
+     * 底部技术支持等信息
+     */
+    private static void addOtherBottomMsg(EscCommand esc,String qrUrl,String shopName,String shopPhone,String shopAddress){
+
+        esc.addText("…………………………………………\n");
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
+        esc.addSelectSizeOfModuleForQRCode((byte) 8);
+        esc.addStoreQRCodeData(qrUrl);
+        esc.addPrintQRCode();
+        esc.addPrintAndFeedLines((byte) 1);
+
+        esc.addText("扫描上方二维码查看订单详情\n");
+        esc.addPrintAndFeedLines((byte) 2);
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
+
+        esc.addText("感谢您使用"+shopName+"，订餐热线："+shopPhone+"\n");
+        esc.addText("联系地址："+shopAddress+"\n");
+        esc.addPrintAndFeedLines((byte) 2);
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
+        esc.addText("技术支持·多粉 400-899-4522");
+    }
+
+    public static EscCommand getPrintEscCommand(){
         EscCommand esc = new EscCommand();
         esc.addPrintAndFeedLines((byte) 1);
         esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);// 设置打印居中
@@ -27,11 +199,11 @@ public class PrintESCOrTSCUtil {
 
         // 打印文字 *//*
         esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF);// 取消倍高倍宽
-        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);// 设置打印左对齐
-        esc.addText("--------------------------------\n");// 打印文字
-        esc.addText("单号：12345678987445775\n"); // 打印文字
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
         esc.addText("--------------------------------\n");
-        esc.addText("消费总额："+money+"\n");
+        esc.addText("单号：12345678987445775\n");
+        esc.addText("--------------------------------\n");
+        esc.addText("消费总额："+10.00+"\n");
         esc.addText("--------------------------------\n");
         esc.addText("抵扣方式：100粉币（-10.00）\n");
         esc.addText("实付金额：46.10\n");

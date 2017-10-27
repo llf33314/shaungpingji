@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.gt.doubledisplay.R;
@@ -17,6 +18,7 @@ import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.bean.StoreOrderBean;
 import com.gt.doubledisplay.printer.extraposition.PrintESCOrTSCUtil;
 import com.gt.doubledisplay.printer.extraposition.bluetooth.BluetoothSettingActivity;
+import com.gt.doubledisplay.printer.policy.WeituPrinter;
 import com.gt.doubledisplay.update.OnTaskFinishListener;
 import com.gt.doubledisplay.update.UpdateManager;
 import com.gt.doubledisplay.utils.commonutil.LogUtils;
@@ -40,14 +42,16 @@ public class SettingActivity extends BaseActivity {
     CheckBox cbPrinter;
     @BindView(R.id.setting_cb_use_money_box)
     CheckBox cbMoneyBox;
+    @BindView(R.id.setting_print_money_box)
+    LinearLayout moneyBox;
 
-    private Gson gson;
+
     public static final String DEVICE_SETTING="deviceSetting";
     public static final int DEVICE_SETTING_USE_PRINTER=0x01;
     public static final int DEVICE_SETTING_USE_MONEY_BOX=0x02;
 
     private long clickTime;
-    private String printTestString="{\"cashier\":\"\",\"consumption_money\":62.32,\"fansCurrency_deduction\":0,\"integral_deduction\":0,\"member_deduction\":0,\"menus\":[{\"commnt\":\"\",\"menu_no\":\"1002\",\"money\":10,\"name\":\"红烧鱼\",\"norms\":\"\",\"num\":1,\"original_price\":10},{\"commnt\":\"\",\"money\":11,\"name\":\"叉烧包\",\"norms\":\"\",\"num\":1,\"original_price\":11},{\"commnt\":\"\",\"menu_no\":\"1004\",\"money\":38,\"name\":\"咸菜炒猪大肠\",\"norms\":\"\",\"num\":1,\"original_price\":38},{\"commnt\":\"\",\"money\":3.32,\"name\":\"鱼粥\",\"norms\":\"加1  小份  黑色\",\"num\":1,\"original_price\":3.32}],\"order_code\":\"DD1508895434927\",\"order_id\":\"A00005\",\"order_time\":\"2017-10-25 09:37:14\",\"payWay\":\"现金支付\",\"pay_money\":62.32,\"pay_time\":\"2017-10-25 09:37:16\",\"pay_type\":1,\"print_type\":1,\"qrUrl\":\"http://canyin.duofriend.com//simple/79B4DE7C/orderDetailtoxp.do?orderId=3459\",\"remark\":\"\",\"result\":1,\"shop_adress\":\"广东省深圳市南山区兰光科技园C座513\",\"shop_name\":\"谷通科技\",\"shop_phone\":\"0755-26609632\",\"yhq_deduction\":0}";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +72,13 @@ public class SettingActivity extends BaseActivity {
 
         cbPrinter.setOnCheckedChangeListener(new CheckBoxListener());
         cbMoneyBox.setOnCheckedChangeListener(new CheckBoxListener());
+        hideMoneyBoxBtn();
+    }
 
+    private void hideMoneyBoxBtn(){
+        if (!(MyApplication.getPrinter() instanceof WeituPrinter)){
+            moneyBox.setVisibility(View.GONE);
+        }
     }
 
     private class CheckBoxListener implements CompoundButton.OnCheckedChangeListener{
@@ -115,29 +125,13 @@ public class SettingActivity extends BaseActivity {
                 checkUpdate();
                 break;
             case R.id.setting_print_test:
-                printTestStoreOrder();
+                MyApplication.getPrinter().printTest();
                 break;
             case R.id.setting_print_money_box:
                 MsPrinter.openMoneyBox();
                 break;
             default:
                 break;
-        }
-
-    }
-
-    public void printTestStoreOrder(){
-        if(gson==null){
-            gson=new Gson();
-        }
-        StoreOrderBean order=gson.fromJson(printTestString,StoreOrderBean.class);
-        //打印不干胶
-        PrintESCOrTSCUtil.printStoreXCM(order.getOrder_id(),order.getMenus());
-        //微兔打印内置打印机
-        if (MyApplication.getPrinter()!=null){
-            MyApplication.getPrinter().printStoreOrder(order);
-        }else{
-            ToastUtil.getInstance().showToast("设备非打印机设备",5000);
         }
 
     }

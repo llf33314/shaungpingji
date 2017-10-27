@@ -130,12 +130,12 @@ public class DuofenJSBridge {
     @JavascriptInterface
     public void printStoreOrder(String jsonMsg){
         LogUtils.d(TAG,"printStoreOrder:"+jsonMsg);
-       // Log.d(TAG,"printStoreOrder:"+jsonMsg);
         StoreOrderBean order=gson.fromJson(jsonMsg,StoreOrderBean.class);
         //打印不干胶
         PrintESCOrTSCUtil.printStoreXCM(order.getOrder_id(),order.getMenus());
         //微兔打印内置打印机
         if (MyApplication.getPrinter()!=null){
+            //调用之前排版
             MyApplication.getPrinter().printStoreOrder(order);
         }else{
             ToastUtil.getInstance().showToast("设备非打印机设备",5000);
@@ -162,7 +162,7 @@ public class DuofenJSBridge {
     @JavascriptInterface
     public void openMoneyBox(){
         LogUtils.d(TAG,"openMoneyBox");
-        MsPrinter.openMoneyBox();
+        MyApplication.getPrinter().openMoneyBox();
     }
 
   /**

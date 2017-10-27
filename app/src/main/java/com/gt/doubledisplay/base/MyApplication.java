@@ -154,7 +154,8 @@ public class MyApplication extends Application {
         if ("NATIVE".equals(deviceName)){//微兔设备
             initWeituPrinter();
             printerType=new WeituPrinter();
-        }else if ("065".equals(deviceName)){
+        }else {
+
             printerType=new ZeroSixFivePrinter();
         }
     }

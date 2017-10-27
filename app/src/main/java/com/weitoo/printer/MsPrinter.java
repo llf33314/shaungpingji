@@ -3,6 +3,7 @@ package com.weitoo.printer;
 import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.bean.StoreOrderBean;
 import com.gt.doubledisplay.bean.TakeOutOrderBean;
+import com.gt.doubledisplay.printer.policy.WeituPrinter;
 import com.gt.doubledisplay.setting.SettingActivity;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.printsdk.usbsdk.UsbDriver;
@@ -67,6 +68,8 @@ public class MsPrinter {
 
 
     public static void openMoneyBox(){
+        //非微兔设备无前线操作
+
         UsbDriver msUsbDriver =MyApplication.getMsUsbDriver();
         if (msUsbDriver==null||(MyApplication.getSettingCode()&SettingActivity.DEVICE_SETTING_USE_MONEY_BOX)==0){//不使用钱箱
             return;

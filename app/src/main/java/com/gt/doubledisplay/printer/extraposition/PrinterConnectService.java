@@ -29,8 +29,10 @@ import com.gprinter.service.GpPrintService;
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.base.MoreFunctionDialog;
 import com.gt.doubledisplay.base.MyApplication;
+import com.gt.doubledisplay.bean.StoreOrderBean;
 import com.gt.doubledisplay.printer.extraposition.bluetooth.GPBluetoothUtil;
 import com.gt.doubledisplay.printer.extraposition.bluetooth.OpenPrinterPortMsg;
+import com.gt.doubledisplay.printer.policy.ZeroSixFivePrinter;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.orhanobut.hawk.Hawk;
@@ -111,6 +113,8 @@ public class PrinterConnectService extends Service {
                             BluetoothDevice d=openPrinterPortMsg.getBluetoothDevice();
                             openBluetoothProtFromDevice(d);
                         }
+                        break;
+                    default :
                         break;
                 }
             }
@@ -219,7 +223,8 @@ public class PrinterConnectService extends Service {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mGpService = GpService.Stub.asInterface(service);
-            if (mPortConnectionStateBroad==null){ //注册佳博打印机连接广播
+            //注册佳博打印机连接广播
+            if (mPortConnectionStateBroad==null){
                 mPortConnectionStateBroad=new PortConnectionStateBroad();
                 IntentFilter intentFilter=new IntentFilter(CONNECTION_ACTION);
                 PrinterConnectService.this.registerReceiver(mPortConnectionStateBroad,intentFilter);
@@ -363,13 +368,30 @@ public class PrinterConnectService extends Service {
     }
 
 
-    private static int sendESCReceipt(String money) {
-        EscCommand esc=PrintESCOrTSCUtil.getPrintEscCommand(money);
+    public static int sendESCTest() {
+        EscCommand esc=PrintESCOrTSCUtil.getPrintEscCommand();
 
         Vector<Byte> datas = esc.getCommand(); // 发送数据
 
         return printEscAndTsc(datas,1);
     }
+
+    public static int printStoreOrTakeOutOrder(){
+        //这里只有065设备才会进来
+        if (MyApplication.getPrinter() instanceof ZeroSixFivePrinter){
+            ZeroSixFivePrinter zeroSixFivePrinter= (ZeroSixFivePrinter) MyApplication.getPrinter();
+            EscCommand esc=zeroSixFivePrinter.getEsc();
+            Vector<Byte> datas = esc.getCommand(); // 发送数据
+
+            return printEscAndTsc(datas,1);
+        }else{
+            ToastUtil.getInstance().showToast("打印机初始化有误，请重启设备后再尝试");
+            return -1;
+        }
+
+    }
+
+
 
 
     private static int sendLabelReceipt(String number,String name,String size,String remark) {
