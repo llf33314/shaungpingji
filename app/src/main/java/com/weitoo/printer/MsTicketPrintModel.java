@@ -20,7 +20,7 @@ public  class MsTicketPrintModel {
     final StringBuilder data = new StringBuilder();
     public final String PRINTER_ENCODING = "GBK";
     //调整位置用
-    public static final String SPCE="   ";
+    public static final String SPCE="";
     protected MsTicketPrintHelper mTicketPrintHelper;
 
     private final int LINE_SPCE=40;
@@ -30,7 +30,9 @@ public  class MsTicketPrintModel {
     public static MsTicketPrintModel getInstance(){
         if (instance==null){
             synchronized (MsTicketPrintModel.class){
-                instance=new MsTicketPrintModel();
+                if (instance==null){
+                    instance=new MsTicketPrintModel();
+                }
             }
         }
         return instance;

@@ -3,18 +3,17 @@ package com.gt.doubledisplay.web;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.gt.doubledisplay.base.MyApplication;
+import com.gt.doubledisplay.bean.MainScreenMsgBean;
 import com.gt.doubledisplay.bean.StoreOrderBean;
-import com.gt.doubledisplay.bean.ScreenMsgBean;
+import com.gt.doubledisplay.bean.AssistantScreenMsgBean;
 import com.gt.doubledisplay.bean.TakeOutOrderBean;
 import com.gt.doubledisplay.printer.extraposition.PrintESCOrTSCUtil;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.LogUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
-import com.weitoo.printer.MsPrinter;
 
 import org.xwalk.core.JavascriptInterface;
 import org.xwalk.core.XWalkView;
@@ -34,7 +33,6 @@ public class DuofenJSBridge {
 
     private Gson gson=new Gson();
 
-    // 构造器
     public DuofenJSBridge(Context context, XWalkView webView){
         this.context = context;
         this.mWebView=webView;
@@ -61,70 +59,14 @@ public class DuofenJSBridge {
 
     /**
      * 主屏点击扫码支付 显示副副屏二维码
-     * @param data 里面字段能标记是否开还是关
+     * @param jsonData 里面字段能标记是否开还是关
      */
     @JavascriptInterface
-    public void showPayQRCode(String data){
-        Log.d(TAG,"showPayQRCode:"+data);
-        RxBus.get().post(new ScreenMsgBean(data));
+    public void showPayQRCode(String jsonData){
+        LogUtils.d(TAG,"showPayQRCode:"+jsonData);
+        RxBus.get().post(new AssistantScreenMsgBean(jsonData));
     }
 
-    /**
-     * 打印不干胶
-     * {
-     "cashier": "",
-     "consumption_money": 4.32,
-     "fansCurrency_deduction": 1,
-     "integral_deduction": 1,
-     "member_deduction": 0,
-     "menus": [
-     {
-     "commnt": "",
-     "money": 3.3,
-     "name": "叉烧包",
-     "norms": "微辣  紫色",
-     "num": 1
-     },
-     {
-     "commnt": "",
-     "menu_no": "1003",
-     "money": 1,
-     "name": "黄金叉烧",
-     "norms": "微辣  小份  白色",
-     "num": 1
-     },
-     {
-     "commnt": "",
-     "menu_no": "3362",
-     "money": 0.02,
-     "name": "洋葱炒肉片",
-     "norms": "小份  中辣",
-     "num": 2
-     }
-     ],
-     "order_code": "DD1505292021472",
-     "order_id": "A00001",
-     "order_time": "2017-09-13 16:40:21",
-     "pay_money": 4.32,
-     "pay_time": "2017-09-13 16:40:33",
-     "pay_type": 1,
-     "print_type": 1,
-     "result": 1,
-     "shop_adress": "广东省深圳市南山区兰光科技园C座513",
-     "shop_name": "谷通科技",
-     "shop_phone": "0755-26609632"
-     }
-     */
-
-     /*  @JavascriptInterface
-    public void printTscOrder(String jsonMsg){
-        StoreOrderBean order=gson.fromJson(jsonMsg,StoreOrderBean.class);
-
-        //微兔打印内置打印机
-        MsPrinter.printStoreOrder(order);
-        //打印不干胶
-        PrintESCOrTSCUtil.printStoreXCM(order.getOrder_id(),order.getMenus());
-    }*/
 
 
     @JavascriptInterface
@@ -133,36 +75,47 @@ public class DuofenJSBridge {
         StoreOrderBean order=gson.fromJson(jsonMsg,StoreOrderBean.class);
         //打印不干胶
         PrintESCOrTSCUtil.printStoreXCM(order.getOrder_id(),order.getMenus());
-        //微兔打印内置打印机
-        if (MyApplication.getPrinter()!=null){
-            //调用之前排版
-            MyApplication.getPrinter().printStoreOrder(order);
-        }else{
-            ToastUtil.getInstance().showToast("设备非打印机设备",5000);
+        //打印到店
+        MyApplication.getPrinter().printStoreOrder(order);
         }
 
-    }
 
     @JavascriptInterface
     public void printTakeOutOrder(String jsonMsg){
         LogUtils.d(TAG,"printTakeOutOrder:"+jsonMsg);
-       // Log.d(TAG,"printTakeOutOrder:"+jsonMsg);
         TakeOutOrderBean order=gson.fromJson(jsonMsg,TakeOutOrderBean.class);
 
         //打印不干胶
         PrintESCOrTSCUtil.printTakeOutXCM(order.getOrder_id(),order.getMenus());
-        //微兔打印内置打印机
-        if (MyApplication.getPrinter()!=null){
-            MyApplication.getPrinter().printTakeOutOrder(order);
-        }else{
-            ToastUtil.getInstance().showToast("设备非打印机设备",5000);
-        }
+        //打印外卖
+        MyApplication.getPrinter().printTakeOutOrder(order);
     }
 
     @JavascriptInterface
     public void openMoneyBox(){
         LogUtils.d(TAG,"openMoneyBox");
         MyApplication.getPrinter().openMoneyBox();
+    }
+
+    /**
+     * 主屏调用副屏方法
+     * @param methodName 方法名
+     * @param msg        参数  可以为json
+     */
+    @JavascriptInterface
+    public void callAssistantScreenMethod(String methodName,String msg){
+        LogUtils.d(TAG,"methodName:"+methodName+"\nmsg:"+msg);
+        RxBus.get().post(new AssistantScreenMsgBean(methodName,msg));
+    }
+    /**
+     * 副屏调用主屏方法
+     * @param methodName 方法名
+     * @param msg        参数  可以为json
+     */
+    @JavascriptInterface
+    public void callMainScreenMethod(String methodName,String msg){
+        LogUtils.d(TAG,"methodName:"+methodName+"\nmsg:"+msg);
+        RxBus.get().post(new MainScreenMsgBean(methodName,msg));
     }
 
   /**

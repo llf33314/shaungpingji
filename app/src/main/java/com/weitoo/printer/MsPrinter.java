@@ -27,7 +27,7 @@ public class MsPrinter {
     }*/
 
     private static boolean checkCanPrintOrder(Object orderObject){
-        //用户设置不适用内置打印机
+        //用户设置不使用内置打印机
         if (MyApplication.getMsUsbDriver()==null
                 ||(MyApplication.getSettingCode()&SettingActivity.DEVICE_SETTING_USE_PRINTER)==0){//不使用内置打印机
             return false;

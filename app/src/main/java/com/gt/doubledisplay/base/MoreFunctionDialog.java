@@ -76,12 +76,12 @@ public class MoreFunctionDialog extends Dialog {
             if (okListener!=null){
                 btnOk.setVisibility(View.VISIBLE);
             }
-            if (okListener!=null){
+            if (cancelListener!=null){
                 btnCancel.setVisibility(View.VISIBLE);
             }
             btnOk.setOnClickListener(okListener);
             btnCancel.setOnClickListener(cancelListener);
-             this.show();
+           this.show();
     }
 
 }

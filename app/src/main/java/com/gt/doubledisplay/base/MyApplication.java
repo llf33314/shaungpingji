@@ -54,7 +54,7 @@ public class MyApplication extends Application {
     //登录后获取user_id 请求接口获取  user_id即是 bus_id
     public static String DEVICE_ID="";
 
-    WebViewDiffDisplayPresentation mp;
+    public static WebViewDiffDisplayPresentation mp;
 
     private static PrinterPolicy printerType;
 
@@ -198,6 +198,10 @@ public class MyApplication extends Application {
     }
 
     // Get UsbDriver(UsbManager) service
+
+    /**
+     * 初始化微兔硬件设备 内置打印机与钱箱？
+     */
     public static void getUsbDriverService() {
         UsbManager mUsbManager = (UsbManager) getAppContext().getSystemService(Context.USB_SERVICE);
         mMsUsbDriver = new com.printsdk.usbsdk.UsbDriver(

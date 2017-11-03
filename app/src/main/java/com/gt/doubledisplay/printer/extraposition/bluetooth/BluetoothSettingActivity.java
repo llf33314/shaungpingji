@@ -117,6 +117,8 @@ public class BluetoothSettingActivity extends BaseActivity {
                    // scanResultAdapter.removeDevice((BluetoothDevice) msg.obj);
                     btnScanBluetooth.performClick();
                     break;
+                default:
+                    break;
 
             }
 
@@ -267,8 +269,12 @@ public class BluetoothSettingActivity extends BaseActivity {
             filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
             filter.addAction(BluetoothDevice.ACTION_FOUND);
             filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-            filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
-            filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+
+            //在PrinterConnectService统一处理
+            //filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+            // filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+
+
             //   BOND_NONE = 10; //配对没有成功
             // BOND_BONDING = 11; //配对中
             // BOND_BONDED = 12; //配对成功
@@ -499,10 +505,10 @@ public class BluetoothSettingActivity extends BaseActivity {
                         rxMsg.setBluetoothDevice(device);
                         RxBus.get().post(rxMsg);
                         break;
+                    default:
+                        break;
                 }
             }
         }
     }
-
-
 }

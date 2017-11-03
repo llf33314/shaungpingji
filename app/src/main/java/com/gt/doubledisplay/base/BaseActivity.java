@@ -1,5 +1,6 @@
 package com.gt.doubledisplay.base;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -34,7 +35,8 @@ import butterknife.ButterKnife;
 public  class BaseActivity extends RxAppCompatActivity {
     private RelativeLayout mToolbar;
     private TextView toolBarTitle;
-    private Button btnSettting;
+    private Button btnSetting;
+    private Button toolbarSynScreen;
 
     //用于web查看当前地址
     private int titleClickCount=0;
@@ -42,34 +44,54 @@ public  class BaseActivity extends RxAppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // BarUtils.setStatusBarColor(this,getResources().getColor(R.color.toolbarBg));
         super.setContentView(R.layout.toolbar);
         init();
     }
 
-    private void init(){
-        mToolbar= (RelativeLayout) findViewById(R.id.base_toolbar);
-        toolBarTitle= (TextView) findViewById(R.id.toolbar_title);
-        btnSettting= (Button) findViewById(R.id.toolbar_blu);
+    private void init() {
+        mToolbar = (RelativeLayout) findViewById(R.id.base_toolbar);
+        toolBarTitle = (TextView) findViewById(R.id.toolbar_title);
+        btnSetting = (Button) findViewById(R.id.toolbar_setting);
+        toolbarSynScreen = (Button) findViewById(R.id.toolbar_syn_screen);
         AppManager.getInstance().addActivity(this);
-        btnSettting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(BaseActivity.this, SettingActivity.class);
-                startActivity(intent);
-            }
-        });
 
-        toolBarTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                titleClickCount++;
-                if (titleClickCount%10==0){
-                    titleTenClick();
-                }
+        ToolBarClickListener l = new ToolBarClickListener();
+        toolBarTitle.setOnClickListener(l);
+        toolbarSynScreen.setOnClickListener(l);
+        btnSetting.setOnClickListener(l);
+
+    }
+
+    private class ToolBarClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.toolbar_title:
+                    titleClickCount++;
+                    if (titleClickCount%10==0){
+                        titleTenClick();
+                    }
+                    break;
+                case R.id.toolbar_syn_screen:
+                    if (MyApplication.mp.isShowing()){
+                        MyApplication.mp.dismiss();
+                        toolbarSynScreen.setText("取消同步");
+                    }else{
+                        MyApplication.mp.show();
+                        toolbarSynScreen.setText("同步副屏");
+                    }
+                    break;
+
+                case R.id.toolbar_setting:
+                    Intent intent=new Intent(BaseActivity.this, SettingActivity.class);
+                    startActivity(intent);
+                    break;
+                default:
+                    break;
 
             }
-        });
+        }
     }
 
     /**
@@ -80,7 +102,7 @@ public  class BaseActivity extends RxAppCompatActivity {
     }
 
     public void showBtnBlu(){
-        btnSettting.setVisibility(View.VISIBLE);
+        btnSetting.setVisibility(View.VISIBLE);
     }
 
     @CallSuper

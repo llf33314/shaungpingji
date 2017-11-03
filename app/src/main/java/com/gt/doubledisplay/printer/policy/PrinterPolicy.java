@@ -9,10 +9,10 @@ import com.gt.doubledisplay.bean.TakeOutOrderBean;
 
 public interface PrinterPolicy {
 
-    String printTestString="{\"cashier\":\"\",\"consumption_money\":62.32,\"fansCurrency_deduction\":0,\"integral_deduction\":0,\"member_deduction\":0,\"menus\":[{\"commnt\":\"\",\"menu_no\":\"1002\",\"money\":10,\"name\":\"红烧鱼\",\"norms\":\"\",\"num\":1,\"original_price\":10},{\"commnt\":\"\",\"money\":11,\"name\":\"叉烧包\",\"norms\":\"\",\"num\":1,\"original_price\":11},{\"commnt\":\"\",\"menu_no\":\"1004\",\"money\":38,\"name\":\"咸菜炒猪大肠\",\"norms\":\"\",\"num\":1,\"original_price\":38},{\"commnt\":\"\",\"money\":3.32,\"name\":\"鱼粥\",\"norms\":\"加1  小份  黑色\",\"num\":1,\"original_price\":3.32}],\"order_code\":\"DD1508895434927\",\"order_id\":\"A00005\",\"order_time\":\"2017-10-25 09:37:14\",\"payWay\":\"现金支付\",\"pay_money\":62.32,\"pay_time\":\"2017-10-25 09:37:16\",\"pay_type\":1,\"print_type\":1,\"qrUrl\":\"http://canyin.duofriend.com//simple/79B4DE7C/orderDetailtoxp.do?orderId=3459\",\"remark\":\"\",\"result\":1,\"shop_adress\":\"广东省深圳市南山区兰光科技园C座513\",\"shop_name\":\"谷通科技\",\"shop_phone\":\"0755-26609632\",\"yhq_deduction\":0}";
+    String PRINT_TEST_STRING="{\"cashier\":\"\",\"consumption_money\":62.32,\"fansCurrency_deduction\":0,\"integral_deduction\":0,\"member_deduction\":0,\"menus\":[{\"commnt\":\"\",\"menu_no\":\"1002\",\"money\":10,\"name\":\"红烧鱼\",\"norms\":\"\",\"num\":1,\"original_price\":10},{\"commnt\":\"\",\"money\":11,\"name\":\"叉烧包\",\"norms\":\"\",\"num\":1,\"original_price\":11},{\"commnt\":\"\",\"menu_no\":\"1004\",\"money\":38,\"name\":\"咸菜炒猪大肠\",\"norms\":\"\",\"num\":1,\"original_price\":38},{\"commnt\":\"\",\"money\":3.32,\"name\":\"鱼粥\",\"norms\":\"加1  小份  黑色\",\"num\":1,\"original_price\":3.32}],\"order_code\":\"DD1508895434927\",\"order_id\":\"A00005\",\"order_time\":\"2017-10-25 09:37:14\",\"payWay\":\"现金支付\",\"pay_money\":62.32,\"pay_time\":\"2017-10-25 09:37:16\",\"pay_type\":1,\"print_type\":1,\"qrUrl\":\"http://canyin.duofriend.com//simple/79B4DE7C/orderDetailtoxp.do?orderId=3459\",\"remark\":\"\",\"result\":1,\"shop_adress\":\"广东省深圳市南山区兰光科技园C座513\",\"shop_name\":\"谷通科技\",\"shop_phone\":\"0755-26609632\",\"yhq_deduction\":0}";
 
     /**
-     * 开始排版 主要做一些初始化动作 清除缓存等
+     * 开始排版 主要做一些初始化动作 清除变量缓存等
      */
     void startCompose();
 
@@ -71,6 +71,11 @@ public interface PrinterPolicy {
      */
     void addLeftAndBigRight(String leftStr,String rightStr);
     /**
+     * 添加居中文字
+     */
+    void addCenterText(String rightStr);
+
+    /**
      * 添加到店订单
      */
     void addStoreOrder(StoreOrderBean storeOrderBean);
@@ -82,12 +87,12 @@ public interface PrinterPolicy {
     /**
      * 商品栏标题
      */
-    void addOrderTitleText(String name,String number,String money);
+    void addOrderTitleText(String name,String price,String number,String money);
 
     /**
      * 添加商品
      */
-    void addOrderText(String name,int number,double money);
+    void addOrderText(String name,String price,int number,double money);
     /**
      * 添加底部其他信息打印
      */

@@ -19,7 +19,7 @@ public class GPUsbUtil {
 
     private static final String TAG=GPUsbUtil.class.getSimpleName();
 
-    //不干胶打印机 ID 1280   名称 GP-58
+    //不干胶打印机 ID 1280   名称 GP-58   其他打印机不知道是不是都是这样
     private static final int GP_PRODEUCT_ID=1280;
 
     public static UsbDevice getGPExtrapositionUsbDevice(UsbManager usbManager){

@@ -294,19 +294,13 @@ public class PrintESCOrTSCUtil {
      * @param menus
      */
     public static void printStoreXCM(String orderId,List<StoreOrderBean.MenusBean> menus){
-        //JSONObject json= null;
-           // json = new JSONObject(s);
-           // String orderId=json.getString("order_id");
-           // String jsonMenus=json.getString("menus");
-           // Gson gson=new Gson();
+
             if (menus!=null&&menus.size()>0){
                 for (StoreOrderBean.MenusBean m:menus){
                     String size=m.getNorms()+" x1";
                     for (int i=0;i<m.getNum();i++){
 
-                       // int res=PrinterConnectSerivce.printReceiptClicked(m.getMenu_no(),m.getName(),size,m.getCommnt());
                         int res= PrinterConnectService.printReceiptClicked(orderId,m.getName(),size,m.getCommnt());
-
                         if (res==PRINTER_NOT_INTI){//打印机未初始化
                             break;
                         }

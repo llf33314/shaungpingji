@@ -1,6 +1,7 @@
 package com.weitoo.printer;
 
 import com.gt.doubledisplay.base.MyApplication;
+import com.gt.doubledisplay.utils.commonutil.LogUtils;
 import com.printsdk.cmd.PrintCmd;
 
 /**
@@ -18,6 +19,11 @@ public class UsbPrinterUtil {
 
         byte[] bRead1 = new byte[1];
         byte[] bWrite1 = PrintCmd.GetStatus1();
+        //当连接佳博不干胶打印机 断开后 这个会返回null会对微兔打印机影响  因此这里做处理
+
+        try {
+
+
         if(MyApplication.getMsUsbDriver().read(bRead1,bWrite1)>0)
         {
             iRet = PrintCmd.CheckStatus1(bRead1[0]);
@@ -53,6 +59,10 @@ public class UsbPrinterUtil {
             iRet = PrintCmd.CheckStatus4(bRead4[0]);
         }
         return iRet;
+        }catch (NullPointerException e){
+            LogUtils.e(e.getMessage());
+            return 1;
+        }
     }
 
     //0 打印机正常 、1 打印机未连接或未上电、2 打印机和调用库不匹配

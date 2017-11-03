@@ -218,6 +218,8 @@ public class ESCUtil {
 		case 8:
 			realSize = 119;
 			break;
+			default:
+				break;
 		}
 		byte[] result = new byte[3];
 		result[0] = 29;

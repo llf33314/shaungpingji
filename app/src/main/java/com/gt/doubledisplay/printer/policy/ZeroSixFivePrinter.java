@@ -9,11 +9,14 @@ import com.gt.doubledisplay.bean.StoreOrderBean;
 import com.gt.doubledisplay.bean.TakeOutOrderBean;
 import com.gt.doubledisplay.printer.extraposition.PrintESCOrTSCUtil;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectService;
+import com.gt.doubledisplay.setting.SettingActivity;
 import com.gt.doubledisplay.utils.commonutil.StringUtils;
 import com.gt.doubledisplay.utils.commonutil.TimeUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 
 import java.util.List;
+
+import hdx.HdxUtil;
 
 /**
  * Created by wzb on 2017/9/25 0025.
@@ -47,7 +50,11 @@ public class ZeroSixFivePrinter implements PrinterPolicy {
 
     @Override
     public void openMoneyBox() {
-
+        //不使用钱箱
+        if ((MyApplication.getSettingCode()& SettingActivity.DEVICE_SETTING_USE_MONEY_BOX)==0){
+            return;
+        }
+        HdxUtil.SetV12Power(1);
     }
 
     @Override
@@ -97,6 +104,12 @@ public class ZeroSixFivePrinter implements PrinterPolicy {
     @Override
     public void addLeftAndBigRight(String leftStr, String rightStr) {
         addLeftAndRight(leftStr,rightStr,true);
+    }
+
+    @Override
+    public void addCenterText(String centerStr) {
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
+        esc.addText(centerStr);
     }
 
     @Override
@@ -182,7 +195,7 @@ public class ZeroSixFivePrinter implements PrinterPolicy {
     }
 
     @Override
-    public void addOrderTitleText(String name, String number, String money) {
+    public void addOrderTitleText(String name, String price,String number, String money) {
         int nameLength=PRINTER_WIDTH/2;
         StringBuilder sb=new StringBuilder(name);
         for (int i=0;i<nameLength-name.length()*2;i++){
@@ -197,8 +210,15 @@ public class ZeroSixFivePrinter implements PrinterPolicy {
         esc.addText(sb.toString()+"\n");
     }
 
+    /**
+     065设备不打印单价
+     */
+    private void addOrderTitleText(String name,String number, String money) {
+        addOrderTitleText(name,"",number,money);
+    }
+
     @Override
-    public void addOrderText(String name, int number, double money) {
+    public void addOrderText(String name,String price, int number, double money) {
         String numberStr=String.valueOf(number);
         String moneyStr=String.valueOf(money);
         int nameLength=PRINTER_WIDTH/2;
@@ -225,6 +245,9 @@ public class ZeroSixFivePrinter implements PrinterPolicy {
         sb.append(money);
 
         esc.addText(sb.toString()+"\n");
+    }
+    private void addOrderText(String name, int number, double money) {
+        addOrderText(name,"",number,money);
     }
 
     @Override
@@ -294,7 +317,7 @@ public class ZeroSixFivePrinter implements PrinterPolicy {
         if(gson==null){
             gson=new Gson();
         }
-        StoreOrderBean order=gson.fromJson(printTestString,StoreOrderBean.class);
+        StoreOrderBean order=gson.fromJson(PRINT_TEST_STRING,StoreOrderBean.class);
         //打印不干胶
         PrintESCOrTSCUtil.printStoreXCM(order.getOrder_id(),order.getMenus());
         //微兔打印内置打印机

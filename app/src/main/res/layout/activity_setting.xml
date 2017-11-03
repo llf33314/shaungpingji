@@ -43,6 +43,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/setting_ll_use_internal_printer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_25"
         android:layout_marginTop="@dimen/dp_10"

@@ -44,7 +44,8 @@ public class SettingActivity extends BaseActivity {
     CheckBox cbMoneyBox;
     @BindView(R.id.setting_print_money_box)
     LinearLayout moneyBox;
-
+    @BindView(R.id.setting_ll_use_internal_printer)
+    LinearLayout usePrinter;
 
     public static final String DEVICE_SETTING="deviceSetting";
     public static final int DEVICE_SETTING_USE_PRINTER=0x01;
@@ -72,12 +73,13 @@ public class SettingActivity extends BaseActivity {
 
         cbPrinter.setOnCheckedChangeListener(new CheckBoxListener());
         cbMoneyBox.setOnCheckedChangeListener(new CheckBoxListener());
-        hideMoneyBoxBtn();
+        hideBtns();
     }
 
-    private void hideMoneyBoxBtn(){
+    private void hideBtns(){
         if (!(MyApplication.getPrinter() instanceof WeituPrinter)){
-            moneyBox.setVisibility(View.GONE);
+           // moneyBox.setVisibility(View.GONE);
+            usePrinter.setVisibility(View.GONE);
         }
     }
 
@@ -100,7 +102,9 @@ public class SettingActivity extends BaseActivity {
                 case R.id.setting_cb_use_money_box:
                     if (isChecked){
                         Hawk.put(DEVICE_SETTING,MyApplication.getSettingCode()|DEVICE_SETTING_USE_MONEY_BOX);
-                        if (MyApplication.getMsUsbDriver()==null){//都不设置时 不启动这个服务 所以在这里写
+                        //如果是微兔设备才去打开 usb服务 如果是065设备什么都不做
+                        if (MyApplication.getPrinter() instanceof WeituPrinter&&MyApplication.getMsUsbDriver()==null){
+                            //都不设置时 不启动这个服务 所以在这里写
                             MyApplication.getUsbDriverService();
                         }
                     }else {
@@ -128,12 +132,11 @@ public class SettingActivity extends BaseActivity {
                 MyApplication.getPrinter().printTest();
                 break;
             case R.id.setting_print_money_box:
-                MsPrinter.openMoneyBox();
+                MyApplication.getPrinter().openMoneyBox();
                 break;
             default:
                 break;
         }
-
     }
 
     private void checkUpdate() {

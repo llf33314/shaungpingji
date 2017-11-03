@@ -1,15 +1,10 @@
 package com.gt.doubledisplay.web;
 
-import android.app.Activity;
 import android.app.Presentation;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Display;
-import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -17,7 +12,7 @@ import android.widget.ImageView;
 import com.gt.doubledisplay.R;
 import com.gt.doubledisplay.base.MyApplication;
 import com.gt.doubledisplay.bean.DeviceBean;
-import com.gt.doubledisplay.bean.ScreenMsgBean;
+import com.gt.doubledisplay.bean.AssistantScreenMsgBean;
 import com.gt.doubledisplay.http.rxjava.observable.SchedulerTransformer;
 import com.gt.doubledisplay.utils.RxBus;
 
@@ -71,13 +66,17 @@ public class WebViewDiffDisplayPresentation extends Presentation {
             }
         });
 
-        RxBus.get().toObservable(ScreenMsgBean.class)
-                .compose(SchedulerTransformer.<ScreenMsgBean>transformer())
-                .subscribe(new Consumer<ScreenMsgBean>() {
+        RxBus.get().toObservable(AssistantScreenMsgBean.class)
+                .compose(SchedulerTransformer.<AssistantScreenMsgBean>transformer())
+                .subscribe(new Consumer<AssistantScreenMsgBean>() {
                     @Override
-                    public void accept(@NonNull ScreenMsgBean screenMsgBean) throws Exception {
-                        mGTWebViewFrameLayout.getWebView().loadUrl("javascript:getDataAndShow('"+screenMsgBean.getMsg()+"')");
-                       // Log.d("WebView","javascript:getDataAndShow('"+screenMsgBean.getMsg()+"')");
+                    public void accept(@NonNull AssistantScreenMsgBean assistantScreenMsgBean) throws Exception {
+                        //暂时这么写 后期小馋猫估计要改
+                        if (TextUtils.isEmpty(assistantScreenMsgBean.getMethonName())){
+                            mGTWebViewFrameLayout.getWebView().loadUrl("javascript:getDataAndShow('"+ assistantScreenMsgBean.getMsg()+"')");
+                        }else{
+                            mGTWebViewFrameLayout.getWebView().loadUrl("javascript:"+assistantScreenMsgBean.getMethonName()+"('"+ assistantScreenMsgBean.getMsg()+"')");
+                        }
                     }
                 });
 

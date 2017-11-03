@@ -47,6 +47,7 @@
             android:gravity="center"
             android:background="@drawable/bg_gray_border_not_radius"
             android:textColor="@color/wifi_connection_tv_color"
+            android:visibility="gone"
             />
         <TextView
             android:id="@+id/dialog_more_cancel"
@@ -55,6 +56,7 @@
             android:layout_weight="1"
             android:text="本次不提示"
             android:textSize="16sp"
+            android:visibility="gone"
             android:gravity="center"
             android:textColor="@color/wifi_connection_tv_color"
             android:background="@drawable/bg_gray_border_not_radius"

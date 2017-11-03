@@ -33,6 +33,29 @@ public class GPBluetoothUtil {
         return null;
     }
 
+    /**
+     * 没有更好的方法获取当前蓝牙的连接状态了
+     * @return
+     */
+    public static List<BluetoothDevice> getConnectingBluetoothList(BluetoothAdapter mBluetoothAdapter){
+        List<BluetoothDevice> bluetoothDeviceList=new ArrayList<>();
+
+        if (mBluetoothAdapter==null||!mBluetoothAdapter.isEnabled()){
+            return null;
+        }
+        Set<BluetoothDevice> devices = mBluetoothAdapter.getBondedDevices();
+
+        for(BluetoothDevice device : devices){
+            //测试用  因为0D30显示的类型不是打印机？
+            //过滤掉内置打印机
+            if (/*device.getType()==3&&*/!"88:D1:31:71:2D:10".equals(device.getAddress())){
+                bluetoothDeviceList.add(device);
+
+            }
+        }
+        return bluetoothDeviceList;
+    }
+
     public static boolean isHasBluetoothDevice(BluetoothAdapter mBluetoothAdapter){
 
         if (!mBluetoothAdapter.isEnabled()){

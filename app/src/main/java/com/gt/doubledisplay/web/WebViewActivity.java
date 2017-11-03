@@ -8,7 +8,9 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import com.gt.doubledisplay.base.BaseActivity;
+import com.gt.doubledisplay.bean.MainScreenMsgBean;
 import com.gt.doubledisplay.http.HttpConfig;
+import com.gt.doubledisplay.http.rxjava.observable.SchedulerTransformer;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectService;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
@@ -46,7 +48,14 @@ public class WebViewActivity extends BaseActivity {
         showBtnBlu();
         mGTWebViewFrameLayout.loadUrl();
 
-
+        RxBus.get().toObservable(MainScreenMsgBean.class)
+                .compose(SchedulerTransformer.<MainScreenMsgBean>transformer())
+                .subscribe(new Consumer<MainScreenMsgBean>() {
+                    @Override
+                    public void accept(@NonNull MainScreenMsgBean mainScreenMsgBean) throws Exception {
+                          mGTWebViewFrameLayout.getWebView().loadUrl("javascript:"+mainScreenMsgBean.getMethonName()+"('"+ mainScreenMsgBean.getMsg()+"')");
+                    }
+                });
     }
 
     @Override
@@ -81,8 +90,5 @@ public class WebViewActivity extends BaseActivity {
                }
         return super.onKeyDown(keyCode, event);
     }
-
-
-
 }
 

@@ -14,7 +14,7 @@ public final class MsTicketPrintHelper {
     private final int LINE_BIG_CHAR_COUNT=36;
     public final String NextLine = "\n";
     public final String PRINTER_ENCODING = "GBK";
-    public final String DIVIDING_LINE = SPCE+"……………………………………………………" +NextLine;
+    public final String DIVIDING_LINE = "…………………………………………………………" +NextLine;
     private static MsTicketPrintHelper instance;
     private StringBuffer sb = new StringBuffer();
 
@@ -70,9 +70,9 @@ public final class MsTicketPrintHelper {
      * 右边粗体
      */
     public String getBigRightLine(String left,String right){
-       // int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(right)*2-4;  //这个4是右边距
+       // int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(right)*2-4;  //这个5是右边距
 
-        int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(left) - getCustomByteLen(right)*LINE_CHAR_COUNT/LINE_BIG_CHAR_COUNT-4;
+        int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(left) - getCustomByteLen(right)*LINE_CHAR_COUNT/LINE_BIG_CHAR_COUNT-5;
         if (spaceNum < 0) {
             spaceNum = 0;
         }

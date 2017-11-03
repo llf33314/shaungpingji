@@ -139,6 +139,8 @@ public class BondedRecyclerviewAdapter extends RecyclerView.Adapter<BondedRecycl
                     holder.connectionState.setText("已连接，点击可断开");
                 }
                 break;
+            default:
+                break;
         }
 
     }
