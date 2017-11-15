@@ -22,7 +22,7 @@ public class HttpConfig {
     //public static final String LOGIN_URL=BASE_URL+"/ErpMenus/79B4DE7C/Erplogin.do";
 
     //测试
-    // public static final String DUOFRIEND_XCM="https://canyin.deeptel.com.cn/";
+   // public static final String DUOFRIEND_XCM="https://canyin.deeptel.com.cn/";
     //堡垒
     // public static final String DUOFRIEND_XCM="http://nb.canyin.deeptel.com.cn";
     //正式

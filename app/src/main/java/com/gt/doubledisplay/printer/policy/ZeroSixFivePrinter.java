@@ -329,13 +329,27 @@ public class ZeroSixFivePrinter implements PrinterPolicy {
 
     }
 
+    /**
+     *
+     * @param leftStr
+     * @param rightStr
+     * @param isRightBig 是否变大
+     */
     private void addLeftAndRight(String leftStr, String rightStr,boolean isRightBig){
+       // int amplification=isRightBig?2:2;
+        //不知道为什么要这样 理论应该是下面的代码才对
         int amplification=isRightBig?2:1;
         esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
-        int leftLength=leftStr.length();
-        int rightLength=rightStr.length()*amplification;
+        //因为中文是占用俩个字符位置
+        int leftLength=leftStr.length()+StringUtils.hasDoubleEncodeStr(leftStr);
+        int rightLength=(rightStr.length()+StringUtils.hasDoubleEncodeStr(rightStr))*amplification;
         int spaceLength=PRINTER_WIDTH-leftLength-rightLength;
         StringBuilder leftStrAndSpace=new StringBuilder(leftStr);
+        if (isRightBig){//右边变大后需要这样处理  理论上应该不用的
+            for (int i=0;i<StringUtils.hasDoubleEncodeStr(leftStr);i++){
+                leftStrAndSpace.append(" ");
+            }
+        }
         for (int i=0;i<spaceLength;i++){
             leftStrAndSpace.append(" ");
         }

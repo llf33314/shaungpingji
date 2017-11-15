@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,7 +36,7 @@ import butterknife.ButterKnife;
 public  class BaseActivity extends RxAppCompatActivity {
     private RelativeLayout mToolbar;
     private TextView toolBarTitle;
-    private Button btnSetting;
+    private ImageButton btnSetting;
     private Button toolbarSynScreen;
 
     //用于web查看当前地址
@@ -51,7 +52,7 @@ public  class BaseActivity extends RxAppCompatActivity {
     private void init() {
         mToolbar = (RelativeLayout) findViewById(R.id.base_toolbar);
         toolBarTitle = (TextView) findViewById(R.id.toolbar_title);
-        btnSetting = (Button) findViewById(R.id.toolbar_setting);
+        btnSetting = (ImageButton) findViewById(R.id.toolbar_setting);
         toolbarSynScreen = (Button) findViewById(R.id.toolbar_syn_screen);
         AppManager.getInstance().addActivity(this);
 

@@ -132,8 +132,8 @@ public class WeituPrinter implements PrinterPolicy {
     @Override
     public void addLeftAndBigRight(String leftStr, String rightStr) {
         leftStr=SPCE+leftStr;
-        appendData(PrintCmd.PrintString(leftStr,1));
-        appendData(PrintCmd.SetSizechar(1,1,0,9*17));
+        appendData(PrintCmd.PrintString(leftStr, 1));
+        appendData(PrintCmd.SetSizechar(1,1,0,12*24));
         appendData(PrintCmd.PrintString(mTicketPrintHelper.getBigRightLine(leftStr,rightStr), 0));
         // appendData(PrintCmd.PrintString(right, 0));
         appendData(PrintCmd.SetSizechar(0,0,0,0));

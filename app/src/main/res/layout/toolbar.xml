@@ -16,32 +16,32 @@
         android:textColor="@color/white"
         android:textSize="22sp" />
 
-    <Button
+    <ImageButton
         android:id="@+id/toolbar_setting"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:layout_alignParentRight="true"
-        android:text="设 置"
         android:textSize="18sp"
         android:background="@drawable/btn_blue"
         android:textColor="@color/white"
+        android:src="@drawable/setting"
+        android:scaleType="centerInside"
         />
     <Button
         android:id="@+id/toolbar_syn_screen"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="同步副屏"
-        android:textSize="18sp"
-        android:background="@drawable/btn_blue"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:background="@drawable/btn_setting_screen"
         android:textColor="@color/white"
-        android:layout_toStartOf="@id/toolbar_setting"
-        />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/dp_2"
+        android:layout_marginBottom="@dimen/dp_2"
+        android:layout_toStartOf="@+id/toolbar_setting" />
 </RelativeLayout>

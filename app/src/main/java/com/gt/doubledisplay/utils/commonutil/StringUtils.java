@@ -199,4 +199,38 @@ public final class StringUtils {
         }
         return name;
     }
+    public static boolean isChineseChat(char c){
+        return c>19968&&c<40869;
+    }
+
+    /**
+     * 字符串有多少个中文
+     * @param str
+     */
+    public static int hasChineseNumber(String str){
+        int num=0;
+        for (int i=0;i<str.length();i++){
+            if (isChineseChat(str.charAt(i))){
+                num++;
+            }
+        }
+        return num;
+    }
+
+    /**
+     * 有多少个双字节编码
+     * @param str
+     * @return
+     */
+    public static int hasDoubleEncodeStr(String str){
+        int num=0;
+        for (int i=0;i<str.length();i++){
+            String s=String.valueOf(str.charAt(i));
+            if (s.getBytes().length!=s.length()){
+                num++;
+            }
+        }
+        return num;
+    }
+
 }

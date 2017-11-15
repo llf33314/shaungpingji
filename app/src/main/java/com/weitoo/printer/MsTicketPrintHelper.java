@@ -58,8 +58,9 @@ public final class MsTicketPrintHelper {
     }
 
     private String getLine(int totalWidth, String left, String right, boolean needNextLine) {
+        //wzb 缩进去一点点  这个4是自己加的让左右都缩进去一点
         int spaceNum = totalWidth - getCustomByteLen(left) - getCustomByteLen(right) - 4;
-        //wzb 缩进去一点点
+
         if (spaceNum < 0) {
             spaceNum = 0;
         }
@@ -70,9 +71,15 @@ public final class MsTicketPrintHelper {
      * 右边粗体
      */
     public String getBigRightLine(String left,String right){
-       // int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(right)*2-4;  //这个5是右边距
-
-        int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(left) - getCustomByteLen(right)*LINE_CHAR_COUNT/LINE_BIG_CHAR_COUNT-5;
+       // int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(right)*2-4;  //这个4是边距
+        //边距问题这样处理特殊处理  但是只支持数字 如果后期需要支持中文另外再调试
+        int m;
+        if (getCustomByteLen(right)==3||getCustomByteLen(right)%2==0){
+            m=4;
+        }else{
+            m=5;
+        }
+        int spaceNum = LINE_CHAR_COUNT - getCustomByteLen(left) - getCustomByteLen(right)*LINE_CHAR_COUNT/LINE_BIG_CHAR_COUNT-m;
         if (spaceNum < 0) {
             spaceNum = 0;
         }
@@ -80,6 +87,8 @@ public final class MsTicketPrintHelper {
         return  getNString(spaceNum, " ") + right ;
 
     }
+
+
 
     public String getGoodsLine(String name, String unitPrice, String num, String sum) {
         int len = getCustomByteLen(name);

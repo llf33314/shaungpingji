@@ -36,7 +36,9 @@ import com.gt.doubledisplay.printer.extraposition.bluetooth.GPBluetoothUtil;
 import com.gt.doubledisplay.printer.extraposition.bluetooth.OpenPrinterPortMsg;
 import com.gt.doubledisplay.printer.policy.ZeroSixFivePrinter;
 import com.gt.doubledisplay.utils.DialogUtils;
+import com.gt.doubledisplay.utils.Logger;
 import com.gt.doubledisplay.utils.RxBus;
+import com.gt.doubledisplay.utils.commonutil.LogUtils;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.orhanobut.hawk.Hawk;
 
@@ -172,6 +174,7 @@ public class PrinterConnectService extends Service {
         try {
             int rel = mGpService.openPort(PRINTER_INDEX[1], PortParameters.BLUETOOTH ,bluetoothDevice.getAddress(),0);
             GpCom.ERROR_CODE r = GpCom.ERROR_CODE.values()[rel];
+            Logger.d("openBluetooth",String.valueOf(r));
             // ToastUtil.getInstance().showToast("result :" + String.valueOf(r));
         } catch (RemoteException e) {
             e.printStackTrace();

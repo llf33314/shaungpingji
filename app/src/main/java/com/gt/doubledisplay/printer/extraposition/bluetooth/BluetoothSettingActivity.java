@@ -155,10 +155,7 @@ public class BluetoothSettingActivity extends BaseActivity {
         swBluetooth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-               /* PrinterConnectSerivce.printReceiptClicked("aaa","aaaaaa","aaaa","aaa");
-                if (true){
-                    return;
-                }*/
+
                 if (isChecked){
                     if (!mBluetoothAdapter.isEnabled()){
                         mBluetoothAdapter.enable();
