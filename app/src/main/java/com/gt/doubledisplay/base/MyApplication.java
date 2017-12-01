@@ -150,12 +150,12 @@ public class MyApplication extends Application {
     }
 
     private void initPrinter(){
-        String deviceName=DeviceUtils.getModel();
-        if ("NATIVE".equals(deviceName)){//微兔设备
+       // String deviceName=DeviceUtils.getModel();
+        String productName=DeviceUtils.getProductName();
+        if ("WEITOO".equals(productName)){//微兔设备
             initWeituPrinter();
             printerType=new WeituPrinter();
         }else {
-
             printerType=new ZeroSixFivePrinter();
         }
     }
@@ -264,4 +264,10 @@ public class MyApplication extends Application {
     public static UsbDriver getMsUsbDriver() {
         return mMsUsbDriver;
     }
+
+    public static boolean testOther(String str,int i){
+        ToastUtil.getInstance().showToast("str:"+str+"\ti:"+i);
+        return true;
+    }
+
 }

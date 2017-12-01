@@ -13,7 +13,6 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
-    //暂时去掉sign参数
     @FormUrlEncoded
     @POST(HttpConfig.LOGIN_URL)
     Observable<String> login(@Field("login_name")String account, @Field("password")String psd, @Field("sign")String sign);

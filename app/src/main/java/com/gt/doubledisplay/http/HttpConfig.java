@@ -11,7 +11,7 @@ public class HttpConfig {
     //堡垒
    // public static final String BASE_URL = "http://nb.yj.deeptel.com.cn/";
     //正式
-     public static final String BASE_URL = "http://yj.duofriend.com/";
+     public static final String BASE_URL = "https://yj.duofriend.com/";
 
     //微站测试
    // public static final String BASE_URL = "http://wz.yj.deeptel.com.cn/";
@@ -26,7 +26,7 @@ public class HttpConfig {
     //堡垒
     // public static final String DUOFRIEND_XCM="http://nb.canyin.deeptel.com.cn";
     //正式
-    public static final String DUOFRIEND_XCM="http://canyin.duofriend.com/";
+    public static final String DUOFRIEND_XCM="https://canyin.duofriend.com/";
 
     //微站测试
    // public static final String DUOFRIEND_XCM="http://wz.canyin.deeptel.com.cn/login/index.do";
@@ -54,5 +54,5 @@ public class HttpConfig {
     //堡垒
    // public static final String LOGIN_URL="http://nb.deeptel.com.cn/ErpMenus/79B4DE7C/DoubleErplogin.do";
     //正式
-    public static final String LOGIN_URL="http://duofriend.com/ErpMenus/79B4DE7C/DoubleErplogin.do";
+    public static final String LOGIN_URL="https://duofriend.com/ErpMenus/79B4DE7C/DoubleErplogin.do";
 }

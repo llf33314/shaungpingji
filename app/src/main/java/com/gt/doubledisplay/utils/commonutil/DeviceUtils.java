@@ -10,6 +10,7 @@ import android.os.PowerManager;
 import android.provider.Settings;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
@@ -238,5 +239,21 @@ public final class DeviceUtils {
      */
     public static void reboot2Bootloader() {
         ShellUtils.execCmd("reboot bootloader", true);
+    }
+
+    /**
+     * 获取厂商设备
+     * @return
+     */
+    public static String getProductName(){
+        String productName = "";
+        try {
+            Class<?> c=Class.forName("android.os.SystemProperties");
+            Method get=c.getMethod("get",String.class);
+            productName=(String)get.invoke(c,"ro.product.brand");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return productName;
     }
 }

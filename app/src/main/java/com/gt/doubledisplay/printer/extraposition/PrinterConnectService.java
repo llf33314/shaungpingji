@@ -20,6 +20,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.gprinter.aidl.GpService;
 import com.gprinter.command.EscCommand;
@@ -97,7 +98,10 @@ public class PrinterConnectService extends Service {
 
     UsbManager mUsbManager ;
 
-    private static UsbDevice mUsbDevice;
+    /**
+     * Usb设备
+     */
+    private static List<UsbDevice> mUsbDeviceList;
 
 
     /**
@@ -192,15 +196,15 @@ public class PrinterConnectService extends Service {
         }
         if(isHasUsbDevice()){
             //0918 暂时只支持GP不干胶打印机
-            openUsbProt();
+            openAllUsbProt();
         }
     }
 
     //这个方法很关键  根据判断是否会去自动连接 蓝牙或者usb productId如果改变了会影响连接
     private boolean isHasUsbDevice(){
-        mUsbDevice  = GPUsbUtil.getGPExtrapositionUsbDevice(mUsbManager);
+        mUsbDeviceList  = GPUsbUtil.getGPExtrapositionUsbDevice(mUsbManager);
        // ToastUtil.getInstance().showToast( mUsbDevice!=null?"有USB":"没USB");
-        return  mUsbDevice!=null;
+        return mUsbDeviceList.size()>0;
     }
 
     private void registerBoothCloseBroadcast() {
@@ -262,21 +266,47 @@ public class PrinterConnectService extends Service {
     }
 
     /**
+     * 打开俩个类型打印机打印机
+     * @return
+     */
+    private static int openAllUsbProt(){
+        //十进制 前面俩位代表不干胶 后面代表热敏 为0代表都成功
+        int result=-1;
+        for (int i=0;i<mUsbDeviceList.size();i++){
+            UsbDevice device=mUsbDeviceList.get(i);
+            if (device!=null){
+                int rel=openUsbProt(i,device.getDeviceName());
+                if (i==0){
+                    result=rel*100;
+                }else{
+                    if (result==-1){
+                        result=rel;
+                    }else{
+                        result=result+rel;
+                    }
+                }
+            }
+        }
+        return  result;
+    }
+    /**
      * 连接成功会通过广播接受做操作
      *
      * GP sdk有bug 没有初始化成功 打开usb端口会报null  所以在插入的时候要加个延迟？
      * @return
+     * printTypeId  0 是不干胶打印机 1 是热敏打印机
+     * mUsbDeviceList.get(printTypeId).getDeviceName()
      */
-    private static int openUsbProt( ){
-        if (mUsbDevice==null){
+    private static int openUsbProt(int printTypeId,String deviceName){
+        if (mUsbDeviceList.size()<1){
             ToastUtil.getInstance().showToast("请连接USB打印机");
             return -1;
         }
         int rel = -1;
         try {
-            int state=mGpService.getPrinterConnectStatus(PRINTER_INDEX[0]);
+            int state=mGpService.getPrinterConnectStatus(PRINTER_INDEX[printTypeId]);
             if (state== GpDevice.STATE_NONE ||state== GpDevice.STATE_LISTEN ||state==GpDevice.STATE_CONNECTING){
-                rel = mGpService.openPort(PRINTER_INDEX[0], PortParameters.USB, mUsbDevice.getDeviceName(), 0);
+                rel = mGpService.openPort(PRINTER_INDEX[printTypeId], PortParameters.USB, deviceName, 0);
                 GpCom.ERROR_CODE r = GpCom.ERROR_CODE.values()[rel];
              //  ToastUtil.getInstance().showToast("result :" + String.valueOf(r));
             }
@@ -444,18 +474,17 @@ public class PrinterConnectService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
                     int type = intent.getIntExtra(GpPrintService.CONNECT_STATUS, 0);
+                     Logger.d("StateBroad",type+"");
                     switch (type){
                         //卧槽  关机插入usb 再开机佳博也发这条广播  神坑
                         case GpDevice. STATE_NONE: //连接断开
-                         //   ToastUtil.getInstance().showToast("打印机连接断开");
                             //蓝牙连接状态断开后判断是否有usb打印机 连接usb打印机
-                            if (isHasUsbDevice()){
+                            if (isHasUsbDevice()){  //这个可要可不要
                                 if (mGpService==null){  //这么处理 概率性mGpService为null  因为神坑
                                     connection();
                                 }else{
-                                    openUsbProt();
+                                    openAllUsbProt();
                                 }
-
                             }
                             break;
                         case GpDevice. STATE_LISTEN : //监听状态
@@ -466,10 +495,9 @@ public class PrinterConnectService extends Service {
                             //ToastUtil.getInstance().showToast("已连接设备");
                              break;
                         case  GpDevice. STATE_INVALID_PRINTER : //无效的打印机
-                         //  ToastUtil.getInstance().showToast("无效的打印机");
+                               //ToastUtil.getInstance().showToast("无效的打印机");
                               break;
                         case  GpDevice. STATE_VALID_PRINTER : //有效的打印机
-
                               ToastUtil.getInstance().showToast("外置打印机已连接");
                               break;
                         default:
@@ -507,21 +535,41 @@ public class PrinterConnectService extends Service {
                 }
             } else if (action.equals(UsbManager.ACTION_USB_DEVICE_DETACHED)) {//断开USB
                 // ToastUtil.getInstance().showToast("usb打印机断开...");
-                mUsbDevice=null;
+                //刷新list 并且关闭对应的usb端口
+                mUsbDeviceList= GPUsbUtil.getGPExtrapositionUsbDevice(mUsbManager);
+
+                for (int i=0;i<mUsbDeviceList.size();i++){
+                    UsbDevice device=mUsbDeviceList.get(i);
+                    if (device==null){
+                        closeProt(PRINTER_INDEX[i]);
+                    }
+                }
+
                 //如果蓝牙已经连接 则打开蓝牙端口
-                closeProt(PRINTER_INDEX[0]);
                 BluetoothDevice device=GPBluetoothUtil.getConnectingBluetooth(mBluetoothAdapter);
                 if (device!=null){
                     openBluetoothProtFromDevice(device);
                 }
 
             }else if (action.equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)){ //插入USB
-                   // if (!isConnceted()){//如果打印机状态是蓝牙已经连接中 则什么都不干
+
                       //  ToastUtil.getInstance().showToast("usb打印机");
-                        UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                        mUsbDevice=usbDevice;
-                        openUsbProt();
-                  //  }
+                        //打开刚插入usb的端口
+                 int printTypeId=-1;
+                 UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                 mUsbDeviceList= GPUsbUtil.getGPExtrapositionUsbDevice(mUsbManager);
+                 for (int i=0;i<mUsbDeviceList.size();i++){
+                     //只有热敏的时候这个会为null
+                     if (mUsbDeviceList.get(i)==null){
+                         continue;
+                     }
+                     if (mUsbDeviceList.get(i).getProductId()==usbDevice.getProductId()){
+                         printTypeId=i;
+                     }
+                 }
+                 if (printTypeId!=-1){
+                     openUsbProt(printTypeId,usbDevice.getDeviceName());
+                 }
             }
         }
     };

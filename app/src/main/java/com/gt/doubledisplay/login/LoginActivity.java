@@ -31,6 +31,7 @@ import com.gt.doubledisplay.http.rxjava.observable.ResultTransformer;
 import com.gt.doubledisplay.http.rxjava.observable.SchedulerTransformer;
 import com.gt.doubledisplay.http.rxjava.observer.BaseObserver;
 import com.gt.doubledisplay.printer.extraposition.PrinterConnectService;
+import com.gt.doubledisplay.update.UpdateManager;
 import com.gt.doubledisplay.utils.RxBus;
 import com.gt.doubledisplay.utils.commonutil.ToastUtil;
 import com.gt.doubledisplay.web.GTWebViewFrameLayout;
@@ -83,9 +84,8 @@ public class LoginActivity extends RxAppCompatActivity {
         ButterKnife.bind(this);
         init();
 
-        //连接socket  暂时这么写 如果是登录页面就不启动
-        //UpdateManager updateManager=new UpdateManager(this,"DoubleScreen");
-        //updateManager.requestUpdate();
+        UpdateManager updateManager=new UpdateManager(this,"DoubleScreen");
+        updateManager.requestUpdate();
     }
 
     @OnClick({R.id.login_forget_psd, R.id.btn_login})

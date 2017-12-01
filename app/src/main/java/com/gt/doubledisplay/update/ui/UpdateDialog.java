@@ -8,6 +8,7 @@ import android.support.annotation.StyleRes;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -23,10 +24,12 @@ public class UpdateDialog extends Dialog {
     private String contentStr="";
     private String titleStr="";
 
+    private LinearLayout btnsLl;
+
     private Button confirmButton;
 
-
     private Button cancelButton;
+
 
     private TextView content;
     private TextView title;
@@ -53,6 +56,7 @@ public class UpdateDialog extends Dialog {
     private void init(){
         setContentView(R.layout.dialog_ask_update);
         cancelButton= (Button) this.findViewById(R.id.cancel);
+        btnsLl=(LinearLayout)this.findViewById(R.id.update_btns_ll);
         content= (TextView) this.findViewById(R.id.dialog_content);
         title= (TextView) this.findViewById(R.id.dialog_title);
         progressBar=(ProgressBar)this.findViewById(R.id.bar);
@@ -77,6 +81,10 @@ public class UpdateDialog extends Dialog {
     }
     public Button getCancelButton() {
         return cancelButton;
+    }
+
+    public void goneBtns(){
+        btnsLl.setVisibility(View.GONE);
     }
     public ProgressBar getProgressBar() {
         return progressBar;

@@ -238,7 +238,8 @@ public class GTWebViewFrameLayout extends FrameLayout {
     }
 
     public void loadUrl(){
-        mWebView.loadUrl(mUrl);
+
+         mWebView.loadUrl(mUrl);
     }
 
     public XWalkView getWebView(){

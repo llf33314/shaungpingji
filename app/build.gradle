@@ -17,8 +17,8 @@ android {
         applicationId "com.gt.doubledisplay"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 103
+        versionName "1.0.3"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
@@ -51,7 +51,8 @@ android {
                 def flavorName = variant.flavorName.startsWith("_") ? variant.flavorName.substring(1) : variant.flavorName
                 def apkFile = new File(
                         output.outputFile.getParent(),
-                        "DoubleDisplayApp_${flavorName}_${variant.buildType.name}_v${variant.versionName}_${buildTime()}.apk")
+                        //"DoubleDisplayApp_${flavorName}_${variant.buildType.name}_v${variant.versionName}_${buildTime()}.apk")
+                        "DoubleDisplayApp-v${variant.versionName}.apk")
                 output.outputFile = apkFile
             }
         }

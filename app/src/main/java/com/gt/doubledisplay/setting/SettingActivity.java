@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.gt.doubledisplay.R;
@@ -46,6 +47,9 @@ public class SettingActivity extends BaseActivity {
     LinearLayout moneyBox;
     @BindView(R.id.setting_ll_use_internal_printer)
     LinearLayout usePrinter;
+    @BindView(R.id.setting_device_id)
+    TextView deviceIdTv;
+
 
     public static final String DEVICE_SETTING="deviceSetting";
     public static final int DEVICE_SETTING_USE_PRINTER=0x01;
@@ -74,6 +78,7 @@ public class SettingActivity extends BaseActivity {
         cbPrinter.setOnCheckedChangeListener(new CheckBoxListener());
         cbMoneyBox.setOnCheckedChangeListener(new CheckBoxListener());
         hideBtns();
+        deviceIdTv.setText("设备编号:"+MyApplication.DEVICE_ID);
     }
 
     private void hideBtns(){

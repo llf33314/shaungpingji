@@ -220,11 +220,10 @@ public final class StringUtils {
     /**
      * 有多少个双字节编码
      * @param str
-     * @return
      */
     public static int hasDoubleEncodeStr(String str){
         int num=0;
-        for (int i=0;i<str.length();i++){
+        for (int i=0,size=str.length();i<size;i++){
             String s=String.valueOf(str.charAt(i));
             if (s.getBytes().length!=s.length()){
                 num++;

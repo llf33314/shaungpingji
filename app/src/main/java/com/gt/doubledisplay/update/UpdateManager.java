@@ -216,8 +216,7 @@ public class UpdateManager {
                     mProgress=askUpdateDialog.getProgressBar();
                     askUpdateDialog.getProgressBar().setVisibility(View.VISIBLE);
                     askUpdateDialog.getContent().setText("正在更新");
-                    askUpdateDialog.getConfirmButton().setVisibility(View.GONE);
-                    askUpdateDialog.getCancelButton().setVisibility(View.GONE);
+                    askUpdateDialog.goneBtns();
                     downloadAPK(appUpdateBean.apkUrl, APK_FILE_NAME);
 
                 }
@@ -267,6 +266,7 @@ public class UpdateManager {
         //安装应用
         Logger.i(TAG, "installAPK APK_FILE_NAME=" + APK_FILE_NAME);
         Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                         , APK_FILE_NAME)),
                 "application/vnd.android.package-archive");
