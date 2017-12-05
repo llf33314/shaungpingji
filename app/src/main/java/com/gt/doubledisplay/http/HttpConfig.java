@@ -9,7 +9,7 @@ public class HttpConfig {
     //测试
     //public static final String BASE_URL = "https://yj.deeptel.com.cn/";
     //堡垒
-   // public static final String BASE_URL = "http://nb.yj.deeptel.com.cn/";
+    //public static final String BASE_URL = "https://nb.yj.deeptel.com.cn/";
     //正式
      public static final String BASE_URL = "https://yj.duofriend.com/";
 
@@ -24,9 +24,9 @@ public class HttpConfig {
     //测试
    // public static final String DUOFRIEND_XCM="https://canyin.deeptel.com.cn/";
     //堡垒
-    // public static final String DUOFRIEND_XCM="http://nb.canyin.deeptel.com.cn";
+     //public static final String DUOFRIEND_XCM="https://nb.canyin.deeptel.com.cn";
     //正式
-    public static final String DUOFRIEND_XCM="https://canyin.duofriend.com/";
+      public static final String DUOFRIEND_XCM="https://canyin.duofriend.com/";
 
     //微站测试
    // public static final String DUOFRIEND_XCM="http://wz.canyin.deeptel.com.cn/login/index.do";

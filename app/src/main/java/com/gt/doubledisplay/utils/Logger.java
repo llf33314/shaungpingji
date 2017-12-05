@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class Logger {
 
-    public static int LOG_LEVEL = 1;
+    public static int LOG_LEVEL = 5;
 
     public static int ERROR = 1;
     public static int WARN = 2;
