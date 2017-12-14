@@ -25,9 +25,6 @@ public interface ApiService {
     @POST("doubleScreenMobile/getPrintData")
     Observable<String> getPrintTscOrder(@Field("orderId")String orderId);
 
-  /*  @POST("doubleScreenMobile/getEqCode")
-    Observable<BaseResponse<DeviceBean>>getDeviceId(@Query("busId") String busId);*/
-
     @POST("http://hz1.yifriend.net/ErpMenus/79B4DE7C/Erplogin.do")
     Observable<String>getErpLogin(@Query("login_name")String login_name,@Query("password")String password,@Query("sign")String sign);
 

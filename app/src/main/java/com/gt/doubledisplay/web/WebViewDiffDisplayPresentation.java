@@ -30,39 +30,32 @@ public class WebViewDiffDisplayPresentation extends Presentation {
 
     private String mUrl;
 
-    public WebViewDiffDisplayPresentation(Context outerContext, Display display,String url) {
+    public WebViewDiffDisplayPresentation(Context outerContext, Display display, String url) {
         super(outerContext, display);
-        this.mUrl=url;
+        this.mUrl = url;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Window w=this.getWindow();
+        Window w = this.getWindow();
         w.setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        WindowManager.LayoutParams lp=w.getAttributes();
+        WindowManager.LayoutParams lp = w.getAttributes();
 
-        mGTWebViewFrameLayout =new GTWebViewFrameLayout(this.getContext(),mUrl);
+        mGTWebViewFrameLayout = new GTWebViewFrameLayout(this.getContext(), mUrl);
 
-        ImageView iv=new ImageView(MyApplication.getAppContext());
+        ImageView iv = new ImageView(MyApplication.getAppContext());
         iv.setImageResource(R.drawable.bg);
-       // iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
         setContentView(iv);
-       // mGTWebViewFrameLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
 
         //显示轮播广告
         RxBus.get().toObservable(DeviceBean.class).compose(SchedulerTransformer.<DeviceBean>transformer()).subscribe(new Consumer<DeviceBean>() {
             @Override
             public void accept(@NonNull DeviceBean deviceBean) throws Exception {
                 setContentView(mGTWebViewFrameLayout);
-               /* FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mGTWebViewFrameLayout.getLayoutParams();
-                lp.setMargins(0, BarUtils.getStatusBarHeight(MyApplication.getAppContext()), 0, BarUtils.getNavigationBarHeight());
-                mGTWebViewFrameLayout.setLayoutParams(lp);*/
                 mGTWebViewFrameLayout.loadUrl();
 
-               // mGTWebViewFrameLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             }
         });
 
@@ -72,33 +65,12 @@ public class WebViewDiffDisplayPresentation extends Presentation {
                     @Override
                     public void accept(@NonNull AssistantScreenMsgBean assistantScreenMsgBean) throws Exception {
                         //暂时这么写 后期小馋猫估计要改
-                        if (TextUtils.isEmpty(assistantScreenMsgBean.getMethonName())){
-                            mGTWebViewFrameLayout.getWebView().loadUrl("javascript:getDataAndShow('"+ assistantScreenMsgBean.getMsg()+"')");
-                        }else{
-                            mGTWebViewFrameLayout.getWebView().loadUrl("javascript:"+assistantScreenMsgBean.getMethonName()+"('"+ assistantScreenMsgBean.getMsg()+"')");
+                        if (TextUtils.isEmpty(assistantScreenMsgBean.getMethonName())) {
+                            mGTWebViewFrameLayout.getWebView().loadUrl("javascript:getDataAndShow('" + assistantScreenMsgBean.getMsg() + "')");
+                        } else {
+                            mGTWebViewFrameLayout.getWebView().loadUrl("javascript:" + assistantScreenMsgBean.getMethonName() + "('" + assistantScreenMsgBean.getMsg() + "')");
                         }
                     }
                 });
-
-
-
     }
-    @Override
-    public void show(){
-        /*if (mGTWebViewFrameLayout !=null){//已经初始化了  第一次初始化在onCreate load
-            mGTWebViewFrameLayout.loadUrl();
-        }*/
-        super.show();
-    }
-
-
-    /*  DisplayManager  mDisplayManager;//屏幕管理类
-    mDisplayManager = (DisplayManager)this.getContext().getSystemService(Context.DISPLAY_SERVICE);
-    displays =mDisplayManager.getDisplays();
-            if (displays.length<2){
-        ToastUtil.getInstance().showToast("副屏未连接");
-        return;
-    }*/
-
-
 }

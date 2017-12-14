@@ -37,18 +37,6 @@ public class ChooseBusinessAdapter extends BaseRecyclerAdapter<LoginBean.Erplist
         return R.layout.item_choose_business;
     }
 
-  /*  @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        final View view= LayoutInflater.from(mContext).inflate(getLayoutId(),parent,false);
-
-        final BaseViewHolder baseViewHolder=new BaseViewHolder(view,mContext);
-
-        bindListener(baseViewHolder);
-
-        return baseViewHolder;
-    }*/
-
     /**
      * rv都是包含内容 图片大小需要 正方形且页面需要显示三个item;
      */

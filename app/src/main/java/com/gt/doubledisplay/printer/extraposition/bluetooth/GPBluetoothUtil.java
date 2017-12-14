@@ -25,7 +25,7 @@ public class GPBluetoothUtil {
 
         for(BluetoothDevice device : devices){
             //测试用  因为0D30显示的类型不是打印机？
-            //过滤掉微兔内置打印机
+            //过滤掉微兔内置打印机  内置打印机是虚拟蓝牙
             if (/*device.getType()==3&&*/!"88:D1:31:71:2D:10".equals(device.getAddress())){
                 return device;
             }

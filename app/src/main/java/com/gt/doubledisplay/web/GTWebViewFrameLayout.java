@@ -47,28 +47,28 @@ public class GTWebViewFrameLayout extends FrameLayout {
 
     private XWalkView mWebView;
 
-    private Intent socketIntent;
-    private static final String USERAGENT="Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36";
+    private static final String USERAGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36";
     /**
      * 例子里面的框架需要这样写
      */
     private String mUrl;
 
     private Context mContext;
-    public GTWebViewFrameLayout(Context context,String url) {
+
+    public GTWebViewFrameLayout(Context context, String url) {
         super(context);
-        this.mContext=context;
+        this.mContext = context;
 
         mUrl = url;
 
         //先执行上面代码 下载一些资源一边初始化 webView
-        mBar=new HorizontalProgress(context);
-        mWebView =new XWalkView(context);
+        mBar = new HorizontalProgress(context);
+        mWebView = new XWalkView(context);
 
         FrameLayout.LayoutParams webViewLp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-        this.addView(mWebView,webViewLp);
+        this.addView(mWebView, webViewLp);
         FrameLayout.LayoutParams barLp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ConvertUtils.dp2px(3));
-        this.addView(mBar,barLp);
+        this.addView(mBar, barLp);
 
         initWebView();
 
@@ -78,7 +78,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
         super(context, attrs);
     }
 
-    private void initWebView(){
+    private void initWebView() {
 
         //没有模式或者url为null
         if (TextUtils.isEmpty(mUrl)) {
@@ -95,7 +95,7 @@ public class GTWebViewFrameLayout extends FrameLayout {
         webSettings.setJavaScriptEnabled(true);
         mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
 
-        mWebView.addJavascriptInterface(new DuofenJSBridge(this.getContext(),mWebView),"doubleAndroid");
+        mWebView.addJavascriptInterface(new DuofenJSBridge(this.getContext(), mWebView), "doubleAndroid");
 
         // init webview settings
         webSettings.setAllowContentAccess(true);
@@ -113,26 +113,26 @@ public class GTWebViewFrameLayout extends FrameLayout {
     }
 
 
-    private void showNullTv(){
+    private void showNullTv() {
         FrameLayout.LayoutParams tvLp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-        TextView tv=new TextView(this.getContext());
+        TextView tv = new TextView(this.getContext());
         tv.setText("访问地址为空或未指定网页加载模式");
         tv.setTextSize(30);
         tv.setGravity(Gravity.CENTER);
-        this.addView(tv,tvLp);
+        this.addView(tv, tvLp);
     }
 
-    public XWalkUIClient getUIClient(){
-        return new XWalkUIClient(mWebView){
+    public XWalkUIClient getUIClient() {
+        return new XWalkUIClient(mWebView) {
             @Override
             public boolean onJsAlert(XWalkView view, String url, String message, final XWalkJavascriptResult result) {
-                showWebDialog(message,result);
+                showWebDialog(message, result);
                 return true;
             }
 
             @Override
             public boolean onJsConfirm(XWalkView view, String url, String message, final XWalkJavascriptResult result) {
-                showWebDialog(message,result);
+                showWebDialog(message, result);
                 return true;
             }
 
@@ -140,24 +140,24 @@ public class GTWebViewFrameLayout extends FrameLayout {
             public void onReceivedTitle(XWalkView view, String title) {
                 try {
                     //副屏幕不走这里  set设置标题
-                    BaseActivity activity=(BaseActivity) GTWebViewFrameLayout.this.getContext();
+                    BaseActivity activity = (BaseActivity) GTWebViewFrameLayout.this.getContext();
                     activity.setToolBarTitle(title);
-                }catch (ClassCastException e){
-                    super.onReceivedTitle(view,title);
+                } catch (ClassCastException e) {
+                    super.onReceivedTitle(view, title);
                 }
             }
         };
     }
 
     /**
-     *副屏alert 时 会报错
+     * 副屏alert 时 会报错
      */
-    private void showWebDialog(String message,final XWalkJavascriptResult result){
-       Context context=this.getContext();
-        if (!(context instanceof Activity)){
+    private void showWebDialog(String message, final XWalkJavascriptResult result) {
+        Context context = this.getContext();
+        if (!(context instanceof Activity)) {
             //ToastUtil.getInstance().showToast(message,5000);
-            Logger.d("showWebDialog",message);
-        }else{
+            Logger.d("showWebDialog", message);
+        } else {
             new AlertDialog.Builder(context)
                     .setTitle("温馨提示")
                     .setMessage(message)
@@ -174,12 +174,11 @@ public class GTWebViewFrameLayout extends FrameLayout {
                         }
                     })
                     .show();
-
         }
 
     }
 
-    public XWalkResourceClient getWebChromeClient(){
+    public XWalkResourceClient getWebChromeClient() {
         return new XWalkResourceClient(mWebView) {
 
             @Override
@@ -195,54 +194,27 @@ public class GTWebViewFrameLayout extends FrameLayout {
 
             @Override
             public XWalkWebResourceResponse shouldInterceptLoadRequest(XWalkView view, XWalkWebResourceRequest request) {
-               // Log.d("GTWebView",request.getUrl().toString());
-
-
-                String url=request.getUrl().toString();
-                if (HttpConfig.DUOFRIEND_XCM_LOGIN_OUT_URL.equals(url)||HttpConfig.DUOFRIEND_XCM_LOGIN_OUT_URL_2.equals(url)){
-                    Context context=mWebView.getContext();
-                    Intent intent=new Intent(context, LoginActivity.class);
+                String url = request.getUrl().toString();
+                if (HttpConfig.DUOFRIEND_XCM_LOGIN_OUT_URL.equals(url) || HttpConfig.DUOFRIEND_XCM_LOGIN_OUT_URL_2.equals(url)) {
+                    Context context = mWebView.getContext();
+                    Intent intent = new Intent(context, LoginActivity.class);
                     context.startActivity(intent);
-                    if (context instanceof Activity){
+                    if (context instanceof Activity) {
                         ((Activity) context).finish();
                     }
                 }
                 return super.shouldInterceptLoadRequest(view, request);
             }
 
-            /*@Override
-            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-
-                builder.setTitle("温馨提示")
-                        .setMessage(message)
-                        .setPositiveButton("确定", null);
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-                result.confirm();//  因为没有绑定事件，需要强行confirm,否则页面会变黑显示不了内容。*//**//*
-                return true;// 不需要绑定按键事件
-            }*/
-
-            //=========多窗口的问题==========================================================
-            /*@Override
-            public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
-                WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
-                transport.setWebView(view);
-                resultMsg.sendToTarget();
-                return true;
-            }*/
-
-
         };
     }
 
-    public void loadUrl(){
+    public void loadUrl() {
 
-         mWebView.loadUrl(mUrl);
+        mWebView.loadUrl(mUrl);
     }
 
-    public XWalkView getWebView(){
-        return  mWebView;
+    public XWalkView getWebView() {
+        return mWebView;
     }
 }

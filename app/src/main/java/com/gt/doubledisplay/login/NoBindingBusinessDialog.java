@@ -15,6 +15,7 @@ import butterknife.OnClick;
 
 /**
  * Created by wzb on 2017/8/2 0002.
+ * 陈丹erp登录接口没有绑定任何erp提示
  */
 
 public class NoBindingBusinessDialog extends Dialog {

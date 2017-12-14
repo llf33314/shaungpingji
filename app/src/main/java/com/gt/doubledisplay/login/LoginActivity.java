@@ -67,8 +67,7 @@ public class LoginActivity extends RxAppCompatActivity {
 
     private static final String ACCOUNT = "login_account";
     private static final String PSD = "login_psd";
-    //打印机连接
-    public static Intent portIntent;
+
 
     Gson gson = new Gson();
     @BindView(R.id.version)
@@ -111,7 +110,6 @@ public class LoginActivity extends RxAppCompatActivity {
                                 LoginSignBean.SignBean sign = loginSignBean.getSign();
 
                                 //保存设备信息 给副屏调用
-                                //MyApplication.USER_ID= HttpConfig.SOCKET_ANDROID_AUTH_KEY+loginSignBean.getStyle()+"_"+loginSignBean.getUserId();
                                 MyApplication.USER_ID = loginSignBean.getUserId() + "";
                                 MyApplication.DEVICE_ID = loginSignBean.getEqCode();
 
@@ -182,7 +180,7 @@ public class LoginActivity extends RxAppCompatActivity {
                                     ToastUtil.getInstance().showToast(loginBean.getMsg());
                                     /* Hawk.delete(ACCOUNT);
                                      Hawk.delete(PSD)*/
-                                    ;
+
                                 }
                             }
 
@@ -246,10 +244,9 @@ public class LoginActivity extends RxAppCompatActivity {
         if (!TextUtils.isEmpty(psd) && !TextUtils.isEmpty(account)) {
             cbPsd.setChecked(true);
         }
-        /*portIntent = new Intent(this, PrinterConnectService.class);
-        startService(portIntent);*/
-        if (!TextUtils.isEmpty(AppUtils.getAppInfo().getVersionName())){
-            version.setText("版本号："+AppUtils.getAppInfo().getVersionName());
+
+        if (!TextUtils.isEmpty(AppUtils.getAppInfo().getVersionName())) {
+            version.setText("版本号：" + AppUtils.getAppInfo().getVersionName());
         }
     }
 

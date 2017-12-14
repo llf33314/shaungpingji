@@ -59,21 +59,6 @@ public class WebViewActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-       /* WebView mWebView= mGTWebViewFrameLayout.getWebView();
-        if (mWebView != null) {
-            mWebView.clearHistory();
-            ((ViewGroup) mWebView.getParent()).removeView(mWebView);
-            mWebView.loadUrl("about:blank");
-            mWebView.stopLoading();
-            mWebView.setWebChromeClient(null);
-            mWebView.setWebViewClient(null);
-            mWebView.destroy();
-            mWebView = null;*/
-    }
-
-    @Override
     protected void titleTenClick() {
         ToastUtil.getInstance().showToast(url);
     }

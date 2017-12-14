@@ -90,10 +90,6 @@ public class BluetoothSettingActivity extends BaseActivity {
     //android 固定的
     private final UUID MY_UUID=UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-
-    //第三方提供的类库用于链接蓝牙
-   // private PortParameters mPortParam;
-
     private Handler refreshBondedHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) { //配对成功
@@ -107,14 +103,12 @@ public class BluetoothSettingActivity extends BaseActivity {
                     break;
                 case REFRESH_BOND_SCAN:
                     refreshBonded();
-                   // scanResultAdapter.removeDevice((BluetoothDevice) msg.obj);
                     btnScanBluetooth.performClick();
                     rvBluetoothBonded.requestLayout();
                     break;
                 case CONNECTIONED:
                     refreshBonded();
                     rvBluetoothBonded.requestLayout();
-                   // scanResultAdapter.removeDevice((BluetoothDevice) msg.obj);
                     btnScanBluetooth.performClick();
                     break;
                 default:
@@ -206,18 +200,6 @@ public class BluetoothSettingActivity extends BaseActivity {
                 BluetoothDevice bluetoothDevice=mBondedRecyclerviewAdapter.getBluetoothDevice(position);
                 try {
                     if (removeBond(BluetoothDevice.class,bluetoothDevice)){
-                     //   ToastUtil.getInstance().showToast("蓝牙已断开");
-                        //改为用广播更新Ui
-                       /* refreshBondedHandler.postDelayed(new Runnable() {//不加延迟数据无法刷新 机制问题
-                            @Override
-                            public void run() {
-                                refreshBondedHandler.sendEmptyMessage(REFRESH_BOND);
-                            }
-                        },300);*/
-
-                       /* ViewGroup viewGroup= (ViewGroup) view;
-                        TextView connectState= (TextView) viewGroup.findViewById(R.id.tv_item_bluetooth_conncetion_state);
-                        connectState.setText("断开中...");*/
 
                     }else{
                         ToastUtil.getInstance().showToast("取消失败");
@@ -246,10 +228,6 @@ public class BluetoothSettingActivity extends BaseActivity {
                 BluetoothDevice remoteDevice=mBluetoothAdapter.getRemoteDevice(mac);
                 new Thread(new ConnectThread(remoteDevice)).start();
                 mBluetoothAdapter.cancelDiscovery();
-                //改用广播更新UI
-                /*ViewGroup viewGroup= (ViewGroup) view;
-                TextView connectState= (TextView) viewGroup.findViewById(R.id.tv_item_bluetooth_conncetion_state);
-                connectState.setText("正在配对...");*/
             }
 
             @Override
@@ -320,25 +298,16 @@ public class BluetoothSettingActivity extends BaseActivity {
         public void run() {
             //未知原因connect报异常
             try {
-                //device.getType();手机是1  打印机是3
-                if (device.getType()==1){
-
-                }else{
-
-                  //  boolean ret = BluetoothUtil.setPin(BluetoothDevice.class, device, PIN);
-                }
                if (!BluetoothUtil.createBond(BluetoothDevice.class,device)){ //这种方式连接失败
                    mBluetoothSocket=device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
                    mBluetoothSocket.connect();
                }
                //ToastUtil.getInstance().showToast("ret:"+ret+"\n"+device.getType()+"\n"+ device.getUuids());
-               // sendRefreshUi(device);
             } catch (IOException connectException) {
                 //处理连接建立失败的异常
                 try {
                     mBluetoothSocket= (BluetoothSocket) device.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(device,1);
                     mBluetoothSocket.connect();
-                  //  sendRefreshUi(device);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
@@ -352,15 +321,7 @@ public class BluetoothSettingActivity extends BaseActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //  doSomething(mmSocket);
         }
-
-        /*//关闭一个正在进行的连接
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) { }
-        }*/
     }
 
     @Override

@@ -19,8 +19,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HttpCall {
 
-    private static String token;
-
     private static ApiService mApiService;
 
     public static ApiService getApiService(){
